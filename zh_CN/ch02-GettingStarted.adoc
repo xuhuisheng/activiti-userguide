@@ -1,65 +1,63 @@
 
-== Getting Started
+== 开始
 
 [[demo.setup.one.minute.version]]
 
-=== One minute version
+=== 一分钟入门
 
 
-After downloading the Activiti Explorer WAR file from the link:$$http://www.activiti.org$$[Activiti website], follow these steps to get the demo setup running with default settings. You'll need a working link:$$http://java.sun.com/javase/downloads/index.jsp$$[Java runtime] and link:$$http://tomcat.apache.org/download-70.cgi$$[Apache Tomcat] installation (actually, any web container would work since we only rely on the servlet capability. But we test on Tomcat primarily).
+从$$http://www.activiti.org$$[Activiti website]下载Activiti Explorer的WAR文件后，按照以下步骤使用默认设置运行demo。你需要已经安装 link:$$http://java.sun.com/javase/downloads/index.jsp$$[Java运行环境] 与 link:$$http://tomcat.apache.org/download-70.cgi$$[Apache Tomcat] （事实上，鉴于我们只使用servlet功能，任何web容器都可以运行。但我们主要在Tomcat上进行测试）。
 
-* Copy the downloaded activiti-explorer.war to the webapps directory of Tomcat.
-* Start Tomcat by running the startup.bat or startup.sh scripts in the bin folder of Tomcat
-* When Tomcat is started open your browser and go to  link:$$http://localhost:8080/activiti-explorer$$[http://localhost:8080/activiti-explorer].
-            Login with kermit/kermit.
-
+* 将下载的activiti-explorer.war复制到Tomcat的webapps文件夹下。
+* 运行Tomcat的bin文件夹下的startup.bat或者startup.sh脚本启动Tomcat。
+* Tomcat启动后，打开浏览器访问 link:$$http://localhost:8080/activiti-explorer$$[http://localhost:8080/activiti-explorer]。使用kermit/kermit登录。
 
 
-That's it! The Activiti Explorer application uses an in-memory H2 database by default, if you want to use another database configuration please read <<activiti.setup,the longer version>>.
+
+就是这样！Activiti Explorer 应用默认使用H2内存数据库。如果你想使用其他数据库配置，请阅读 <<activiti.setup,较长版>>。
 
 
 [[activiti.setup]]
 
 
-=== Activiti setup
+=== Activiti安装
 
-To install Activiti you'll need a working link:$$http://java.sun.com/javase/downloads/index.jsp$$[Java runtime] and link:$$http://tomcat.apache.org/download-70.cgi$$[Apache Tomcat] installation. Also make sure that the _$$JAVA_HOME$$_ system variable is correctly set. The way to do this depends on your operating system.
+要安装Activiti, 你需要已经安装 link:$$http://java.sun.com/javase/downloads/index.jsp$$[Java runtime] 与 link:$$http://tomcat.apache.org/download-70.cgi$$[Apache Tomcat] 。同时确认 _$$JAVA_HOME$$_ 环境变量已经设置正确。该环境变量的设置方法取决于你的操作系统。
 
-To get the Activiti Explorer and REST web applications running just copy the WARs downloaded from the Activiti download page to the +webapps+ folder in your Tomcat installation directory. By default the Explorer application runs with an in-memory database and with example processes, users and groups.
+要运行Activiti Explorer与REST web应用，将你从Activiti下载的WAR文件，复制到Tomcat安装目录下的+webapps+文件夹中。Explorer 应用默认使用内存数据库，示例流程、用户与组。
 
 
-These are the demo users:
+下表列出demo用户：
 
 [options="header"]
 |===============
-|UserId|Password|Security roles
+|用户账号|密码|安全角色
 |kermit|kermit|admin
 |gonzo|gonzo|manager
 |fozzie|fozzie|user
 |===============
 
 
-Now you can access following web application:
+现在你可以访问如下web应用：
 
 [options="header"]
 |===============
-|Webapp Name|URL|Description
-|Activiti Explorer|link:$$http://localhost:8080/activiti-explorer$$[http://localhost:8080/activiti-explorer]|The process engine user console.  Use this tool to start new processes, assign tasks, view and claim tasks, etc. This tool also allows to administrate the Activiti engine.
+|Webapp名称|URL|说明
+|Activiti Explorer|link:$$http://localhost:8080/activiti-explorer$$[http://localhost:8080/activiti-explorer]|流程引擎的用户操作台。使用这个工具来启动新流程、分配任务、查看与接收任务等。这个工具同时可以管理Activiti引擎。
 |===============
 
-Note that the Activiti Explorer demo setup is a way of showing the capabilities and functionality of Activiti as easily and as fast as possible. This does however, *not* mean
-that it is the only way of using Activiti. As Activiti is 'just a jar', it can be embedded in any Java environment: with swing or on a Tomcat, JBoss, WebSphere, etc. Or you could very well choose to run Activiti as a typical, standalone BPM server. If it is possible in Java, it is possible with Activiti!
+请注意Activiti Explorer示例配置只是用尽可能简单快捷的方式展现Activiti的能力与功能。这*并不*意味着只有这一种使用Activiti的方式。Activiti'只是一个jar'，它可以被嵌入到任何Java环境中：swing、Tomcat、JBoss、 WebSphere，等等。你也可以将Activiti作为典型的、独立运行的的BPM服务器。任何在Java里可以做的事情，都可以在Activiti中做！
 
 
 [[activiti.setup.database]]
 
 
-=== Activiti database setup
+=== Activiti数据库配置
 
-As said in the one minute demo setup, the Activiti Explorer runs an in-memory H2 database by default. To run the Activiti Explorer with a standalone H2 or another database the db.properties in the WEB-INF/classes of the Activiti Explorer web application  should be changed.
+就像在一分钟示例配置中介绍的，Activiti Explorer默认运行在H2内存数据库上。要让Activiti Explorer使用独立运行的H2数据库或其他数据库，需要修改Activiti Explorer web应用下，WEB-INF/classes目录中的db.properties。
 
 
-In addition, be aware that the Activiti Explorer generates demo user and groups, process definitions and models by default. To disable this, the engine.properties file in the WEB-INF/classes folder should be changed. To disable the demo setup fully you can set all of these properties to false. But as you can see you can also enable and disable items individually.
+另外，请注意Activiti Explorer默认自动生成演示用户、组、流程定义与模型。要禁用这些设置，需要修改WEB-INF/classes目录下的engine.properties文件。要完全禁用示例设置，可以将所有设置项设为false。你也可以单独禁用或启用其中的某些设置。
 
 [source, properties, linenums]
 ----
@@ -73,14 +71,13 @@ create.demo.reports=true
 [[getting.started.including.libs]]
 
 
-=== Include the Activiti jar and its dependencies
+=== 引入Activiti jar与依赖
 
 
-To include the Activiti jar and its dependent libraries, we advise using link:$$http://maven.apache.org/$$[Maven] (or link:$$http://ant.apache.org/ivy/$$[Ivy]), as it
- simplifies dependency management on both our and your side a lot. Follow the instructions at link:$$http://www.activiti.org/community.html#maven.repository$$[] to include the necessary jars in your environment.
+我们建议使用 link:$$http://maven.apache.org/$$[Maven] (或者 link:$$http://ant.apache.org/ivy/$$[Ivy])来引入Activiti jar与依赖库，因为它简化了我们之间的依赖管理。参考 link:$$http://www.activiti.org/community.html#maven.repository$$[]中的介绍来将必要的jar引入你的项目。
 
 
-Alternatively, if you don't want to use Maven you can include the jars in your project yourself. The Activiti download zip contains a folder +libs+ which contain all the Activiti jars (and the source jars). The dependencies are not shipped this way. The required dependencies of the Activiti engine are (generated using ++mvn dependency:tree++):
+如果不想使用Maven，你也可以自行将jar引入你的项目。从Activiti下载的zip包中的+libs+文件夹，包含所有Activiti的jar（包括源码jar）。依赖并没有通过这种方式发布。Activiti引擎的依赖列表如下（使用++mvn dependency:tree++生成）：
 
 ----
 org.activiti:activiti-engine:jar:5.17.0
@@ -103,17 +100,17 @@ org.activiti:activiti-engine:jar:5.17.0
 +- org.slf4j:jcl-over-slf4j:jar:1.7.6:compile
 ----
 
-Note: the mail jars are only needed if you are using the <<bpmnEmailTask,mail service task>>.
+注意：只有使用了<<bpmnEmailTask,邮件任务>>才必须引入邮件依赖jar。
 
-All the dependencies can easily be downloaded using +mvn dependency:copy-dependencies+ on a module of the link:$$https://github.com/Activiti/Activiti$$[Activiti source code].
+所有依赖可以在All the dependencies can easily be downloaded using +mvn dependency:copy-dependencies+ on a module of the link:$$https://github.com/Activiti/Activiti$$[Activiti source code].
 
 
 [[getting.started.next.steps]]
 
-=== Next steps
+=== 下一步
 
-Playing around with the <<activitiExplorer,Activiti Explorer>> web application is a good way to get familiar with the Activiti concepts and functionality. However, the main purpose of Activiti is of course to enable powerful BPM and workflow capabilities in your own application. The following chapters will help you to get familiar with how to use Activiti programmatically in your environment:
+使用<<activitiExplorer,Activiti Explorer>> web应用是一个熟悉Activiti概念与功能的好办法。然而，Activiti的主要目的是用来为你自己的应用添加强大的BPM与工作流功能。下面的章节会帮助你熟悉如何在你的环境中编程使用Activiti：
 
-* <<configuration,The chapter on configuration>> will teach you how to set up Activiti and how to obtain an instance of the +ProcessEngine+ class which is your central access point to all the engine functionality of Activiti.
-*<<chapterApi,The API chapter>> will guide you through the services which form Activiti's API. These services offer the Activiti engine functionality in a convenient yet powerful way and can be used in any Java environment.
-*Interested in getting insight on BPMN 2.0, the format in which processes for the Activiti engine are written? Then continue on to the <<bpmn20,BPMN 2.0 section>>.
+* <<configuration,配置章节>>会教你如何设置Activiti，如何获得+ProcessEngine+ 类的实例，他是所有Activiti引擎功能的中心入口。
+* <<chapterApi,API章节>>会带你了解构成Activiti API的服务。这些服务用简便但强大的方式提供了Activiti引擎的功能，可以使用在任何Java环境下。
+* 对深入了解Activiti引擎中流程的编写格式，BPMN 2.0，感兴趣吗？请继续浏览<<bpmn20,BPMN 2.0章节>>。
