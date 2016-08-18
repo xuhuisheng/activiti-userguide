@@ -1,20 +1,20 @@
-== Configuration
+== 配置
 
 [[configuration]]
 
-=== Creating a ProcessEngine
+=== 创建ProcessEngine
 
 
-The Activiti process engine is configured through an XML file called +activiti.cfg.xml+. Note that this is *not* applicable if you're using <<springintegration,the Spring style of building a process engine>>.
+Activiti流程引擎通过名为++activiti.cfg.xml++的XML文件进行配置。请注意这种方式与<<springintegration,使用Spring创建流程引擎>>**不**一样。
 
-The easiest way to obtain a +ProcessEngine+, is to use the +org.activiti.engine.ProcessEngines+ class:
+获取++ProcessEngine++，最简单的方式是使用++org.activiti.engine.ProcessEngines++类：
 
 [source,java,linenums]
 ----
 ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine()
 ----
 
-This will look for an +activiti.cfg.xml+ file on the classpath and construct an engine based on the configuration in that file. The following snippet shows an example configuration.  The following sections will give a detailed overview of the configuration properties.
+这样会从classpath寻找++activiti.cfg.xml++，并用这个文件中的配置构造引擎。下面的代码展示了一个配置的例子。后续章节会对配置参数进行详细介绍。
 
 [source,xml,linenums]
 ----
@@ -42,9 +42,9 @@ This will look for an +activiti.cfg.xml+ file on the classpath and construct an 
 </beans>
 ----
 
-Note that the configuration XML is in fact a Spring configuration. *This does not mean that Activiti can only be used in a Spring environment!* We are simply leveraging the parsing and dependency injection capabilities of Spring internally for building up the engine.
+请注意这个配置XML文件实际上是一个Spring配置文件。**但这并不意味着Activiti只能用于Spring环境！**我们只是简单利用Spring内部的解析与依赖注入功能来构造引擎。
 
-The ProcessEngineConfiguration object can also be created programmatically using the configuration file. It is also possible to use a different bean id (e.g. see line 3).
+也可以通过编程方式使用配置文件，来构造ProcessEngineConfiguration对象。也可以使用不同的bean id(例如第3行)。
 
 [source,java,linenums]
 ----
@@ -56,8 +56,7 @@ ProcessEngineConfiguration.createProcessEngineConfigurationFromInputStream(Input
 ----
 
 
-It is also possible not to use a configuration file, and create a configuration based on
-defaults (see <<configurationClasses,the different supported classes>> for more information).
+也可以不使用配置文件，基于默认创建配置（参考<<configurationClasses,不同的支持类>>获得更多信息）。
 
 [source,java,linenums]
 ----
@@ -65,7 +64,7 @@ ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration();
 ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration();
 ----
 
-All these +ProcessEngineConfiguration.createXXX()+ methods return a +ProcessEngineConfiguration+ that can further be tweaked if needed. After calling the +buildProcessEngine()+ operation, a +ProcessEngine+ is created:
+所有的++ProcessEngineConfiguration.createXXX()++方法都返回++ProcessEngineConfiguration++，并可以继续按需调整。调用++buildProcessEngine()++后，生成一个++ProcessEngine++：
 
 [source,java,linenums]
 ----
@@ -85,7 +84,7 @@ ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemPr
 === ProcessEngineConfiguration bean
 
 
-The +activiti.cfg.xml+ must contain a bean that has the id +$$'processEngineConfiguration'$$+.
+++activiti.cfg.xml++文件中必须包含一个id为$$'processEngineConfiguration'$$的bean。
 
 [source,xml,linenums]
 ----
@@ -93,34 +92,34 @@ The +activiti.cfg.xml+ must contain a bean that has the id +$$'processEngineConf
 ----
 
 
-This bean is then used to construct the +ProcessEngine+. There are multiple classes available that can be used to define the +processEngineConfiguration+. These classes represent different environments, and set defaults accordingly. It's a best practice to select the class the matches (the most) your environment, to minimalise the number of properties needed to configure the engine. The following classes are currently available (more will follow in future releases): [[configurationClasses]]
+这个bean被用于构建++ProcessEngine++。有多个类可以用于定义++processEngineConfiguration++。这些类用于不同的环境，并各自设置一些默认值。最佳实践是选择（最）匹配你环境的类，以便减少配置引擎需要的参数。下面列出目前可以使用的类（后续版本会提供更多）：[[configurationClasses]]
 
-* *org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration*: the process engine is used in a standalone way. Activiti will take care of the transactions. By default, the database will only be checked when the engine boots (and an exception is thrown if there is no Activiti schema or the schema version is incorrect).
-* *org.activiti.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration*: this is a convenience class for unit testing purposes. Activiti will take care of the transactions. An H2 in-memory database is used by default. The database will be created and dropped when the engine boots and shuts down. When using this, probably no additional configuration is needed (except when using for example the job executor or mail capabilities).
-* *org.activiti.spring.SpringProcessEngineConfiguration*: To be used when the process engine is used in a Spring environment.  See <<springintegration,the Spring integration section>> for more information.
-* *org.activiti.engine.impl.cfg.JtaProcessEngineConfiguration*: To be used when the engine runs in standalone mode, with JTA transactions.
+* *org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration*：流程引擎独立运行。Activiti自行处理事务。在默认情况下，数据库检查只在引擎启动时进行（如果Activiti表结构不存在或表结构版本不对，会抛出异常）。
+* *org.activiti.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration*：这是一个便于使用单元测试的类。Activiti自行处理事务。默认使用H2内存数据库。数据库会在引擎启动时创建，并在引擎关闭时删除。使用这个类时，很可能不需要更多的配置（除了使用任务执行器或邮件功能等时）。
+* *org.activiti.spring.SpringProcessEngineConfiguration*：在流程引擎处于Spring环境时使用。查看<<springintegration,Spring集成章节>>获得更多信息。
+* *org.activiti.engine.impl.cfg.JtaProcessEngineConfiguration*：用于引擎独立运行，并使用JTA事务的情况。
 
 
 [[databaseConfiguration]]
 
-=== Database configuration
+=== 数据库配置
 
 
-There are two ways to configure the database that the Activiti engine will use. The first option is to define the JDBC properties of the database:
+有两种方式配置Activiti引擎使用的数据库。第一种方式是定义数据库的JDBC参数：
 
-* *jdbcUrl*: JDBC URL of the database.
-* *jdbcDriver*: implementation of the driver for the specific database type.
-* *jdbcUsername*: username to connect to the database.
-* *jdbcPassword*: password to connect to the database.
+* *jdbcUrl*: 数据库的JDBC URL。
+* *jdbcDriver*: 特定数据库类型的驱动实现。
+* *jdbcUsername*: 用于连接数据库的用户名。
+* *jdbcPassword*: 用于连接数据库的密码。
 
-The data source that is constructed based on the provided JDBC properties will have the default link:$$http://www.mybatis.org/$$[MyBatis] connection pool settings. The following attributes can optionally be set to tweak that connection pool (taken from the MyBatis documentation):
+通过提供的JDBC参数构造的数据源，使用默认的link:$$http://www.mybatis.org/$$[MyBatis]连接池设置。可用下列属性调整这个连接池（来自MyBatis文档）：
 
-* *jdbcMaxActiveConnections*: The number of active connections that the connection pool at maximum at any time can contain. Default is 10.
-* *jdbcMaxIdleConnections*: The number of idle connections that the connection pool at maximum at any time can contain.
-* *jdbcMaxCheckoutTime*: The amount of time in milliseconds a connection can be 'checked out' from the connection pool before it is forcefully returned. Default is 20000 (20 seconds).
-* *jdbcMaxWaitTime*: This is a low level setting that gives the pool a chance to print a log status and re-attempt the acquisition of a connection in the case that it is taking unusually long (to avoid failing silently forever if the pool is misconfigured) Default is 20000 (20 seconds).
+* *jdbcMaxActiveConnections*: 连接池能够容纳的最大活动连接数量。默认值为10.
+* *jdbcMaxIdleConnections*: 连接池能够容纳的最大空闲连接数量。
+* *jdbcMaxCheckoutTime*: 连接从连接池“取出”后，被强制返回前的最大时间间隔，单位为毫秒。默认值为20000（20秒）。
+* *jdbcMaxWaitTime*: 这是一个底层设置，在连接池获取连接的时间异常长时，打印日志并尝试重新获取连接（避免连接池配置错误造成的永久沉默失败。默认值为20000（20秒）。
 
-Example database configuration:
+数据库配置示例：
 
 [source,xml,linenums]
 ----
@@ -131,7 +130,7 @@ Example database configuration:
 ----
 
 
-Alternatively, a +javax.sql.DataSource+ implementation can be used (e.g. DBCP from link:$$http://commons.apache.org/dbcp/$$[Apache Commons]):
+也可以使用++javax.sql.DataSource++的实现（例如来自link:$$http://commons.apache.org/dbcp/$$[Apache Commons]的DBCP）：
 
 [source,xml,linenums]
 ----
@@ -151,20 +150,20 @@ Alternatively, a +javax.sql.DataSource+ implementation can be used (e.g. DBCP fr
 ----
 
 
-Note that Activiti does not ship with a library that allows to define such a data source. So you have to make sure that the libraries (e.g. from DBCP) are on your classpath.
+请注意Activiti发布时不包括用于定义数据源的库。需要自行把库（例如来自DBCP）放在你的classpath中。
 
-The following properties can be set, regardless of whether you are using the JDBC or data source approach:
+无论使用JDBC还是数据源方式配置，下列参数都可以使用：
 
-* *databaseType*: it's normally not necessary to specify this property as it is automatically analyzed from the database connection metadata. Should only be specified in case automatic detection fails. Possible values: {h2, mysql, oracle, postgres, mssql, db2}. *This property is required when not using the default H2 database*. This setting will determine which create/drop scripts and queries will be used. See <<supporteddatabases,the 'supported databases' section>> for an overview of which types are supported.
-* *databaseSchemaUpdate*: allows to set the strategy to handle the database schema on process engine boot and shutdown.
-** +false+ (default): Checks the version of the DB schema against the library when the process engine is being created and throws an exception if the versions don't match.
-** ++true++: Upon building the process engine, a check is performed and an update of the schema is performed if it is necessary. If the schema doesn't exist, it is created.
-** ++create-drop++: Creates the schema when the process engine is being created and drops the schema when the process engine is being closed.
+* *databaseType*: 通常不需要特别设置这个参数，因为它可以从数据库连接信息中自动分析得出。只有在自动检测失败时才需要设置。可用值：{h2, mysql, oracle, postgres, mssql, db2}。**不使用默认的H2数据库时需要设置这个参数。**这个选项会决定创建、删除与查询时使用的脚本。查看<<supporteddatabases,“支持的数据库”章节>>了解我们支持哪些类型的数据库。
+* *databaseSchemaUpdate*: 用于设置流程引擎启动关闭时使用的数据库表结构控制策略。
+** +false+ (默认): 当引擎启动时，检查数据库表结构的版本是否匹配库文件版本。版本不匹配时抛出异常。
+** ++true++: 构建引擎时，检查并在需要时更新表结构。表结构不存在则会创建。
+** ++create-drop++: 引擎创建时创建表结构，并在引擎关闭时删除表结构。
 
 
 [[jndiDatasourceConfig]]
 
-=== JNDI Datasource Configuration
+=== JNDI数据源配置
 
 
 By default, the database configuration for Activiti is contained within the db.properties files in the WEB-INF/classes of each web application. This isn't always ideal because it
