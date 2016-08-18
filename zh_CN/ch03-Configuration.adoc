@@ -154,7 +154,7 @@ ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemPr
 
 无论使用JDBC还是数据源方式配置，下列参数都可以使用：
 
-* *databaseType*: 通常不需要特别设置这个参数，因为它可以从数据库连接信息中自动分析得出。只有在自动检测失败时才需要设置。可用值：{h2, mysql, oracle, postgres, mssql, db2}。**不使用默认的H2数据库时需要设置这个参数。**这个选项会决定创建、删除与查询时使用的脚本。查看<<supporteddatabases,“支持的数据库”章节>>了解我们支持哪些类型的数据库。
+* *databaseType*: 通常不需要专门设置这个参数，因为它可以从数据库连接信息中自动分析得出。只有在自动检测失败时才需要设置。可用值：{h2, mysql, oracle, postgres, mssql, db2}。**不使用默认的H2数据库时需要设置这个参数。**这个选项会决定创建、删除与查询时使用的脚本。查看<<supporteddatabases,“支持的数据库”章节>>了解我们支持哪些类型的数据库。
 * *databaseSchemaUpdate*: 用于设置流程引擎启动关闭时使用的数据库表结构控制策略。
 ** +false+ (默认): 当引擎启动时，检查数据库表结构的版本是否匹配库文件版本。版本不匹配时抛出异常。
 ** ++true++: 构建引擎时，检查并在需要时更新表结构。表结构不存在则会创建。
