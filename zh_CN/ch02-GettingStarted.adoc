@@ -6,7 +6,7 @@
 === 一分钟入门
 
 
-从$$http://www.activiti.org$$[Activiti website]下载Activiti Explorer的WAR文件后，按照以下步骤使用默认设置运行demo。你需要已经安装 link:$$http://java.sun.com/javase/downloads/index.jsp$$[Java运行环境] 与 link:$$http://tomcat.apache.org/download-70.cgi$$[Apache Tomcat] （事实上，鉴于我们只使用servlet功能，任何web容器都可以运行。但我们主要在Tomcat上进行测试）。
+从 link:$$http://www.activiti.org$$[Activiti website]下载Activiti Explorer的WAR文件后，按照以下步骤使用默认设置运行demo。你需要已经安装 link:$$http://java.sun.com/javase/downloads/index.jsp$$[Java runtime] 与 link:$$http://tomcat.apache.org/download-70.cgi$$[Apache Tomcat]（事实上，鉴于我们只使用servlet功能，任何web容器都可以运行。但我们主要在Tomcat上进行测试）。
 
 * 将下载的activiti-explorer.war复制到Tomcat的webapps文件夹下。
 * 运行Tomcat的bin文件夹下的startup.bat或者startup.sh脚本启动Tomcat。
@@ -46,7 +46,7 @@
 |Activiti Explorer|link:$$http://localhost:8080/activiti-explorer$$[http://localhost:8080/activiti-explorer]|流程引擎的用户操作台。使用这个工具来启动新流程、分配任务、查看与接收任务等。这个工具同时可以管理Activiti引擎。
 |===============
 
-请注意Activiti Explorer示例配置只是用尽可能简单快捷的方式展现Activiti的能力与功能。这*并不*意味着只有这一种使用Activiti的方式。Activiti'只是一个jar'，它可以被嵌入到任何Java环境中：swing、Tomcat、JBoss、 WebSphere，等等。你也可以将Activiti作为典型的、独立运行的的BPM服务器。任何在Java里可以做的事情，都可以在Activiti中做！
+请注意Activiti Explorer示例配置只是用尽可能简单快捷的方式展现Activiti的能力与功能。这*并不*意味着只有这一种使用Activiti的方式。Activiti只是一个jar，它可以被嵌入到任何Java环境中：swing、Tomcat、JBoss、 WebSphere，等等。你也可以将Activiti作为典型的、独立运行的的BPM服务器。任何在Java里可以做的事情，都可以在Activiti中做！
 
 
 [[activiti.setup.database]]
@@ -102,7 +102,7 @@ org.activiti:activiti-engine:jar:5.17.0
 
 注意：只有使用了<<bpmnEmailTask,邮件任务>>才必须引入邮件依赖jar。
 
-所有依赖可以在All the dependencies can easily be downloaded using +mvn dependency:copy-dependencies+ on a module of the link:$$https://github.com/Activiti/Activiti$$[Activiti source code].
+所有依赖可以在link:$$https://github.com/Activiti/Activiti$$[Activiti source code]的模块中使用+mvn dependency:copy-dependencies+下载。
 
 
 [[getting.started.next.steps]]
