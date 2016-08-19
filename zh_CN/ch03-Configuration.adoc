@@ -173,7 +173,7 @@ ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemPr
 
 [[jndi_usage]]
 
-==== Usage
+==== 使用
 
 
 要将Activiti Explorer与Activiti Rest web应用从db.properties配置切换至JNDI数据源配置，请打开Spring主配置文件(activiti-webapp-explorer2/src/main/webapp/WEB-INF/activiti-standalone-context.xml与activiti-webapp-rest2/src/main/resources/activiti-context.xml)，并删除名为"dbProperties" 与"dataSource"的bean。然后增加下列bean：
@@ -304,14 +304,14 @@ activiti.{db}.{create|drop}.{type}.sql
 __db__为<<supporteddatabases,支持的数据库>>，而__type__为
 
 * *engine:* 引擎执行所需的表，必需。
-* *identity:* 存储用户、组、用户与组关系的表。这些表是可选的，但在使用引擎自带的默认认证管理时需要使用。
+* *identity:* 存储用户、组、用户与组关系的表。这些表是可选的，但在使用引擎自带的默认身份管理时需要使用。
 * *history:* 存储历史与审计信息的表。当历史级别设置为__none__时不需要。请注意不使用这些表会导致部分使用历史数据的功能失效（如任务备注）。
 
 **MySQL用户请注意：**低于5.6.4的MySQL版本不支持timestamps或包含毫秒精度的日期。更糟的是部分版本会在创建类似的列时抛出异常，而另一些版本则不会。当使用自动创建/升级时，引擎在执行时会自动修改DDL语句。当使用DDL文件方式建表时，可以使用通用版本，或使用文件名包含__mysql55__的特殊版本（用于5.6.4以下的任何版本）。特殊版本的文件中不会使用毫秒精度的列类型。
 
 具体地说，对于MySQL的版本：
 
-* *<5.6:* 不支持毫秒精度。可以使用DDL文件（使用包含__mysql55__的文件）。No millisecond precision available. DDL files available (look for files containing )。可以使用自动创建/升级。
+* *<5.6:* 不支持毫秒精度。可以使用DDL文件（使用包含__mysql55__的文件）。可以使用自动创建/升级。
 * *5.6.0 - 5.6.3:* 不支持毫秒精度。**不**可以使用自动创建/升级。建议升级为较新版本的数据库。如果确实需要，可以使用包含__mysql55__的DDL文件。
 * *5.6.4+:* 支持毫秒精度。可以使用DDL文件（默认的包含__mysql__的文件）。可以使用自动创建/升级。
 
@@ -322,29 +322,29 @@ __db__为<<supporteddatabases,支持的数据库>>，而__type__为
 [[database.tables.explained]]
 
 
-=== Database table names explained
+=== 数据库表名说明
 
-The database names of Activiti all start with *ACT_*. The second part is a two-character identification of the use case of the table. This use case will also roughly match the service API.
+Activiti的所有数据库表都以**ACT_**开头。第二部分是说明表用途的两字符标示符。服务API的命名也大略符合这个规则。
 
-* *ACT_RE_**: 'RE' stands for +repository+. Tables with this prefix contain 'static' information such as process definitions and process resources (images, rules, etc.).
-* *ACT_RU_**: 'RU' stands for +runtime+. These are the runtime tables that contain the runtime data of process instances, user tasks, variables, jobs, etc. Activiti only stores the runtime data during process instance execution, and removes the records when a process instance ends. This keeps the runtime tables small and fast.
-* *ACT_ID_**: 'ID' stands for +identity+. These tables contain identity information, such as users, groups, etc.
-* *ACT_HI_**: 'HI' stands for +history+. These are the tables that contain historic data, such as past process instances, variables, tasks, etc.
-* *ACT_GE_**: +general+ data, which is used in various use cases.
+* *ACT_RE_**: 'RE'代表++repository++。带有这个前缀的表包含“静态”信息，例如流程定义与流程资源（图片、规则等）。
+* *ACT_RU_**: 'RU'代表++runtime++。这些表存储运行时信息，例如流程实例、用户任务、变量、作业等。Activiti只在流程实例运行中保存运行时数据，并在流程实例结束时删除记录。这样保证运行时表小和快。
+* *ACT_ID_**: 'ID'代表++identity++。这些表包含身份信息，例如用户、组等。
+* *ACT_HI_**: 'HI'代表++history++。这些表存储历史数据，例如已完成的流程实例、变量、任务等。
+* *ACT_GE_**: 通用数据。用于不同场景下。
 
 
 [[databaseUpgrade]]
 
 
-=== Database upgrade
+=== 数据库升级
 
-Make sure you make a backup of your database (using your database backup capabilities) before you run an upgrade.
-
-
-By default, a version check will be performed each time a process engine is created. This typically happens once at boot time of your application or of the Activiti webapps. If the Activiti library notices a difference between the library version and the version of the Activiti database tables, then an exception is thrown.
+在升级前，请确保你已经（使用数据库的备份功能）备份了数据库。
 
 
-To upgrade, you have to start with putting the following configuration property in your activiti.cfg.xml configuration file:
+默认情况下，每次流程引擎创建时会进行版本检查，通常是在你的应用或者Activiti web应用启动的时候。如果Activiti库发现库版本与Activiti数据库表版本不同，会抛出异常。
+
+
+要进行升级，首先需要将下列配置参数放入你的activiti.cfg.xml配置文件：
 
 [source,xml,linenums]
 ----
@@ -359,18 +359,17 @@ To upgrade, you have to start with putting the following configuration property 
 </beans>
 ----
 
-*Also, include a suitable database driver for your database to the classpath.* Upgrade the Activiti libraries in your application. Or start up a new version of Activiti and point it to a database that contains an older version.  With +databaseSchemaUpdate+ set to +true+, Activiti will automatically upgrade the DB schema to the newer version the first time when it notices that libraries and DB schema are out of sync.
+**同时，在classpath中加上合适的数据库驱动。**升级你应用中的Activiti库，或者启动一个新版本的Activiti，并将它指向旧版本的数据库。将++databaseSchemaUpdate++设置为++true++。当Activiti发现库与数据库表结构不同步时，会自动将数据库表结构升级至新版本。
 
-*As an alternative you can also run the upgrade DDL statements.* It's also possible to run the upgrade database scripts, available on the Activiti downloads page.
+**你还可以运行升级DDL语句，也可以从Activiti下载页面获取升级数据库脚本并运行。
 
 [[jobExecutorConfiguration]]
 
-=== Job Executor and Async Executor (since version 5.17.0)
+=== 作业执行器与异步执行器（从5.17.0版本起）
 
-Starting from version 5.17.0 Activiti provides an Async executor in addition to the Job Executor. The Async executor is a more performant and more database friendly way of executing asynchronous jobs in the Activiti Engine.
-It's therefore recommended to switch to the Async executor. By default the old job executor is still used. More information can be found in the advanced section of the user guide.
+从5.17.0版本开始，在作业执行器之外，Activiti还提供了异步执行器。Activiti引擎可以通过它，以性能更好，也对数据库更友好的方式执行异步作业。
 
-Moreover, if running under Java EE 7, JSR-236 compliant +ManagedJobExecutor+ and +ManagedAsyncJobExecutor+ can be used for letting the container manage the threads. In order to enable them, the thread factory should be passed in the configuration as follows:
+此外，如果在Java EE 7下运行，容器还可以使用符合JSR-236标准的++ManagedJobExecutor++与++ManagedAsyncJobExecutor++来管理线程。要启用这个功能，需要在配置中如下加入线程工厂：
 
 [source,xml,linenums]
 ----
@@ -385,27 +384,25 @@ Moreover, if running under Java EE 7, JSR-236 compliant +ManagedJobExecutor+ and
 </bean>
 ----
 
-Both managed implementations fall back to their default counterparts if the thread factory is not specified.
+如果没有设置线程工厂，上述两个管理类都会退化为默认实现。
 
-=== Job executor activation
+=== 启用作业执行器
 
-The +JobExecutor+ is a component that manages a couple of threads to fire timers (and later also asynchronous messages). For unit testing scenarios, it is cumbersome to work with multiple threads. Therefore the API allows to query for (++ManagementService.createJobQuery++) and execute jobs (++ManagementService.executeJob++) through the API so that job execution can be controlled from within a unit test.  To avoid interference by the job executor, it can be turned off.
+++JobExecutor++是管理一组线程的组件，这些线程用于触发定时器（包括后续的异步消息）。在单元测试场景下，使用多线程会很笨重。因此API提供++ManagementService.createJobQuery++用于查询，以及++ManagementService.executeJob++用于执行作业。这样作业的执行就可以在单元测试内部控制。为了避免作业执行器的干扰，可以将它关闭。
 
-By default, the +JobExecutor+ is activated when the process engine boots. Specify
+默认情况下，++JobExecutor++在流程引擎启动时激活。当你不希望++JobExecutor++随流程引擎启动时，设置：
 
 [source,xml,linenums]
 ----
 <property name="jobExecutorActivate" value="false" />
 ----
 
-when you don't want the +JobExecutor+ to be activated upon booting the process engine.
 
-=== Async executor activation
+=== 启用异步执行器
 
-The +AsyncExecutor+ is a component that manages a thread pool to fire timers and other asynchronous tasks.
+++AsyncExecutor++是管理线程池的组件，这个线程池用于触发定时器与异步任务。
 
-By default, the +AsyncExecutor+ is not enabled and the JobExecutor is used due to legacy reasons. It's however recommended to use the new AsyncExecutor instead.
-This can be done by defining two properties
+默认情况下，由于历史原因，当使用++JobExecutor++时，++AsyncExecutor++不生效。然而我们建议使用新的++AsyncExecutor++代替++JobExecutor++，通过定义两个参数实现
 
 [source,xml,linenums]
 ----
@@ -413,23 +410,23 @@ This can be done by defining two properties
 <property name="asyncExecutorActivate" value="true" />
 ----
 
-The asyncExecutorEnabled property is to enable the Async executor instead of the old Job executor.
-The second property asyncExecutorActivate instructs the Activiti Engine to startup the Async executor thread pool at startup. 
+asyncExecutorEnabled参数用于启用异步执行器，代替老的作业执行器。
+第二个参数asyncExecutorActivate命令Activiti引擎在启动时启动异步执行器线程池。
 
 [[mailServerConfiguration]]
 
 
-=== Mail server configuration
+=== 配置邮件服务器
 
-Configuring a mail server is optional. Activiti supports sending e-mails in business processes. To actually send an e-mail, a valid SMTP mail server configuration is required. See the <<bpmnEmailTaskServerConfiguration,e-mail task>> for the configuration options.
+配置邮件服务器是可选的。Activiti支持在业务流程中发送电子邮件。发送电子邮件需要配置有效的SMTP邮件服务器。查看<<bpmnEmailTaskServerConfiguration,电子邮件任务>>了解配置选项。
 
 
 [[historyConfiguration]]
 
 
-=== History configuration
+=== 配置历史
 
-Customizing the configuration of history storage is optional. This allows you to tweak settings that influence the <<history,history capabilities>> of the engine. See <<historyConfig,history configuration>> for more details.
+可以选择自定义历史存储的配置。你可以通过调整配置影响<<history,历史功能>>。查看<<historyConfig,历史配置>>了解细节。
 
 [source,xml,linenums]
 ----
@@ -440,17 +437,17 @@ Customizing the configuration of history storage is optional. This allows you to
 [[exposingConfigurationBeans]]
 
 
-=== Exposing configuration beans in expressions and scripts
+=== 配置在表达式与脚本中暴露的bean
 
-By default, all beans that you specify in the +activiti.cfg.xml+ configuration or in your own Spring configuration file are available to expressions and in the scripts. If you want to limit the visibility of beans in your configuration file, you can configure a property called +beans+ in your process engine configuration. The beans property in +ProcessEngineConfiguration+ is a map. When you specify that property, only beans specified in that map will be visible to expressions and scripts.  The exposed beans will be exposed with the names as you specify in that map.
+默认情况下，所有通过++activiti.cfg.xml++或你自己的Spring配置文件声明的bean，都可以在表达式与脚本中使用。如果你希望限制配置文件中bean的可见性，可以使用流程引擎配置的++beans++参数。++ProcessEngineConfiguration++中的++beans++参数是一个map。当你配置这个参数时，只有在这个map中声明的bean可以在表达式与脚本中使用。bean会使用你在map中指定的名字暴露。
 
 
 [[processDefinitionCacheConfiguration]]
 
 
-=== Deployment cache configuration
+=== 配置部署缓存
 
-All process definition are cached (after they're parsed) to avoid hitting the database every time a process definition is needed and because process definition data doesn't change. By default, there is no limit on this cache. To limit the process definition cache, add following property
+鉴于流程定义信息不会改变，为了避免每次使用流程定义时都读取数据库，所有的流程定义都会（在解析后）被缓存。默认情况下，这个缓存没有限制。要限制流程定义缓存，加上如下的参数
 
 [source,xml,linenums]
 ----
@@ -458,9 +455,9 @@ All process definition are cached (after they're parsed) to avoid hitting the da
 ----
 
 
-Setting this property will swap the default hashmap cache with a LRU cache that has the provided hard limit. Of course, the 'best' value of this property depends on the total amount of process definitions stored and the number of process definitions actually used at runtime by all the runtime process instances.
+设置这个参数，会将默认的hashmap替换为LRU缓存，以进行限制。当然，参数的“最佳”取值，取决于总的流程定义数量，以及实际使用的流程定义数量。
 
-You can also inject your own cache implementation. This must be a bean that implements the org.activiti.engine.impl.persistence.deploy.DeploymentCache interface:
+你也可以注入自己的缓存实现。它必须是一个实现了++org.activiti.engine.impl.persistence.deploy.DeploymentCache++接口的bean：
 
 [source,xml,linenums]
 ----
@@ -470,19 +467,19 @@ You can also inject your own cache implementation. This must be a bean that impl
 ----
 
 
-There is a similar property called +knowledgeBaseCacheLimit+ and +knowledgeBaseCache+ for configuring the rules cache. This is only needed when you use the rules task in your processes.
+配置规则缓存可以使用类似的名为++knowledgeBaseCacheLimit++与++knowledgeBaseCache++的参数。只有在流程中使用规则任务时才需要设置。
 
 
 [[loggingConfiguration]]
 
 
-=== Logging
+=== 日志
 
-As of Activiti 5.12, SLF4J is used as logging framework, replacing the previous used java.util.logging. All logging (activiti, spring, mybatis, ...) is routed through SLF4J and allows for selecting the logging-implementation of your choice.
+自Activiti 5.12版本起，使用SLF4J作为日志框架，替代了之前使用的java.util.logging。所有日志(activiti, spring, mybatis, ...)通过SLF4J路由，并允许你自行选择日志实现。
 
-*By default no SFL4J-binding jar is present in the activiti-engine dependencies, this should be added in your project in order to use the logging framework of your choice.* If no implementation jar is added, SLF4J will use a NOP-logger, not logging anything at all, other than a warning that nothing will be logged. For more info on these bindings link:$$http://www.slf4j.org/codes.html#StaticLoggerBinder$$[http://www.slf4j.org/codes.html#StaticLoggerBinder].
+**默认情况下，Activiti引擎依赖不会提供SFL4J绑定jar。你需要自行将其加入你的项目，以便使用所选的日志框架。**如果没有加入实现jar，SLF4J会使用NOP-logger。这时除了一条警告外，任何日志都不会记录。可以从link:$$http://www.slf4j.org/codes.html#StaticLoggerBinder$$[http://www.slf4j.org/codes.html#StaticLoggerBinder]获取关于绑定的更多信息。
 
-With Maven, add for example a dependency like this (here using log4j), note that you still need to add a version:
+使用Maven可以添加类似这样（这里使用log4j）的依赖，请注意你还需要加上版本：
 
 [source,xml,linenums]
 ----
@@ -493,7 +490,7 @@ With Maven, add for example a dependency like this (here using log4j), note that
 ----
 
 
-The activiti-explorer and activiti-rest webapps are configured to use Log4j-binding. Log4j is also used when running the tests for all the activiti-* modules.
+activiti-explorer与activiti-rest web应用配置为使用Log4j绑定。所有的activiti-*模块运行测试时也会使用Log4j。
 
 
 *Important note when using a container with commons-logging in the classpath:* In order to route the spring-logging through SLF4J, a bridge is used (see link:$$http://www.slf4j.org/legacy.html#jclOverSLF4J$$[http://www.slf4j.org/legacy.html#jclOverSLF4J]). If your container provides a commons-logging implementation, please follow directions on this page: link:$$http://www.slf4j.org/codes.html#release$$[http://www.slf4j.org/codes.html#release] to ensure stability.
