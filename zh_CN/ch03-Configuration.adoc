@@ -166,10 +166,9 @@ ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemPr
 === JNDI数据源配置
 
 
-By default, the database configuration for Activiti is contained within the db.properties files in the WEB-INF/classes of each web application. This isn't always ideal because it
-requires users to either modify the db.properties in the Activiti source and recompile the war file, or explode the war and modify the db.properties on every deployment.
+默认情况下，Activiti的数据库配置保存在每个web应用WEB-INF/classes目录下的db.properties文件中。有时这样并不合适，因为这需要用户修改Activiti源码中的db.properties文件并重新编译war包，或者在部署后解开war包并修改db.properties文件。
 
-By using JNDI (Java Naming and Directory Interface) to obtain the database connection, the connection is fully managed by the Servlet Container and the configuration can be managed outside the war deployment. This also allows more control over the connection parameters than what is provided by the db.properties file.
+通过使用JNDI（Java Naming and Directory Interface，Java命名和目录接口）获取数据库连接，连接完全由Servlet容器管理，配置也可以在war部署之外进行管理。同时也比db.properties提供了更多控制连接的参数。
 
 
 [[jndi_usage]]
@@ -177,7 +176,7 @@ By using JNDI (Java Naming and Directory Interface) to obtain the database conne
 ==== Usage
 
 
-To switch the Activiti Explorer and Activiti Rest web apps from db.properties configuration to JNDI datasource configuration, open the primary Spring configuration files (activiti-webapp-explorer2/src/main/webapp/WEB-INF/activiti-standalone-context.xml and activiti-webapp-rest2/src/main/resources/activiti-context.xml), and delete the beans named "dbProperties" and "dataSource". Then, add the following bean:
+要将Activiti Explorer与Activiti Rest web应用从db.properties配置切换至JNDI数据源配置，请打开Spring主配置文件(activiti-webapp-explorer2/src/main/webapp/WEB-INF/activiti-standalone-context.xml与activiti-webapp-rest2/src/main/resources/activiti-context.xml)，并删除名为"dbProperties" 与"dataSource"的bean。然后增加下列bean：
 
 [source,xml,linenums]
 ----
@@ -187,7 +186,7 @@ To switch the Activiti Explorer and Activiti Rest web apps from db.properties co
 
 ----
 
-Next, we need to add context.xml files that contain the default H2 configuration. These will be overridden by your JNDI configuration, if it exists.  For Activiti Explorer, replace the file at activiti-webapp-explorer2/src/main/webapp/META-INF/context.xml with the following:
+接下来我们需要新增context.xml文件，其中包含默认的H2配置。也可以用你自己的的JNDI配置覆盖它。对于Activiti Explorer，用下列文件替换activiti-webapp-explorer2/src/main/webapp/META-INF/context.xml：
 
 [source,xml,linenums]
 ----
@@ -209,7 +208,7 @@ Next, we need to add context.xml files that contain the default H2 configuration
 </Context>
 ----
 
-For the Activiti REST webapp, add activiti-webapp-rest2/src/main/webapp/META-INF/context.xml containing the following:
+对于Activiti REST web应用，新增activiti-webapp-rest2/src/main/webapp/META-INF/context.xml文件，包含下列配置：
 
 [source,xml,linenums]
 ----
@@ -232,17 +231,17 @@ For the Activiti REST webapp, add activiti-webapp-rest2/src/main/webapp/META-INF
 </Context>
 ----
 
-As an optional step, you can now delete the unused db.properties files in both the Activiti Explorer and Activiti REST webapp projects.
+可选步骤，可以删除Activiti Explorer与Activiti REST web应用中无用的db.properties文件。
 
 
 [[jndi_configuration]]
 
-==== Configuration
+==== 配置
 
 
-Configuration of the JNDI datasource will differ depending on what servlet container application you are using. The instructions below will work for Tomcat, but for other container applications, please refer to the documentation for your container app.
+根据你使用的servlet容器应用不同，配置JNDI数据源的方式也不同。下面的介绍用于Tomcat，对于其他容器应用，请参考对应的文档。
 
-If using Tomcat, the JNDI resource is configured within $CATALINA_BASE/conf/[enginename]/[hostname]/[warname].xml (for Activiti Explorer this will usually be $CATALINA_BASE/conf/Catalina/localhost/activiti-explorer.xml). The default context is copied from the Activiti war file when the application is first deployed, so if it already exists, you will need to replace it. To change the JNDI resource so that the application connects to MySQL instead of H2, for example, change the file to the following:
+Tomcat的JNDI资源配置在$CATALINA_BASE/conf/[enginename]/[hostname]/[warname].xml (对于Activiti Explorer通常会是$CATALINA_BASE/conf/Catalina/localhost/activiti-explorer.xml)。当应用第一次部署时，默认会从Activiti war包中复制context.xml。所以如果存在这个文件则需要替换。例如，如果需要将JNDI资源修改为应用连接MySQL而不是H2，按照下列修改文件：
 
 [source,xml,linenums]
 ----
@@ -268,56 +267,56 @@ If using Tomcat, the JNDI resource is configured within $CATALINA_BASE/conf/[eng
 [[supporteddatabases]]
 
 
-=== Supported databases
+=== 支持的数据库
 
-Listed below are the types (case sensitive!) that Activiti uses to refer to databases.
+下面列出Activiti指定的数据库类型（区分大小写！）。
 
 [[databaseTypes]]
 [options="header"]
 |===============
-|Activiti database type|Example JDBC URL|Notes
-|h2|jdbc:h2:tcp://localhost/activiti|Default configured database
-|mysql|jdbc:mysql://localhost:3306/activiti?autoReconnect=true|Tested using mysql-connector-java database driver
+|Activiti数据库类型|示例JDBC URL|备注
+|h2|jdbc:h2:tcp://localhost/activiti|默认配置的数据库
+|mysql|jdbc:mysql://localhost:3306/activiti?autoReconnect=true|已使用mysql-connector-java数据库驱动测试
 |oracle|jdbc:oracle:thin:@localhost:1521:xe|
 |postgres|jdbc:postgresql://localhost:5432/activiti|
 |db2|jdbc:db2://localhost:50000/activiti|
-|mssql|jdbc:sqlserver://localhost:1433;databaseName=activiti (jdbc.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver) _OR_ jdbc:jtds:sqlserver://localhost:1433/activiti (jdbc.driver=net.sourceforge.jtds.jdbc.Driver)|Tested using Microsoft JDBC Driver 4.0 (sqljdbc4.jar) and JTDS Driver
+|mssql|jdbc:sqlserver://localhost:1433;databaseName=activiti (jdbc.driver=com.microsoft.sqlserver.jdbc.SQLServerDriver) _OR_ jdbc:jtds:sqlserver://localhost:1433/activiti (jdbc.driver=net.sourceforge.jtds.jdbc.Driver)|已使用Microsoft JDBC Driver 4.0 (sqljdbc4.jar)与JTDS Driver测试
 |===============
 
 
 [[creatingDatabaseTable]]
 
-=== Creating the database tables
+=== 创建数据库表
 
-The easiest way to create the database tables for your database is to:
+在你的数据库中创建标的最简单方法是：
 
-* Add the activiti-engine jars to your classpath
-* Add a suitable database driver
-* Add an Activiti configuration file (__activiti.cfg.xml__) to your classpath, pointing to your database (see <<databaseConfiguration,database configuration section>>)
-* Execute the main method of the _DbSchemaCreate_ class
+* 在classpath中增加activiti-engine jar
+* 增加合适的数据库驱动
+* 在classpath中增加Activiti配置文件(__activiti.cfg.xml__)，指向你的数据库(参考<<databaseConfiguration,数据库配置>>)
+* 执行__DbSchemaCreate__类的main方法
 
-However, often only database administrators can execute DDL statements on a database. On a production system, this is also the wisest of choices. The SQL DDL statements can be found on the Activiti downloads page or inside the Activiti distribution folder, in the +database+ subdirectory. The scripts are also in the engine jar (__activiti-engine-x.jar__), in the package __org/activiti/db/create__ (the __drop__ folder contains the drop statements). The SQL files are of the form
+然而，通常只有数据库管理员可以在数据库中执行DDL语句，在生产环境中这也是最明智的选择。DDL的SQL脚本可以在Activiti下载页面或Activiti发布目录中找到，位于++database++子目录。引擎jar (__activiti-engine-x.jar__)的__org/activiti/db/create__包中也有一份(__drop__目录存放删除脚本)。SQL文件的格式为：
 
 ----
 activiti.{db}.{create|drop}.{type}.sql
 ----
 
-Where __db__ is any of the <<supporteddatabases,supported databases>> and __type__ is
+__db__为<<supporteddatabases,支持的数据库>>，而__type__为
 
-* *engine:* the tables needed for engine execution. Required.
-* *identity:* the tables containing users, groups and memberships of users to groups. These tables are optional and should be used when using the default identity management as shipped with the engine.
-* *history:* the tables that contain the history and audit information. Optional: not needed when history level is set to _none_. Note that this will also disable some features (such as commenting on tasks) which store the data in the history database.
+* *engine:* 引擎执行所需的表，必需。
+* *identity:* 存储用户、组、用户与组关系的表。这些表是可选的，但在使用引擎自带的默认认证管理时需要使用。
+* *history:* 存储历史与审计信息的表。当历史级别设置为__none__时不需要。请注意不使用这些表会导致部分使用历史数据的功能失效（如任务备注）。
 
-*Note for MySQL users:* MySQL version lower than 5.6.4 has no support for timestamps or dates with millisecond precision. To make things even worse, some version will throw an exception when trying to create such a column but other versions don't. When doing auto-creation/upgrade, the engine will change the DDL when executing it. When using the DDL file approach, both a regular version and a special file with _mysql55_ in it are available (this applies on anything lower than 5.6.4). This latter file will have column types with no millisecond precision in it.
+**MySQL用户请注意：**低于5.6.4的MySQL版本不支持timestamps或包含毫秒精度的日期。更糟的是部分版本会在创建类似的列时抛出异常，而另一些版本则不会。当使用自动创建/升级时，引擎在执行时会自动修改DDL语句。当使用DDL文件方式建表时，可以使用通用版本，或使用文件名包含__mysql55__的特殊版本（用于5.6.4以下的任何版本）。特殊版本的文件中不会使用毫秒精度的列类型。
 
-Concretely, the following applies for MySQL version
+具体地说，对于MySQL的版本：
 
-* *<5.6:* No millisecond precision available. DDL files available (look for files containing __mysql55__). Auto creation/update will work out of the box.
-* *5.6.0 - 5.6.3:* No millisecond precision available. Auto creation/update will NOT work. It is advised to upgrade to a newer database version anyway. DDL files for _mysql 5.5_ could be used if really needed.
-* *5.6.4+:* Millisecond precision available. DDL files available (default file containing __mysql__). Auto creation/update works out of the box.
+* *<5.6:* 不支持毫秒精度。可以使用DDL文件（使用包含__mysql55__的文件）。No millisecond precision available. DDL files available (look for files containing )。可以使用自动创建/升级。
+* *5.6.0 - 5.6.3:* 不支持毫秒精度。**不**可以使用自动创建/升级。建议升级为较新版本的数据库。如果确实需要，可以使用包含__mysql55__的DDL文件。
+* *5.6.4+:* 支持毫秒精度。可以使用DDL文件（默认的包含__mysql__的文件）。可以使用自动创建/升级。
 
 
-Do note that in the case of upgrading the MySQL database later on and the Activiti tables are already created/upgraded, the column type change will have to be done manually!
+请注意在Activiti表已经创建/升级后，更新MySQL数据库，则需要手工修改列类型！
 
 
 [[database.tables.explained]]
