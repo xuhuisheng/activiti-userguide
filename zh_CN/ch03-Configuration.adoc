@@ -1,8 +1,8 @@
-== 配置
+== 配置 Configuration
 
 [[configuration]]
 
-=== 创建ProcessEngine
+=== 创建ProcessEngine Creating a ProcessEngine
 
 
 Activiti流程引擎通过名为++activiti.cfg.xml++的XML文件进行配置。请注意这种方式与<<springintegration,使用Spring创建流程引擎>>**不**一样。
@@ -102,7 +102,7 @@ ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemPr
 
 [[databaseConfiguration]]
 
-=== 数据库配置
+=== 数据库配置 Database configuration
 
 
 有两种方式配置Activiti引擎使用的数据库。第一种方式是定义数据库的JDBC参数：
@@ -163,7 +163,7 @@ ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemPr
 
 [[jndiDatasourceConfig]]
 
-=== JNDI数据源配置
+=== JNDI数据源配置 JNDI Datasource Configuration
 
 
 默认情况下，Activiti的数据库配置保存在每个web应用WEB-INF/classes目录下的db.properties文件中。有时这样并不合适，因为这需要用户修改Activiti源码中的db.properties文件并重新编译war包，或者在部署后解开war包并修改db.properties文件。
@@ -173,7 +173,7 @@ ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemPr
 
 [[jndi_usage]]
 
-==== 使用
+==== 使用 Usage
 
 
 要将Activiti Explorer与Activiti Rest web应用从db.properties配置切换至JNDI数据源配置，请打开Spring主配置文件(activiti-webapp-explorer2/src/main/webapp/WEB-INF/activiti-standalone-context.xml与activiti-webapp-rest2/src/main/resources/activiti-context.xml)，并删除名为"dbProperties" 与"dataSource"的bean。然后增加下列bean：
@@ -236,7 +236,7 @@ ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemPr
 
 [[jndi_configuration]]
 
-==== 配置
+==== 配置 Configuration
 
 
 根据你使用的servlet容器应用不同，配置JNDI数据源的方式也不同。下面的介绍用于Tomcat，对于其他容器应用，请参考对应的文档。
@@ -267,7 +267,7 @@ Tomcat的JNDI资源配置在$CATALINA_BASE/conf/[enginename]/[hostname]/[warname
 [[supporteddatabases]]
 
 
-=== 支持的数据库
+=== 支持的数据库 Supported databases
 
 下面列出Activiti指定的数据库类型（区分大小写！）。
 
@@ -286,7 +286,7 @@ Tomcat的JNDI资源配置在$CATALINA_BASE/conf/[enginename]/[hostname]/[warname
 
 [[creatingDatabaseTable]]
 
-=== 创建数据库表
+=== 创建数据库表 Creating the database tables
 
 在你的数据库中创建标的最简单方法是：
 
@@ -322,7 +322,7 @@ __db__为<<supporteddatabases,支持的数据库>>，而__type__为
 [[database.tables.explained]]
 
 
-=== 数据库表名说明
+=== 数据库表名说明 Database table names explained
 
 Activiti的所有数据库表都以**ACT_**开头。第二部分是说明表用途的两字符标示符。服务API的命名也大略符合这个规则。
 
@@ -336,7 +336,7 @@ Activiti的所有数据库表都以**ACT_**开头。第二部分是说明表用�
 [[databaseUpgrade]]
 
 
-=== 数据库升级
+=== 数据库升级 Database upgrade
 
 在升级前，请确保你已经（使用数据库的备份功能）备份了数据库。
 
@@ -361,11 +361,11 @@ Activiti的所有数据库表都以**ACT_**开头。第二部分是说明表用�
 
 **同时，在classpath中加上合适的数据库驱动。**升级你应用中的Activiti库，或者启动一个新版本的Activiti，并将它指向旧版本的数据库。将++databaseSchemaUpdate++设置为++true++。当Activiti发现库与数据库表结构不同步时，会自动将数据库表结构升级至新版本。
 
-**你还可以运行升级DDL语句，也可以从Activiti下载页面获取升级数据库脚本并运行。
+**你还可以直接运行升级DDL语句**，也可以从Activiti下载页面获取升级数据库脚本并运行。
 
 [[jobExecutorConfiguration]]
 
-=== 作业执行器（Job Executor）与异步执行器（Async Executor）（从5.17.0版本起）
+=== 作业执行器与异步执行器（从5.17.0版本起） Job Executor and Async Executor (since version 5.17.0)
 
 从5.17.0版本开始，在作业执行器之外，Activiti还提供了异步执行器。Activiti引擎可以通过它，以性能更好，也对数据库更友好的方式执行异步作业。
 
@@ -386,7 +386,7 @@ Activiti的所有数据库表都以**ACT_**开头。第二部分是说明表用�
 
 如果没有设置线程工厂，上述两个managedxx类都会退化为默认实现（非managed版本）。
 
-=== 启用作业执行器
+=== 启用作业执行器 Job executor activation
 
 ++JobExecutor++是管理一组线程的组件，这些线程用于触发定时器（包括后续的异步消息）。在单元测试场景下，使用多线程会很笨重。因此API提供++ManagementService.createJobQuery++用于查询，以及++ManagementService.executeJob++用于执行作业。这样作业的执行就可以在单元测试内部控制。为了避免作业执行器的干扰，可以将它关闭。
 
@@ -398,7 +398,7 @@ Activiti的所有数据库表都以**ACT_**开头。第二部分是说明表用�
 ----
 
 
-=== 启用异步执行器
+=== 启用异步执行器 Async executor activation
 
 ++AsyncExecutor++是管理线程池的组件，这个线程池用于触发定时器与异步任务。
 
@@ -416,7 +416,7 @@ asyncExecutorEnabled参数用于启用异步执行器，代替老的作业执行
 [[mailServerConfiguration]]
 
 
-=== 配置邮件服务器
+=== 配置邮件服务器 Mail server configuration
 
 配置邮件服务器是可选的。Activiti支持在业务流程中发送电子邮件。发送电子邮件需要配置有效的SMTP邮件服务器。查看<<bpmnEmailTaskServerConfiguration,电子邮件任务>>了解配置选项。
 
@@ -424,7 +424,7 @@ asyncExecutorEnabled参数用于启用异步执行器，代替老的作业执行
 [[historyConfiguration]]
 
 
-=== 配置历史
+=== 配置历史 History configuration
 
 可以选择自定义历史存储的配置。你可以通过调整配置影响<<history,历史功能>>。查看<<historyConfig,历史配置>>了解细节。
 
@@ -437,7 +437,7 @@ asyncExecutorEnabled参数用于启用异步执行器，代替老的作业执行
 [[exposingConfigurationBeans]]
 
 
-=== 配置在表达式与脚本中暴露的bean
+=== 配置在表达式与脚本中暴露的bean Exposing configuration beans in expressions and scripts
 
 默认情况下，所有通过++activiti.cfg.xml++或你自己的Spring配置文件声明的bean，都可以在表达式与脚本中使用。如果你希望限制配置文件中bean的可见性，可以使用流程引擎配置的++beans++参数。++ProcessEngineConfiguration++中的++beans++参数是一个map。当你配置这个参数时，只有在这个map中声明的bean可以在表达式与脚本中使用。bean会使用你在map中指定的名字暴露。
 
@@ -445,7 +445,7 @@ asyncExecutorEnabled参数用于启用异步执行器，代替老的作业执行
 [[processDefinitionCacheConfiguration]]
 
 
-=== 配置部署缓存
+=== 配置部署缓存 Deployment cache configuration
 
 鉴于流程定义信息不会改变，为了避免每次使用流程定义时都读取数据库，所有的流程定义都会（在解析后）被缓存。默认情况下，这个缓存没有限制。要限制流程定义缓存，加上如下的参数
 
@@ -467,13 +467,13 @@ asyncExecutorEnabled参数用于启用异步执行器，代替老的作业执行
 ----
 
 
-配置规则缓存可以使用类似的名为++knowledgeBaseCacheLimit++与++knowledgeBaseCache++的参数。只有在流程中使用规则任务时才需要设置。
+配置规则缓存(rules cache)可以使用类似的名为++knowledgeBaseCacheLimit++与++knowledgeBaseCache++的参数。只有在流程中使用规则任务(rules task)时才需要设置。
 
 
 [[loggingConfiguration]]
 
 
-=== 日志
+=== 日志 Logging
 
 自Activiti 5.12版本起，使用SLF4J作为日志框架，替代了之前使用的java.util.logging。所有日志(activiti, spring, mybatis, ...)通过SLF4J路由，并允许你自行选择日志实现。
 
@@ -493,7 +493,7 @@ asyncExecutorEnabled参数用于启用异步执行器，代替老的作业执行
 activiti-explorer与activiti-rest web应用配置为使用Log4j绑定。所有的activiti-*模块运行测试时也会使用Log4j。
 
 
-**重要提示：当使用classpath中带有commons-logging的容器时：**为了将spring的日志路由至SLF4j，需要使用桥接（参考link:$$http://www.slf4j.org/legacy.html#jclOverSLF4J$$[http://www.slf4j.org/legacy.html#jclOverSLF4J]）。如果你的容提起恭了commons-logging实现，请按照link:$$http://www.slf4j.org/codes.html#release$$[http://www.slf4j.org/codes.html#release]页面的指示来保证稳定性。
+**重要提示：当使用classpath中带有commons-logging的容器时：**为了将spring的日志路由至SLF4j，需要使用桥接（参考link:$$http://www.slf4j.org/legacy.html#jclOverSLF4J$$[http://www.slf4j.org/legacy.html#jclOverSLF4J]）。如果你的容器提供了commons-logging实现，请按照link:$$http://www.slf4j.org/codes.html#release$$[http://www.slf4j.org/codes.html#release]页面的指示来保证稳定性。
 
 使用Maven的示例（省略了版本）：
 
@@ -509,7 +509,7 @@ activiti-explorer与activiti-rest web应用配置为使用Log4j绑定。所有�
 [[MDC]]
 
 
-=== 映射诊断上下文（MDC）
+=== 映射诊断上下文 Mapped Diagnostic Contexts
 
 从5.13版本开始，Activiti支持SLF4J的映射诊断上下文特性。与需要日志记录的信息一起，下列基本信息也会传递给底层日志记录器：
 
@@ -530,7 +530,7 @@ activiti-explorer与activiti-rest web应用配置为使用Log4j绑定。所有�
 [[eventDispatcher]]
 
 
-=== 事件处理器
+=== 事件处理器 Event handlers
 
 Activiti 5.15引入了事件机制。它可以让你在引擎中发生多种事件的时候得到通知。查看<<eventDispatcherEventTypes,所有支持的事件类型>>了解可用的事件。
 
@@ -542,9 +542,9 @@ Activiti 5.15引入了事件机制。它可以让你在引擎中发生多种事�
 [[eventDispatcherListener]]
 
 
-==== 事件监听器实现
+==== 事件监听器实现 Event listener implementation
 
-对事件监听器的唯一要求，是要实现(implements) ++org.activiti.engine.delegate.event.ActivitiEventListener++。下面是一个监听器实现的例子，它将接收的所有事件打印至标准输出，并对作业执行相关的事件特别处理。：
+对事件监听器的唯一要求，是要实现++org.activiti.engine.delegate.event.ActivitiEventListener++接口。下面是一个监听器实现的例子，它将接收的所有事件打印至标准输出，并对作业执行相关的事件特别处理。：
 
 [source,java,linenums]
 ----
@@ -587,11 +587,11 @@ Activiti提供了少量基础实现，以简化常用的事件监听器用例。
 [[eventDispatcherConfiguration]]
 
 
-==== 配置与安装
+==== 配置与安装 Configuration and setup
 
 在流程引擎中配置的事件监听器会在流程引擎启动时生效，引擎重启后也会保持有效。
 
-++eventListeners++参数配置为++org.activiti.engine.delegate.event.ActivitiEventListener++实例的列表(list)。与他处一样，你可以声明内联bean定义，也可以用++ref++指向已有的bean。下面的代码片段在配置中增加了一个事件监听器，无论任何类型的事件分发时，都会得到通知：
+++eventListeners++参数配置为++org.activiti.engine.delegate.event.ActivitiEventListener++实例的列表(list)。与其他地方一样，你可以声明内联bean定义，也可以用++ref++指向已有的bean。下面的代码片段在配置中增加了一个事件监听器，无论任何类型的事件分发时，都会得到通知：
 
 [source,xml,linenums]
 ----
@@ -624,12 +624,12 @@ Activiti提供了少量基础实现，以简化常用的事件监听器用例。
 ----
 
 
-事件分发的顺序由加入监听器的顺序决定。首先，所有(++eventListeners++参数定义的)普通事件监听器按照他们在++list++里的顺序被调用；之后，如果某类型的事件被分发，则(++typedEventListeners++ 参数定义的)该类型监听器被调用。
+事件分发的顺序由加入监听器的顺序决定。首先，所有普通(++eventListeners++参数定义的)事件监听器按照他们在++list++里的顺序被调用；之后，如果某类型的事件被分发，则该类型(++typedEventListeners++ 参数定义的)监听器被调用。
 
 
 [[eventDispatcherConfigurationRuntime]]
 
-==== 在运行时增加监听器
+==== 在运行时增加监听器 Adding listeners at runtime
 
 可以使用API(++RuntimeService++)为引擎增加或删除额外的事件监听器：
 
@@ -662,14 +662,14 @@ void addEventListener(ActivitiEventListener listenerToAdd, ActivitiEventType... 
 [[eventDispatcherConfigurationProcessDefinition]]
 
 
-==== 为流程定义增加监听器
+==== 为流程定义增加监听器 Adding listeners to process definitions
 
 可以为某一流程定义增加监听器。只有与该流程定义相关，或使用该流程定义启动的流程实例相关的事件，才会调用这个监听器。监听器实现可以用完全限定类名（fully qualified classname）定义；也可以定义为表达式，该表达式能被解析为实现监听器接口的bean；也可以配置为抛出消息（message）/信号（signal）/错误（error）的BPMN事件。
 
 
-===== 执行用户定义逻辑的监听器
+===== 执行用户定义逻辑的监听器 Listeners executing user-defined logic
 
-下面的代码片段为流程定义增加了2个监听器。第一个监听器接收任何类型的事件，使用完全限定类名定义。第二个监听器器只在作业成功执行或失败时被通知，使用流程引擎配置中++beans++参数定义的bean作为监听器。
+下面的代码片段为流程定义增加了2个监听器。第一个监听器接收任何类型的事件，使用完全限定类名定义。第二个监听器只在作业成功执行或失败时被通知，使用流程引擎配置中++beans++参数定义的bean作为监听器。
 
 [source,xml,linenums]
 ----
@@ -684,7 +684,7 @@ void addEventListener(ActivitiEventListener listenerToAdd, ActivitiEventType... 
 </process>
 ----
 
-实体相关的事件也可以在流程定义中增加监听器，只有在特定实体类型的事件发生时得到通知。下面的代码片段展示了如何进行。可以使用实体的所有（第一个例子）事件，或只使用实体的特定类型（第二个例子）事件。
+实体相关的事件也可以在流程定义中增加监听器，只有在特定实体类型的事件发生时得到通知。下面的代码片段展示了如何设置。可以使用实体的所有（第一个例子）事件，或只使用实体的特定类型（第二个例子）事件。
 
 [source,xml,linenums]
 ----
@@ -703,7 +703,7 @@ void addEventListener(ActivitiEventListener listenerToAdd, ActivitiEventType... 
 
 
 
-===== 抛出BPMN事件的监听器
+===== 抛出BPMN事件的监听器 Listeners throwing BPMN events
 
 <<experimental, [试验功能] >>
 
@@ -747,22 +747,22 @@ void addEventListener(ActivitiEventListener listenerToAdd, ActivitiEventType... 
 </process>
 ----
 
-如果需要使用额外的逻辑判断是否需要跑出BPMN事件，可以扩展Activiti提供的监听器类。通过在你的子类中覆盖++isValidEvent(ActivitiEvent event)++，可以阻止抛出BPMN事件。相关的类为++org.activiti.engine.test.api.event.SignalThrowingEventListenerTest++, ++org.activiti.engine.impl.bpmn.helper.MessageThrowingEventListener++与++org.activiti.engine.impl.bpmn.helper.ErrorThrowingEventListener++.
+如果需要使用额外的逻辑判断是否需要抛出BPMN事件，可以扩展Activiti提供的监听器类。通过在你的子类中覆盖++isValidEvent(ActivitiEvent event)++，可以阻止抛出BPMN事件。相关的类为++org.activiti.engine.test.api.event.SignalThrowingEventListenerTest++, ++org.activiti.engine.impl.bpmn.helper.MessageThrowingEventListener++与++org.activiti.engine.impl.bpmn.helper.ErrorThrowingEventListener++.
 
 
-===== 关于流程定义监听器的说明
+===== 关于流程定义监听器的说明 Notes on listeners on a process-definition
 
-* 事件监听器只能作为++extensionElements++的子元素，声明在++process++元素上。不能在个别活动（activity）上定义监听器。
-* ++delegateExpression++中的表达式，与其他表达式（例如在网关中）不一样，不可以访问执行上下文。只能够引用在流程引擎配置中++beans++参数定义的bean，或是使用spring（且没有定义beans参数）时，引用任何实现了监听器接口的spring bean。
+* 事件监听器只能作为++extensionElements++的子元素，声明在++process++元素上。不能在个别节点（activity）上定义（事件）监听器。
+* ++delegateExpression++中的表达式，与其他表达式（例如在网关中的）不一样，不可以访问执行上下文。只能够引用在流程引擎配置中++beans++参数定义的bean，或是使用spring（且没有定义beans参数）时，引用任何实现了监听器接口的spring bean。
 * 使用监听器的++class++属性时，只会创建唯一一个该类的实例。请确保监听器实现不依赖于成员变量，或确保多线程/上下文的使用安全。
 * 如果++events++属性使用了不合法的事件类型，或者使用了不合法的++throwEvent++值，会在流程定义部署时抛出异常（导致部署失败）。如果++class++或++delegateExecution++指定了不合法的值（不存在的类，不存在的bean引用，或者代理类没有实现监听器接口），在流程启动（或该流程定义的第一个有效事件分发给这个监听器）时，会抛出异常。请确保引用的类在classpath中，并且保证表达式能够解析为有效的实例。
 
 
 [[eventDispatcherCustomEvents]]
 
-==== 通过API分发事件
+==== 通过API分发事件 Dispatching events through API
 
-我们通过API提供事件分发机制，使你可以向任何在引擎中注册的监听器分发自定义事件。建议（但不强制）只分发类型为++CUSTOM++的++ActivitiEvents++。可以使用++RuntimeService++分发事件：
+我们通过API提供事件分发机制，可以向任何在引擎中注册的监听器分发自定义事件。建议（但不强制）只分发类型为++CUSTOM++的++ActivitiEvents++。可以使用++RuntimeService++分发事件：
 
 [source,java,linenums]
 ----
@@ -780,7 +780,7 @@ void addEventListener(ActivitiEventListener listenerToAdd, ActivitiEventType... 
 [[eventDispatcherEventTypes]]
 
 
-==== 支持的事件类型
+==== 支持的事件类型 Supported event types
 
 下表列出引擎中的所有事件类型。每种类型对应++org.activiti.engine.delegate.event.ActivitiEventType++中的一个枚举值。
 
@@ -790,42 +790,42 @@ void addEventListener(ActivitiEventListener listenerToAdd, ActivitiEventType... 
 |===============
 |Event name|Description|Event classes
 |ENGINE_CREATED|本监听器附着的流程引擎已经创建，并可以响应API调用。|+org.activiti...ActivitiEvent+
-|ENGINE_CLOSED|本监听器附着的流程引擎已经关闭，对该引擎的API调用不再可用。|+org.activiti...ActivitiEvent+
+|ENGINE_CLOSED|本监听器附着的流程引擎已经关闭，不能再对该引擎的进行API调用。|+org.activiti...ActivitiEvent+
 |ENTITY_CREATED|新的实体已经创建。该实体包含在本事件里。|+org.activiti...ActivitiEntityEvent+
-|ENTITY_INITIALIZED|新的实体已经创建并完全初始化。如果任何子实体作为该实体的一部分被创建，本事件会在子实体创建/初始化后触发，与++$$ENTITY_CREATE$$++事件相反。|+org.activiti...ActivitiEntityEvent+
+|ENTITY_INITIALIZED|新的实体已经创建并完全初始化。如果任何子实体作为该实体的一部分被创建，本事件会在子实体创建/初始化后触发，与 +$$ENTITY_CREATE$$+ 事件相反。|+org.activiti...ActivitiEntityEvent+
 |ENTITY_UPDATED|实体已经更新。该实体包含在本事件里。|+org.activiti...ActivitiEntityEvent+
 |ENTITY_DELETED|实体已经删除。该实体包含在本事件里。|+org.activiti...ActivitiEntityEvent+
 |ENTITY_SUSPENDED|实体已经挂起。该实体包含在本事件里。会为ProcessDefinitions（流程定义）, ProcessInstances（流程实例）与Tasks（任务）分发本事件。|+org.activiti...ActivitiEntityEvent+
 |ENTITY_ACTIVATED|实体已被激活。该实体包含在本事件里。会为ProcessDefinitions, ProcessInstances与Tasks分发本事件。|+org.activiti...ActivitiEntityEvent+
-|JOB_EXECUTION_SUCCESS|作业（job）已经成功执行。该作业包含在本事件里。|+org.activiti...ActivitiEntityEvent+
+|JOB_EXECUTION_SUCCESS|作业已经成功执行。该作业包含在本事件里。|+org.activiti...ActivitiEntityEvent+
 |JOB_EXECUTION_FAILURE|作业执行失败。该作业与异常包含在本事件里。|+org.activiti...ActivitiEntityEvent+ and +org.activiti...ActivitiExceptionEvent+
 |JOB_RETRIES_DECREMENTED|作业重试次数已经由于执行失败而减少。该作业包含在本事件里。|+org.activiti...ActivitiEntityEvent+
-|TIMER_FIRED|定时器已经被触发。该作业包含在本事件里？|+org.activiti...ActivitiEntityEvent+
+|TIMER_FIRED|定时器已经被触发。|+org.activiti...ActivitiEntityEvent+
 |JOB_CANCELED|作业已经被取消。该作业包含在本事件里。作业会由于API调用取消，任务完成导致关联的边界定时器取消，也会由于新流程定义的部署而取消。|+org.activiti...ActivitiEntityEvent+
 |ACTIVITY_STARTED|节点开始执行|+org.activiti...ActivitiActivityEvent+
 |ACTIVITY_COMPLETED|节点成功完成|+org.activiti...ActivitiActivityEvent+
 |ACTIVITY_CANCELLED|节点将要取消。节点的取消有三个原因（MessageEventSubscriptionEntity, SignalEventSubscriptionEntity, TimerEntity）。|+org.activiti...ActivitiActivityCancelledEvent+
 |ACTIVITY_SIGNALED|节点收到了一个信号|+org.activiti...ActivitiSignalEvent+
-|ACTIVITY_MESSAGE_RECEIVED|节点收到了一个消息。事件在节点接收消息前分发。消息接收后，会为该节点分发++$$ACTIVITY_SIGNAL$$++或++$$ACTIVITY_STARTED$$++事件，取决于类型（边界事件，或子流程启动事件）。|+org.activiti...ActivitiMessageEvent+
-|ACTIVITY_ERROR_RECEIVED|节点收到了错误事件。在节点实际处理错误前分发。该事件的++activityId++含有处理错误的节点的引用。如果错误被成功传递，后续会为节点发送++$$ACTIVITY_SIGNALLED$$++或++$$ACTIVITY_COMPLETE$$++消息。|+org.activiti...ActivitiErrorEvent+
+|ACTIVITY_MESSAGE_RECEIVED|节点收到了一个消息。事件在节点接收消息前分发。消息接收后，会为该节点分发 +$$ACTIVITY_SIGNAL$$+ 或 +$$ACTIVITY_STARTED$$+ 事件，取决于其类型（边界事件，或子流程启动事件）。|+org.activiti...ActivitiMessageEvent+
+|ACTIVITY_ERROR_RECEIVED|节点收到了错误事件。在节点实际处理错误前分发。该事件的++activityId++含有处理错误的节点的引用。如果错误被成功传递，后续会为节点发送 +$$ACTIVITY_SIGNALLED$$+ 或 +$$ACTIVITY_COMPLETE$$+ 消息。|+org.activiti...ActivitiErrorEvent+
 |UNCAUGHT_BPMN_ERROR|抛出了未捕获的BPMN错误。流程没有该错误的处理器。该事件的++activityId++为空。|+org.activiti...ActivitiErrorEvent+
 |ACTIVITY_COMPENSATE|节点将要被补偿。该事件包含将要执行补偿的节点id。|+org.activiti...ActivitiActivityEvent+
-|VARIABLE_CREATED|创建了流程变量。该事件包含变量名、取值与关联的执行和任务（若有）。|+org.activiti...ActivitiVariableEvent+
-|VARIABLE_UPDATED|更新了已有变量。该事件包含变量名、取值与关联的执行和任务（若有）。|+org.activiti...ActivitiVariableEvent+
-|VARIABLE_DELETED|删除了已有变量。该事件包含变量名、最后取值与关联的执行和任务（若有）。|+org.activiti...ActivitiVariableEvent+
-|TASK_ASSIGNED|任务分派给了用户。该事件包含这个任务。|+org.activiti...ActivitiEntityEvent+
-|TASK_CREATED|任务已经创建。本事件在++$$ENTITY_CREATE$$++事件之后分发。若该任务是流程的一部分，本事件会在任务监听器执行前触发。|+org.activiti...ActivitiEntityEvent+
-|TASK_COMPLETED|任务已经结束。本事件在++$$ENTITY_DELETE$$++事件前分发。若该任务是流程的一部分，本事件会在流程前进之前出发，并且会跟随一个++$$ACTIVITY_COMPLETE$$++事件，指向代表该任务的节点。|+org.activiti...ActivitiEntityEvent+
-|PROCESS_COMPLETED|流程完成。在最后一个节点的++$$ACTIVITY_COMPLETED $$++事件后分发。当流程实例没有任何路径可以继续时，流程结束。|+org.activiti...ActivitiEntityEvent+
+|VARIABLE_CREATED|创建了流程变量。本事件包含变量名、取值与关联的执行和任务（若有）。|+org.activiti...ActivitiVariableEvent+
+|VARIABLE_UPDATED|更新了已有变量。本事件包含变量名、取值与关联的执行和任务（若有）。|+org.activiti...ActivitiVariableEvent+
+|VARIABLE_DELETED|删除了已有变量。本事件包含变量名、最后取值与关联的执行和任务（若有）。|+org.activiti...ActivitiVariableEvent+
+|TASK_ASSIGNED|任务分派给了用户。该任务包含在本事件里。|+org.activiti...ActivitiEntityEvent+
+|TASK_CREATED|任务已经创建。本事件在 +$$ENTITY_CREATE$$+ 事件之后分发。若该任务是流程的一部分，本事件会在任务监听器执行前触发。|+org.activiti...ActivitiEntityEvent+
+|TASK_COMPLETED|任务已经结束。本事件在 +$$ENTITY_DELETE$$+ 事件前分发。若该任务是流程的一部分，本事件会在流程前进之前触发，并且会跟随一个 +$$ACTIVITY_COMPLETE$$+ 事件，指向代表该任务的节点。|+org.activiti...ActivitiEntityEvent+
+|PROCESS_COMPLETED|流程完成。在最后一个节点的 +$$ACTIVITY_COMPLETED $$+ 事件后分发。当流程实例没有任何路径可以继续时，流程结束。|+org.activiti...ActivitiEntityEvent+
 |PROCESS_CANCELLED|流程已经被取消。在流程实例从运行时删除前分发。流程实例使用API调用++RuntimeService.deleteProcessInstance++取消。|+org.activiti...ActivitiCancelledEvent+
-|MEMBERSHIP_CREATED|用户加入了一个组。该事件包含了相关的用户和组的id。|+org.activiti...ActivitiMembershipEvent+
-|MEMBERSHIP_DELETED|用户从一个组中移出。该事件包含了相关的用户和组的id。|+org.activiti...ActivitiMembershipEvent+
-|MEMBERSHIPS_DELETED|组的所有用户将被移出。该事件在用户移出前抛出，因此关联关系仍然可以访问。因为性能原因，不会再为每个被移出的用户抛出++$$MEMBERSHIP_DELETED$$++事件。|+org.activiti...ActivitiMembershipEvent+
+|MEMBERSHIP_CREATED|用户加入了一个组。本事件包含了相关的用户和组的id。|+org.activiti...ActivitiMembershipEvent+
+|MEMBERSHIP_DELETED|用户从一个组中移出。本事件包含了相关的用户和组的id。|+org.activiti...ActivitiMembershipEvent+
+|MEMBERSHIPS_DELETED|组的所有用户将被移出。本事件在用户移出前抛出，因此关联关系仍然可以访问。因为性能原因，不会再为每个被移出的用户抛出 +$$MEMBERSHIP_DELETED$$+ 事件。|+org.activiti...ActivitiMembershipEvent+
 
 |===============
 
 
-引擎中所有的++$$ENTITY_\*$$++事件都与实体关联。下表列出每个实例分发的实体事件：
+引擎中所有的 +$$ENTITY_\*$$+ 事件都与实体关联。下表列出每个实体分发的实体事件：
 
 
 * *+$$ENTITY_CREATED, ENTITY_INITIALIZED, ENTITY_DELETED$$+*: Attachment（附件）, Comment（备注）, Deployment（部署）, Execution（执行）, Group（组）, IdentityLink（身份关联）, Job（作业）, Model（模型）, ProcessDefinition（流程定义）, ProcessInstance（流程实例）, Task（任务）, User（用户）.
@@ -836,10 +836,10 @@ void addEventListener(ActivitiEventListener listenerToAdd, ActivitiEventType... 
 [[eventDispatcherRemarks]]
 
 
-==== 附加信息
+==== 附加信息 Additional remarks
 
 
-**监听器只会被所在引擎分发的事件通知。**因此如果你使用不同的引擎，在同一个数据库上运行，只有该监听器注册的引擎生成的事件，会分发给该监听器。其他引擎生成的事件不会分发给这个监听器，不论这些引擎是否运行在同一个JVM下。
+**监听器只会被通知所在引擎分发的事件。**因此如果你使用不同的引擎，在同一个数据库上运行，只有该监听器注册的引擎生成的事件，会分发给该监听器。其他引擎生成的事件不会分发给这个监听器，不论这些引擎是否运行在同一个JVM下。
 
 某些事件类型（与实体相关）暴露了目标实体。按照事件类型的不同，有时实体不能被更新（例如实体已经被删除）。如果可能的话，请使用事件暴露的++EngineServices++安全操作引擎。即使这样，更新、操作事件中暴露的实体仍然需要小心。
 
