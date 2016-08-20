@@ -327,7 +327,7 @@ __db__为<<supporteddatabases,支持的数据库>>，而__type__为
 Activiti的所有数据库表都以**ACT_**开头。第二部分是说明表用途的两字符标示符。服务API的命名也大略符合这个规则。
 
 * *ACT_RE_**: 'RE'代表++repository++。带有这个前缀的表包含“静态”信息，例如流程定义与流程资源（图片、规则等）。
-* *ACT_RU_**: 'RU'代表++runtime++。这些表存储运行时信息，例如流程实例、用户任务、变量、作业等。Activiti只在流程实例运行中保存运行时数据，并在流程实例结束时删除记录。这样保证运行时表小和快。
+* *ACT_RU_**: 'RU'代表++runtime++。这些表存储运行时信息，例如流程实例（process instance）、用户任务（user task）、变量（variable）、作业（job）等。Activiti只在流程实例运行中保存运行时数据，并在流程实例结束时删除记录。这样保证运行时表小和快。
 * *ACT_ID_**: 'ID'代表++identity++。这些表包含身份信息，例如用户、组等。
 * *ACT_HI_**: 'HI'代表++history++。这些表存储历史数据，例如已完成的流程实例、变量、任务等。
 * *ACT_GE_**: 通用数据。用于不同场景下。
@@ -365,7 +365,7 @@ Activiti的所有数据库表都以**ACT_**开头。第二部分是说明表用�
 
 [[jobExecutorConfiguration]]
 
-=== 作业执行器与异步执行器（从5.17.0版本起）
+=== 作业执行器（Job Executor）与异步执行器（Async Executor）（从5.17.0版本起）
 
 从5.17.0版本开始，在作业执行器之外，Activiti还提供了异步执行器。Activiti引擎可以通过它，以性能更好，也对数据库更友好的方式执行异步作业。
 
@@ -384,7 +384,7 @@ Activiti的所有数据库表都以**ACT_**开头。第二部分是说明表用�
 </bean>
 ----
 
-如果没有设置线程工厂，上述两个管理类都会退化为默认实现。
+如果没有设置线程工厂，上述两个managedxx类都会退化为默认实现（非managed版本）。
 
 === 启用作业执行器
 
@@ -493,9 +493,9 @@ asyncExecutorEnabled参数用于启用异步执行器，代替老的作业执行
 activiti-explorer与activiti-rest web应用配置为使用Log4j绑定。所有的activiti-*模块运行测试时也会使用Log4j。
 
 
-*Important note when using a container with commons-logging in the classpath:* In order to route the spring-logging through SLF4J, a bridge is used (see link:$$http://www.slf4j.org/legacy.html#jclOverSLF4J$$[http://www.slf4j.org/legacy.html#jclOverSLF4J]). If your container provides a commons-logging implementation, please follow directions on this page: link:$$http://www.slf4j.org/codes.html#release$$[http://www.slf4j.org/codes.html#release] to ensure stability.
+**重要提示：当使用classpath中带有commons-logging的容器时：**为了将spring的日志路由至SLF4j，需要使用桥接（参考link:$$http://www.slf4j.org/legacy.html#jclOverSLF4J$$[http://www.slf4j.org/legacy.html#jclOverSLF4J]）。如果你的容提起恭了commons-logging实现，请按照link:$$http://www.slf4j.org/codes.html#release$$[http://www.slf4j.org/codes.html#release]页面的指示来保证稳定性。
 
-Example when using Maven (version omitted):
+使用Maven的示例（省略了版本）：
 
 [source,xml,linenums]
 ----
@@ -509,43 +509,42 @@ Example when using Maven (version omitted):
 [[MDC]]
 
 
-=== Mapped Diagnostic Contexts
+=== 映射诊断上下文（MDC）
 
+从5.13版本开始，Activiti支持SLF4J的映射诊断上下文特性。与需要日志记录的信息一起，下列基本信息也会传递给底层日志记录器：
 
-As of version 5.13, Activiti supports Mapped Diagnostic Contexts feature of sl4j. These basic information are passed to the underlying logger along with what is going to be logged:
+* processDefinition Id 作为 mdcProcessDefinitionID
+* processInstance Id 作为 mdcProcessInstanceID
+* execution Id 作为 mdcExecutionId
 
-* processDefinition Id as mdcProcessDefinitionID
-* processInstance Id as mdcProcessInstanceID
-* execution Id as mdcExecutionId
-
-None of these information are logged by default. The logger can be configured to show them in desired format, extra to the usual logged messages. For example in log4j the following sample layout definition  causes the logger to show the above mentioned information:
+默认情况下这些信息都不会被日志记录，但可以通过配置日志记录器，以使用想要的格式，与其他日志信息一起显示。例如在log4j中进行如下简单的布局定义，就可以让日志记录器显示上述信息：
 
 [source,properties,linenums]
 ----
  log4j.appender.consoleAppender.layout.ConversionPattern=ProcessDefinitionId=%X{mdcProcessDefinitionID} executionId=%X{mdcExecutionId} mdcProcessInstanceID=%X{mdcProcessInstanceID} mdcBusinessKey=%X{mdcBusinessKey} %m%n
 ----
 
-This is useful where the systems are mission critical and logs should be seriously checked,  by means of a log analyzer for example.
+在系统任务很关键的情况下这很有用，可以通过例如日志分析器进行日志的严格检查。
 
 
 [[eventDispatcher]]
 
 
-=== Event handlers
+=== 事件处理器
 
-An event mechanism has been introduced in Activiti 5.15. It allows you to get notified when various events occur within the engine. Take a look at <<eventDispatcherEventTypes,all supported event types>> for an overview of the events available.
+Activiti 5.15引入了事件机制。它可以让你在引擎中发生多种事件的时候得到通知。查看<<eventDispatcherEventTypes,所有支持的事件类型>>了解可用的事件。
 
-It's possible to register a listener for certain types of events as opposed to getting notified when any type of event is dispatched. You can either add engine-wide event listeners <<eventDispatcherConfiguration,through the configuration>>, add engine-wide event listeners <<eventDispatcherConfigurationRuntime,at runtime using the API>> or add event-listeners to <<eventDispatcherConfigurationProcessDefinition,specific process definitions in the BPMN XML>>.
+可以只为特定种类的事件注册监听器，而不是在任何类型的事件发送时都被通知。可以<<eventDispatcherConfiguration,通过配置>>增加引擎全局的事件监听器，<<eventDispatcherConfigurationRuntime,在运行时通过API>>增加引擎全局的事件监听器，也可以 <<eventDispatcherConfigurationProcessDefinition,在BPMN XML文件为个别流程定义>>增加事件监听器。.
 
 
-All events dispatched are a subtype of +org.activiti.engine.delegate.event.ActivitiEvent+. The event exposes (if available) the +type+, +executionId+, +processInstanceId+ and +processDefinitionId+. Certain events contain additional context related to the event that occurred, additional information about additional payload can be found in the list of <<eventDispatcherEventTypes,all supported event types>>.
+所有被分发的事件都是++org.activiti.engine.delegate.event.ActivitiEvent++的子类。事件（在可用时）提供++type++, +executionId+, ++processInstanceId++与++processDefinitionId++。部分事件含有关于发生事件的上下文信息。关于事件包含的附加信息，请参阅<<eventDispatcherEventTypes,所有支持的事件类型>>。
 
 [[eventDispatcherListener]]
 
 
-==== Event listener implementation
+==== 事件监听器实现
 
-The only requirement an event-listener has, is to implement +org.activiti.engine.delegate.event.ActivitiEventListener+. Below is an example implementation of a listener, which outputs all events received to the standard-out, with exception of events related to job-execution:
+对事件监听器的唯一要求，是要实现(implements) ++org.activiti.engine.delegate.event.ActivitiEventListener++。下面是一个监听器实现的例子，它将接收的所有事件打印至标准输出，并对作业执行相关的事件特别处理。：
 
 [source,java,linenums]
 ----
@@ -570,30 +569,29 @@ public class MyEventListener implements ActivitiEventListener {
 
   @Override
   public boolean isFailOnException() {
-    // The logic in the onEvent method of this listener is not critical, exceptions
-    // can be ignored if logging fails...
+    // onEvent方法中的逻辑并不重要，日志失败异常可以被忽略……
     return false;
   }
 }
 ----
 
 
-The +isFailOnException()+ method determines the behaviour in case the +onEvent(..)+ method throws an exception when an event is dispatched. In case +false+ is returned, the exception is ignored. When +true+ is returned, the exception is not ignored and bubbles up, effectively failing the current ongoing command. In case the event was part of an API-call (or any other transactional operation, e.g. job-execution), the transaction will be rolled back. In case the behaviour in the event-listener is not business-critical, it's recommended to return +false+.
+++isFailOnException()++方法决定了当事件分发后，++onEvent(..)++方法抛出异常时的行为。若返回++false++，忽略异常；返回++true++，异常不会被忽略而会被上抛，使当前执行的命令失败。如果事件是API调用（或其他事务操作，例如作业执行）的一部分，事务将被回滚。如果事件监听器中并不是重要的业务操作，建议返回++false++。
 
-There are a few base implementations provided by Activiti to facilitate common use cases of event-listeners. These can be used as base-class or as an example listener implementation:
+Activiti提供了少量基础实现，以简化常用的事件监听器用例。它们可以被用作监听器的示例或基类：
 
-* *org.activiti.engine.delegate.event.BaseEntityEventListener*: An event-listener base-class that can be used to listen for entity-related events for a specific type of entity or for all entities. It hides away the type-checking and offers 4 methods that should be overridden: +onCreate(..)+, +onUpdate(..)+ and +onDelete(..)+ when an entity is created, updated or deleted. For all other entity-related events, the ++onEntityEvent(..) ++is called.
+* *org.activiti.engine.delegate.event.BaseEntityEventListener*: 事件监听器基类，可用来监听实体（entity）相关事件，特定或所有实体的事件都可以。它隐藏了类型检测，提供了4个需要覆盖的方法：++onCreate(..)++, ++onUpdate(..)++与++onDelete(..)++在实体创建、更新及删除时调用；对所有其他实体相关事件，++onEntityEvent(..)++会被调用。
 
 
 
 [[eventDispatcherConfiguration]]
 
 
-==== Configuration and setup
+==== 配置与安装
 
-If an event-listener is configured in the process engine configuration, it will be active when the process engine starts and will remain active after subsequent reboots of the engine.
+在流程引擎中配置的事件监听器会在流程引擎启动时生效，引擎重启后也会保持有效。
 
-The property +eventListeners+ expects a list of +org.activiti.engine.delegate.event.ActivitiEventListener+ instances. As usual, you can either declare an inline bean definition or use a +ref+ to an existing bean instead. The snippet below adds an event-listener to the configuration that is notified when any event is dispatched, regardless of its type:
+++eventListeners++参数配置为++org.activiti.engine.delegate.event.ActivitiEventListener++实例的列表(list)。与他处一样，你可以声明内联bean定义，也可以用++ref++指向已有的bean。下面的代码片段在配置中增加了一个事件监听器，无论任何类型的事件分发时，都会得到通知：
 
 [source,xml,linenums]
 ----
@@ -607,7 +605,7 @@ The property +eventListeners+ expects a list of +org.activiti.engine.delegate.ev
 </bean>
 ----
 
-To get notified when certain types of events get dispatched, use the +typedEventListeners+ property, which expects a map. The key of a map-entry is a comma-separated list of event-names (or a single event-name). The value of a map-entry is a list of +org.activiti.engine.delegate.event.ActivitiEventListener+ instances. The snippet below adds an event-listener to the configuration, that is notified when a job execution was successful or failed:
+要在特定类型的事件分发时得到通知，使用++typedEventListeners++参数，取值为map。map的key为逗号分隔的事件名字列表（或者一个事件的名字），取值为++org.activiti.engine.delegate.event.ActivitiEventListener++实例的列表。下面的代码片段在配置中增加了一个事件监听器，它会在作业执行成功或失败时得到通知：
 
 [source,xml,linenums]
 ----
@@ -626,53 +624,52 @@ To get notified when certain types of events get dispatched, use the +typedEvent
 ----
 
 
-The order of dispatching events is determined on the order the listeners were added. First, all normal event-listeners are called (++eventListeners++ property) in the order they are defined in the ++list++. After that, all typed event listeners (++typedEventListeners++ properties) are called, if an event of the right type is dispatched.
+事件分发的顺序由加入监听器的顺序决定。首先，所有(++eventListeners++参数定义的)普通事件监听器按照他们在++list++里的顺序被调用；之后，如果某类型的事件被分发，则(++typedEventListeners++ 参数定义的)该类型监听器被调用。
 
 
 [[eventDispatcherConfigurationRuntime]]
 
-==== Adding listeners at runtime
+==== 在运行时增加监听器
 
-It's possible to add and remove additional event-listeners to the engine by using the API (++RuntimeService++):
+可以使用API(++RuntimeService++)为引擎增加或删除额外的事件监听器：
 
 [source,java,linenums]
 ----
 
 /**
- * Adds an event-listener which will be notified of ALL events by the dispatcher.
- * @param listenerToAdd the listener to add
+ * 新增一个监听器，分发器会在所有事件分发时通知。
+ * @param listenerToAdd 要新增的监听器
  */
 void addEventListener(ActivitiEventListener listenerToAdd);
 
 /**
- * Adds an event-listener which will only be notified when an event occurs, which type is in the given types.
- * @param listenerToAdd the listener to add
- * @param types types of events the listener should be notified for
+ * 新增一个监听器，在给定类型的事件发生时被通知。
+ * @param listenerToAdd 要新增的监听器
+ * @param types 监听器需要监听的事件类型
  */
 void addEventListener(ActivitiEventListener listenerToAdd, ActivitiEventType... types);
 
 /**
- * Removes the given listener from this dispatcher. The listener will no longer be notified,
- * regardless of the type(s) it was registered for in the first place.
- * @param listenerToRemove listener to remove
+ * 从分发器中移除给定监听器。该监听器不再被通知，无论该监听器注册为监听何种类型。
+ * @param listenerToRemove 要移除的监听器
  */
  void removeEventListener(ActivitiEventListener listenerToRemove);
 ----
 
-Please note that the listeners added at runtime *are not retained when the engine is rebooted.*
+请注意，运行时新增的监听器**在引擎重启后不会保持。**
 
 
 [[eventDispatcherConfigurationProcessDefinition]]
 
 
-==== Adding listeners to process definitions
+==== 为流程定义增加监听器
 
-It's possible to add listeners to a specific process-definition. The listeners will only be called for events related to the process definition and to all events related to process instances that are started with that specific process definition. The listener implementations can be defined using a fully qualified classname, an expression that resolves to a bean that implements the listener interface or can be configured to throw a message/signal/error BPMN event.
+可以为某一流程定义增加监听器。只有与该流程定义相关，或使用该流程定义启动的流程实例相关的事件，才会调用这个监听器。监听器实现可以用完全限定类名（fully qualified classname）定义；也可以定义为表达式，该表达式能被解析为实现监听器接口的bean；也可以配置为抛出消息（message）/信号（signal）/错误（error）的BPMN事件。
 
 
-===== Listeners executing user-defined logic
+===== 执行用户定义逻辑的监听器
 
-The snippet below adds 2 listeners to a process-definition. The first listener will receive events of any type, with a listener implementation based on a fully-qualified class name. The second listener is only notified when a job is successfully executed or when it failed, using a listener that has been defined in the +beans+ property of the process engine configuration.
+下面的代码片段为流程定义增加了2个监听器。第一个监听器接收任何类型的事件，使用完全限定类名定义。第二个监听器器只在作业成功执行或失败时被通知，使用流程引擎配置中++beans++参数定义的bean作为监听器。
 
 [source,xml,linenums]
 ----
@@ -687,7 +684,7 @@ The snippet below adds 2 listeners to a process-definition. The first listener w
 </process>
 ----
 
-For events related to entities, it's also possible to add listeners to a process-definition that get only notified when entity-events occur for a certain entity type. The snippet below shows how this can be achieved. It can be used along for ALL entity-events (first example) or for specific event types only (second example).
+实体相关的事件也可以在流程定义中增加监听器，只有在特定实体类型的事件发生时得到通知。下面的代码片段展示了如何进行。可以使用实体的所有（第一个例子）事件，或只使用实体的特定类型（第二个例子）事件。
 
 [source,xml,linenums]
 ----
@@ -702,16 +699,16 @@ For events related to entities, it's also possible to add listeners to a process
 </process>
 ----
 
-Supported values for the +entityType+ are: +attachment+, +comment+, +execution+, ++identity-link++, ++job++, ++process-instance++, ++process-definition++, ++task++.
+++entityType++可用的值有：++attachment++（附件）, ++comment++（备注）, ++execution++（执行）, ++identity-link++（认证关系）, ++job++（作业）, ++process-instance++（流程实例）, ++process-definition++（流程定义）, ++task++（任务）。
 
 
 
-===== Listeners throwing BPMN events
+===== 抛出BPMN事件的监听器
 
-<<experimental, [EXPERIMENTAL] >>
+<<experimental, [试验功能] >>
 
 
-Another way of handling events being dispatched is to throw a BPMN event. Please bear in mind that it only makes sense to throw BPMN-events with certain kinds of Activiti event types. For example, throwing a BPMN event when the process-instance is deleted will result in an error. The snippet below shows how to throw a signal inside process-instance, throw a signal to an external process (global), throw a message-event inside the process-instance and throw an error-event inside the process-instance. Instead of using the +class+ or +delegateExpression+, the attribute +throwEvent+ is used, along with an additional attribute, specific to the type of event being thrown.
+处理分发的事件的另一个方法，是抛出BPMN事件。请牢记在心，只有特定种类的Activiti事件类型，抛出BPMN事件才合理。例如，在流程实例被删除时抛出BPMN事件，会导致错误。下面的代码片段展示了如何在流程实例中抛出信号，向外部流程（全局）抛出信号，在流程实例中抛出消息事件，以及在流程实例中抛出错误事件。这里不使用++class++或++delegateExpression++，而要使用++throwEvent++属性，以及一个附加属性，用于指定需要抛出的事件类型。
 
 [source,xml,linenums]
 ----
@@ -750,33 +747,32 @@ Another way of handling events being dispatched is to throw a BPMN event. Please
 </process>
 ----
 
-If additional logic is needed to decide whether or not to throw the BPMN-event, it's possible to extend the listener-classes provided by Activiti. By overriding the +isValidEvent(ActivitiEvent event) in your subclass, the BPMN-event throwing can be prevented. The classes involved are +org.activiti.engine.test.api.event.SignalThrowingEventListenerTest+, +org.activiti.engine.impl.bpmn.helper.MessageThrowingEventListener+ and +org.activiti.engine.impl.bpmn.helper.ErrorThrowingEventListener+.
+如果需要使用额外的逻辑判断是否需要跑出BPMN事件，可以扩展Activiti提供的监听器类。通过在你的子类中覆盖++isValidEvent(ActivitiEvent event)++，可以阻止抛出BPMN事件。相关的类为++org.activiti.engine.test.api.event.SignalThrowingEventListenerTest++, ++org.activiti.engine.impl.bpmn.helper.MessageThrowingEventListener++与++org.activiti.engine.impl.bpmn.helper.ErrorThrowingEventListener++.
 
 
-===== Notes on listeners on a process-definition
+===== 关于流程定义监听器的说明
 
-* Event-listeners can only be declared on the +process+ element, as a child-element of the +extensionElements+. Listeners cannot be defined on individual activities in the process.
-* Expressions used in the +delegateExpression+ do not have access to the execution-context, as other expressions (e.g. in gateways) have. They can only reference beans defined in the +beans+ property of the process engine configuration or when using spring (and the beans property is absent) to any spring-bean that implements the listener interface.
-* When using the +class+ attribute of a listener, there will only be a single instance of that class created. Make sure the listener implementations do not rely on member-fields or ensure safe usage from multiple threads/contexts.
-* When an illegal event-type is used in the +events+ attribute or illegal +throwEvent+ value is used, an exception will be thrown when the process-definition is deployed (effectively failing the deployment). When an illegal value for +class+ or +delegateExecution+ is supplied (either a nonexistent class, a nonexistent bean reference or a delegate not implementing listener interface), an exception will be thrown when the process is started (or when the first valid event for that process-definition is dispatched to the listener). Make sure the referenced classes are on the classpath and that the expressions resolve to a valid instance.
+* 事件监听器只能作为++extensionElements++的子元素，声明在++process++元素上。不能在个别活动（activity）上定义监听器。
+* ++delegateExpression++中的表达式，与其他表达式（例如在网关中）不一样，不可以访问执行上下文。只能够引用在流程引擎配置中++beans++参数定义的bean，或是使用spring（且没有定义beans参数）时，引用任何实现了监听器接口的spring bean。
+* 使用监听器的++class++属性时，只会创建唯一一个该类的实例。请确保监听器实现不依赖于成员变量，或确保多线程/上下文的使用安全。
+* 如果++events++属性使用了不合法的事件类型，或者使用了不合法的++throwEvent++值，会在流程定义部署时抛出异常（导致部署失败）。如果++class++或++delegateExecution++指定了不合法的值（不存在的类，不存在的bean引用，或者代理类没有实现监听器接口），在流程启动（或该流程定义的第一个有效事件分发给这个监听器）时，会抛出异常。请确保引用的类在classpath中，并且保证表达式能够解析为有效的实例。
 
 
 [[eventDispatcherCustomEvents]]
 
-==== Dispatching events through API
+==== 通过API分发事件
 
-We opened up the event-dispatching mechanism through the API, to allow you to dispatch custom events to any listeners that are registered in the engine. It's recommended (although not enforced) to only dispatch +ActivitiEvents+ with type +CUSTOM+. Dispatching the event can be done using the ++RuntimeService++:
+我们通过API提供事件分发机制，使你可以向任何在引擎中注册的监听器分发自定义事件。建议（但不强制）只分发类型为++CUSTOM++的++ActivitiEvents++。可以使用++RuntimeService++分发事件：
 
 [source,java,linenums]
 ----
 
 /**
- * Dispatches the given event to any listeners that are registered.
- * @param event event to dispatch.
+ * 将给定事件分发给所有注册监听器。
+ * @param event 要分发的事件。
  *
- * @throws ActivitiException if an exception occurs when dispatching the event or when the {@link ActivitiEventDispatcher}
- * is disabled.
- * @throws ActivitiIllegalArgumentException when the given event is not suitable for dispatching.
+ * @throws ActivitiException 当分发事件发生异常，或者{@link ActivitiEventDispatcher}被禁用。
+ * @throws ActivitiIllegalArgumentException 当给定事件不可分发
  */
  void dispatchEvent(ActivitiEvent event);
 ----
@@ -784,68 +780,55 @@ We opened up the event-dispatching mechanism through the API, to allow you to di
 [[eventDispatcherEventTypes]]
 
 
-==== Supported event types
+==== 支持的事件类型
 
-Listed below are all event types that can occur in the engine. Each type corresponds to an enum value in the +org.activiti.engine.delegate.event.ActivitiEventType+.
+下表列出引擎中的所有事件类型。每种类型对应++org.activiti.engine.delegate.event.ActivitiEventType++中的一个枚举值。
 
 [[eventTypes]]
 .Supported events
 [options="header"]
 |===============
 |Event name|Description|Event classes
-|ENGINE_CREATED|The process-engine this listener is attached to, has been created and is ready for API-calls.|+org.activiti...ActivitiEvent+
-|ENGINE_CLOSED|The process-engine this listener is attached to, has been closed. API-calls to the engine are no longer possible.|+org.activiti...ActivitiEvent+
-|ENTITY_CREATED|A new entity is created. The new entity is contained in the event.|+org.activiti...ActivitiEntityEvent+
-|ENTITY_INITIALIZED|A new entity has been created and is fully initialized. If any children are created as part of the creation of an entity, this event will be fired AFTER the create/initialisation of the child entities as opposed to the +$$ENTITY_CREATE$$+ event.|+org.activiti...ActivitiEntityEvent+
-|ENTITY_UPDATED|An existing is updated. The updated entity is contained in the event.|+org.activiti...ActivitiEntityEvent+
-|ENTITY_DELETED|An existing entity is deleted. The deleted entity is contained in the event.|+org.activiti...ActivitiEntityEvent+
-|ENTITY_SUSPENDED|An existing entity is suspended. The suspended entity is contained in the event. Will be dispatched for ProcessDefinitions, ProcessInstances and Tasks.|+org.activiti...ActivitiEntityEvent+
-|ENTITY_ACTIVATED|An existing entity is activated. The activated entity is contained in the event. Will be dispatched for ProcessDefinitions, ProcessInstances and Tasks.|+org.activiti...ActivitiEntityEvent+
-|JOB_EXECUTION_SUCCESS|A job has been executed successfully. The event contains the job that was executed.|+org.activiti...ActivitiEntityEvent+
-|JOB_EXECUTION_FAILURE|The execution of a job has failed. The event contains the job that was executed and the exception.|+org.activiti...ActivitiEntityEvent+ and +org.activiti...ActivitiExceptionEvent+
-|JOB_RETRIES_DECREMENTED|The number of job retries have been decremented due to a failed job. The event contains the job that was updated.|+org.activiti...ActivitiEntityEvent+
-|TIMER_FIRED|A timer has been fired. The event contains the job that was executed?|+org.activiti...ActivitiEntityEvent+
-|JOB_CANCELED|A job has been canceled. The event contains the job that was canceled. Job can be canceled by
-                  API call, task was completed and associated boundary timer was canceled, on the new process definition
-                  deployment.
-                |+org.activiti...ActivitiEntityEvent+
-|ACTIVITY_STARTED|An activity is starting to execute|+org.activiti...ActivitiActivityEvent+
-|ACTIVITY_COMPLETED|An activity is completed successfully|+org.activiti...ActivitiActivityEvent+
-|ACTIVITY_CANCELLED|An activity is going to be cancelled. There can be three reasons for activity cancellation (MessageEventSubscriptionEntity, SignalEventSubscriptionEntity, TimerEntity).|+org.activiti...ActivitiActivityCancelledEvent+
-|ACTIVITY_SIGNALED|An activity received a signal|+org.activiti...ActivitiSignalEvent+
-|ACTIVITY_MESSAGE_RECEIVED|An activity received a message. Dispatched before the activity receives the message. When received, a +$$ACTIVITY_SIGNAL$$+ or +$$ACTIVITY_STARTED$$+ will
-                be dispatched for this activity, depending on the type (boundary-event or event-subprocess start-event)|+org.activiti...ActivitiMessageEvent+
-|ACTIVITY_ERROR_RECEIVED|An activity has received an error event. Dispatched before the actual error has been handled by
-                 the activity. The event's +activityId+ contains a reference to the error-handling activity.
-                 This event will be either followed by a +$$ACTIVITY_SIGNALLED$$+ event or +$$ACTIVITY_COMPLETE$$+
-                  for the involved activity, if the error was delivered successfully.|+org.activiti...ActivitiErrorEvent+
-|UNCAUGHT_BPMN_ERROR|An uncaught BPMN error has been thrown. The process did not have any handlers for that specific error. The event's +activityId+ will be empty.|+org.activiti...ActivitiErrorEvent+
-|ACTIVITY_COMPENSATE|An activity is about to be compensated. The event contains the id of the activity that is will be executed for compensation.|+org.activiti...ActivitiActivityEvent+
-|VARIABLE_CREATED|A variable has been created. The event contains the variable name, value and related execution and task (if any).|+org.activiti...ActivitiVariableEvent+
-|VARIABLE_UPDATED|An existing variable has been updated. The event contains the variable name, updated value and related execution and task (if any).|+org.activiti...ActivitiVariableEvent+
-|VARIABLE_DELETED|An existing variable has been deleted. The event contains the variable name, last known value and related execution and task (if any).|+org.activiti...ActivitiVariableEvent+
-|TASK_ASSIGNED|A task has been assigned to a user. The event contains the task|+org.activiti...ActivitiEntityEvent+
-|TASK_CREATED|A task has been created. This is dispatched after the +$$ENTITY_CREATE$$+ event. In case the task is part of a process, this event will be
-                  fired before the task listeners are executed.
-                |+org.activiti...ActivitiEntityEvent+
-|TASK_COMPLETED|A task has been completed. This is dispatched before the +$$ENTITY_DELETE$$+ event. In case the task is part of a process, this event will be
-                fired before the process has moved on and will be followed by a +$$ACTIVITY_COMPLETE$$+ event, targeting the activity that represents the completed task.|+org.activiti...ActivitiEntityEvent+
-|PROCESS_COMPLETED| A process has been completed. Dispatched after the last activity +$$ACTIVITY_COMPLETED $$+ event. Process is completed when it reaches state in which process instance does not have
-                  any transition to take.
-                |+org.activiti...ActivitiEntityEvent+
-|PROCESS_CANCELLED|A process has been cancelled. Dispatched before the process instance is deleted from runtime. Process instance is cancelled by API call +RuntimeService.deleteProcessInstance+|+org.activiti...ActivitiCancelledEvent+
-|MEMBERSHIP_CREATED|A user has been added to a group. The event contains the ids of the user and group involved.|+org.activiti...ActivitiMembershipEvent+
-|MEMBERSHIP_DELETED|A user has been removed from a group. The event contains the ids of the user and group involved.|+org.activiti...ActivitiMembershipEvent+
-|MEMBERSHIPS_DELETED|All members will be removed from a group. The event is thrown before the members are removed, so they are still accessible. No individual
-                +$$MEMBERSHIP_DELETED$$+ events will be thrown if all members are deleted at once, for performance reasons.|+org.activiti...ActivitiMembershipEvent+
+|ENGINE_CREATED|本监听器附着的流程引擎已经创建，并可以响应API调用。|+org.activiti...ActivitiEvent+
+|ENGINE_CLOSED|本监听器附着的流程引擎已经关闭，对该引擎的API调用不再可用。|+org.activiti...ActivitiEvent+
+|ENTITY_CREATED|新的实体已经创建。该实体包含在本事件里。|+org.activiti...ActivitiEntityEvent+
+|ENTITY_INITIALIZED|新的实体已经创建并完全初始化。如果任何子实体作为该实体的一部分被创建，本事件会在子实体创建/初始化后触发，与++$$ENTITY_CREATE$$++事件相反。|+org.activiti...ActivitiEntityEvent+
+|ENTITY_UPDATED|实体已经更新。该实体包含在本事件里。|+org.activiti...ActivitiEntityEvent+
+|ENTITY_DELETED|实体已经删除。该实体包含在本事件里。|+org.activiti...ActivitiEntityEvent+
+|ENTITY_SUSPENDED|实体已经挂起。该实体包含在本事件里。会为ProcessDefinitions（流程定义）, ProcessInstances（流程实例）与Tasks（任务）分发本事件。|+org.activiti...ActivitiEntityEvent+
+|ENTITY_ACTIVATED|实体已被激活。该实体包含在本事件里。会为ProcessDefinitions, ProcessInstances与Tasks分发本事件。|+org.activiti...ActivitiEntityEvent+
+|JOB_EXECUTION_SUCCESS|作业（job）已经成功执行。该作业包含在本事件里。|+org.activiti...ActivitiEntityEvent+
+|JOB_EXECUTION_FAILURE|作业执行失败。该作业与异常包含在本事件里。|+org.activiti...ActivitiEntityEvent+ and +org.activiti...ActivitiExceptionEvent+
+|JOB_RETRIES_DECREMENTED|作业重试次数已经由于执行失败而减少。该作业包含在本事件里。|+org.activiti...ActivitiEntityEvent+
+|TIMER_FIRED|定时器已经被触发。该作业包含在本事件里？|+org.activiti...ActivitiEntityEvent+
+|JOB_CANCELED|作业已经被取消。该作业包含在本事件里。作业会由于API调用取消，任务完成导致关联的边界定时器取消，也会由于新流程定义的部署而取消。|+org.activiti...ActivitiEntityEvent+
+|ACTIVITY_STARTED|节点开始执行|+org.activiti...ActivitiActivityEvent+
+|ACTIVITY_COMPLETED|节点成功完成|+org.activiti...ActivitiActivityEvent+
+|ACTIVITY_CANCELLED|节点将要取消。节点的取消有三个原因（MessageEventSubscriptionEntity, SignalEventSubscriptionEntity, TimerEntity）。|+org.activiti...ActivitiActivityCancelledEvent+
+|ACTIVITY_SIGNALED|节点收到了一个信号|+org.activiti...ActivitiSignalEvent+
+|ACTIVITY_MESSAGE_RECEIVED|节点收到了一个消息。事件在节点接收消息前分发。消息接收后，会为该节点分发++$$ACTIVITY_SIGNAL$$++或++$$ACTIVITY_STARTED$$++事件，取决于类型（边界事件，或子流程启动事件）。|+org.activiti...ActivitiMessageEvent+
+|ACTIVITY_ERROR_RECEIVED|节点收到了错误事件。在节点实际处理错误前分发。该事件的++activityId++含有处理错误的节点的引用。如果错误被成功传递，后续会为节点发送++$$ACTIVITY_SIGNALLED$$++或++$$ACTIVITY_COMPLETE$$++消息。|+org.activiti...ActivitiErrorEvent+
+|UNCAUGHT_BPMN_ERROR|抛出了未捕获的BPMN错误。流程没有该错误的处理器。该事件的++activityId++为空。|+org.activiti...ActivitiErrorEvent+
+|ACTIVITY_COMPENSATE|节点将要被补偿。该事件包含将要执行补偿的节点id。|+org.activiti...ActivitiActivityEvent+
+|VARIABLE_CREATED|创建了流程变量。该事件包含变量名、取值与关联的执行和任务（若有）。|+org.activiti...ActivitiVariableEvent+
+|VARIABLE_UPDATED|更新了已有变量。该事件包含变量名、取值与关联的执行和任务（若有）。|+org.activiti...ActivitiVariableEvent+
+|VARIABLE_DELETED|删除了已有变量。该事件包含变量名、最后取值与关联的执行和任务（若有）。|+org.activiti...ActivitiVariableEvent+
+|TASK_ASSIGNED|任务分派给了用户。该事件包含这个任务。|+org.activiti...ActivitiEntityEvent+
+|TASK_CREATED|任务已经创建。本事件在++$$ENTITY_CREATE$$++事件之后分发。若该任务是流程的一部分，本事件会在任务监听器执行前触发。|+org.activiti...ActivitiEntityEvent+
+|TASK_COMPLETED|任务已经结束。本事件在++$$ENTITY_DELETE$$++事件前分发。若该任务是流程的一部分，本事件会在流程前进之前出发，并且会跟随一个++$$ACTIVITY_COMPLETE$$++事件，指向代表该任务的节点。|+org.activiti...ActivitiEntityEvent+
+|PROCESS_COMPLETED|流程完成。在最后一个节点的++$$ACTIVITY_COMPLETED $$++事件后分发。当流程实例没有任何路径可以继续时，流程结束。|+org.activiti...ActivitiEntityEvent+
+|PROCESS_CANCELLED|流程已经被取消。在流程实例从运行时删除前分发。流程实例使用API调用++RuntimeService.deleteProcessInstance++取消。|+org.activiti...ActivitiCancelledEvent+
+|MEMBERSHIP_CREATED|用户加入了一个组。该事件包含了相关的用户和组的id。|+org.activiti...ActivitiMembershipEvent+
+|MEMBERSHIP_DELETED|用户从一个组中移出。该事件包含了相关的用户和组的id。|+org.activiti...ActivitiMembershipEvent+
+|MEMBERSHIPS_DELETED|组的所有用户将被移出。该事件在用户移出前抛出，因此关联关系仍然可以访问。因为性能原因，不会再为每个被移出的用户抛出++$$MEMBERSHIP_DELETED$$++事件。|+org.activiti...ActivitiMembershipEvent+
 
 |===============
 
 
-All +$$ENTITY_\*$$+ events are related to entities inside the engine. The list below show an overview of what entity-events are dispatched for which entities:
+引擎中所有的++$$ENTITY_\*$$++事件都与实体关联。下表列出每个实例分发的实体事件：
 
 
-* *+$$ENTITY_CREATED, ENTITY_INITIALIZED, ENTITY_DELETED$$+*: Attachment, Comment, Deployment, Execution, Group, IdentityLink, Job, Model, ProcessDefinition, ProcessInstance, Task, User.
+* *+$$ENTITY_CREATED, ENTITY_INITIALIZED, ENTITY_DELETED$$+*: Attachment（附件）, Comment（备注）, Deployment（部署）, Execution（执行）, Group（组）, IdentityLink（身份关联）, Job（作业）, Model（模型）, ProcessDefinition（流程定义）, ProcessInstance（流程实例）, Task（任务）, User（用户）.
 * *+$$ENTITY_UPDATED$$+*: Attachment, Deployment, Execution, Group, IdentityLink, Job, Model, ProcessDefinition, ProcessInstance, Task, User.
 * *+$$ENTITY_SUSPENDED, ENTITY_ACTIVATED$$+*: ProcessDefinition, ProcessInstance/Execution, Task.
 
@@ -853,11 +836,11 @@ All +$$ENTITY_\*$$+ events are related to entities inside the engine. The list b
 [[eventDispatcherRemarks]]
 
 
-==== Additional remarks
+==== 附加信息
 
 
-*Only listeners are notified in the engine the events are dispatched from.* So in case you have different engines - running against the same database - only events that originated in the engine the listener is registered for, are dispatched to that listener. The events that occur in the other engine are not dispatched to the listeners, regardless of the fact they are running in the same JVM or not.
+**监听器只会被所在引擎分发的事件通知。**因此如果你使用不同的引擎，在同一个数据库上运行，只有该监听器注册的引擎生成的事件，会分发给该监听器。其他引擎生成的事件不会分发给这个监听器，不论这些引擎是否运行在同一个JVM下。
 
-Certain event-types (related to entities) expose the targeted entity. Depending on the type or event, these entities cannot be updated anymore (e.g. when the entity is deleted). If possible, use the +EngineServices+ exposed by the event to interact in a safe way with the engine. Even then, you need to be cautious with updates/operations on entities that are involved in the dispatched event.
+某些事件类型（与实体相关）暴露了目标实体。按照事件类型的不同，有时实体不能被更新（例如实体已经被删除）。如果可能的话，请使用事件暴露的++EngineServices++安全操作引擎。即使这样，更新、操作事件中暴露的实体仍然需要小心。
 
-No entity-events are dispatched related to history, as they all have a runtime-counterpart which have their events dispatched.
+历史不会分发实体事件，因为它们都有对应的运行时实体分发事件。
