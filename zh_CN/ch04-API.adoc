@@ -222,9 +222,9 @@ Log.info("Number of process definitions: " + repositoryService.createProcessDefi
 ==== 启动流程实例 Starting a process instance
 
 
-After deploying the process definition to the Activiti engine, we can start new process instances from it. For each process definition, there are typically many process instances. The process definition is the 'blueprint', while a process instance is a runtime execution of it.
+向Activiti引擎部署流程定义后，可以用它启动流程实例。每个流程定义都可以有多个流程实例。流程定义就像是“蓝图”，而流程实例在运行时执行它。
 
-Everything related to the runtime state of processes can be found in the *RuntimeService*. There are various way to start a new process instance. In the following snippet, we use the key we defined in the process definition xml to start the process instance. We're also providing some process variables at process instance start, because the description of the first user task will use these in its expressions. Process variables are commonly used because they give meaning to the process instances for a certain process definition. Typically, the process variables are what make process instances differ from one another.
+所有与流程运行时状态相关的东西都可以在**RuntimeService**中找到。启动流程实例有多种不同的方法。在下列代码片段中，使用流程定义xml中定义的key启动流程实例。在启动流程实例时，我们也设置了一些流程变量（process variables），因为第一个用户任务（user task）的描述（description）中的表达式（expression）需要用到它们。流程变量使用很普遍，因为它们为流程定义的流程实例赋予了意义。最有代表性的是，流程变量使每个流程实例与其他的不同。
 
 [source,java,linenums]
 ----
@@ -245,7 +245,7 @@ Log.info("Number of process instances: " + runtimeService.createProcessInstanceQ
 [[api.services.tasks]]
 
 
-==== Completing tasks
+==== 完成任务 Completing tasks
 
 
 When the process starts, the first step will be a user task. This is a step that must be performed by a user of the system. Typically, such a user will have an 'inbox of tasks' which lists all the tasks that need to be done by this user. Following code snippet shows how such a query might be performed:
