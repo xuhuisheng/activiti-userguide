@@ -104,11 +104,11 @@ image::images/api.vacationRequest.png[align="center"]
 [[api.services.deployment]]
 
 
-==== Deploying the process
+==== 部署流程 Deploying the process
 
-Everything that is related to 'static' data (such as process definitions) are accessed through the *RepositoryService*. Conceptually, every such static piece of data is content of the 'repository' of the Activiti engine.
+所有有关“静态”数据（例如流程定义）的东西，都可以通过**RepositoryService**访问。从概念上说，所有这种静态数据，都是Activiti引擎“仓库（repository）”中的内容。
 
-Create a new xml file +VacationRequest.bpmn20.xml+ in the +src/test/resources/org/activiti/test+ resource folder (or anywhere else if you're not using the unit test template) with the following content. Note that this section won't explain the xml constructs being used in the example above. Please read <<bpmn20,the BPMN 2.0 chapter>> to become familiar with these constructs first if needed.
+在++src/test/resources/org/activiti/test++资源目录（如果没有使用单元测试模板，也可以是其他任何地方）下创建名为++VacationRequest.bpmn20.xml++的xml文件，写入下列内容。请注意这个章节不会解释例子中用到的xml的结构。如果需要，请先阅读<<bpmn20,the BPMN 2.0章节>>了解这种结构。
 
 [source,xml,linenums]
 ----
@@ -199,7 +199,7 @@ Create a new xml file +VacationRequest.bpmn20.xml+ in the +src/test/resources/or
 </definitions>
 ----
 
-To make this process known to the Activiti engine, we must 'deploy' it first. Deploying means that the engine will parse the BPMN 2.0 xml to something executable and a new database record will be added for each process definition included in the 'deployment'. This way, when the engine reboots, it will still know all of the 'deployed' processes:
+你必须首先部署（deploy）流程，以使Activiti引擎可以识别它。部署意味着引擎会将BPMN 2.0 xml文件解析为可执行的东西，为部署中包含的每个流程定义创建新的数据库记录。这样，引擎重启后，仍能获取已部署的流程：
 
 [source,java,linenums]
 ----
@@ -213,13 +213,13 @@ Log.info("Number of process definitions: " + repositoryService.createProcessDefi
 ----
 
 
-Read more about deployment in the <<chDeployment,deployment chapter>>.
+在<<chDeployment,部署章节>>阅读更多部署相关信息。
 
 
 [[api.services.start.processinstance]]
 
 
-==== Starting a process instance
+==== 启动流程实例 Starting a process instance
 
 
 After deploying the process definition to the Activiti engine, we can start new process instances from it. For each process definition, there are typically many process instances. The process definition is the 'blueprint', while a process instance is a runtime execution of it.
