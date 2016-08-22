@@ -393,9 +393,9 @@ execution.setVariable(String variableName, Object value);
 
 请注意也可以使用上例中的方法的__local__（局部变量）版本。
 
-For historical (and backwards compatible reasons), when doing any of the calls above, behind the scenes actually *all* variables will be fetched from the database. This means that if you have 10 variables, and only get one through _getVariable("myVariable")_, behind the scenes the other 9 will be fetched and cached. This is not bad, as subsequent calls will not hit the database again.  For example, when your process definition has three sequential service tasks (and thus one database transaction), using one call to fetch all variables in the first service task might be better then fetching the variables needed in each service task separately. Note that this applies *both* for getting and setting variables.
+由于历史（与向后兼容的）原因，当调用上述任何方法时，引擎实际上会从数据库中取出**所有**变量。也就是说，如果你有10个变量，使用__getVariable("myVariable")__获取其中的一个，实际上其他9个变量也会从数据库取出并缓存。这并不坏，因为后续的调用可以不必再读取数据库。比如，你的流程定义包含三个连续的服务任务service task（因此它们在同一个数据库事务里），在第一个服务任务里通过一次调用获取全部变量，也许比在每个服务任务里分别获取需要的变量要好。请注意对读取与设置变量**都是这样**。
 
-Of course, when using a lot of variables or simply when you want tight control on the database query and traffic, this is not appropriate. Since Activiti 5.17, new methods have been introduced to give a tighter control on this, by adding in new methods that have an optional parameter that tells the engine whether or not behind the scenes all variables need to be fetched and cached:
+当然，如果使用大量变量，或者你希望精细控制数据库查询与流量，上述做法并不合适。从Activiti 5.17版本起，引入了可以更精细控制的方法。这个方法有一个可选的参数，告诉引擎是否需要在幕后将所有变量读取并缓存：
 
 [source,java,linenums]
 ----
@@ -404,21 +404,21 @@ Object getVariable(String variableName, boolean fetchAllVariables);
 void setVariable(String variableName, Object value, boolean fetchAllVariables);
 ----
 
-When using _true_ for the parameter _fetchAllVariables_, the behaviour will be exactly as described above: when getting or setting a variable, all other variables will be fetched and cached.
+当__fetchAllVariables__参数为__true__时，行为与上面描述的完全一样：读取或设置一个变量时，所有的变量都将被读取并缓存。
 
-However, when using _false_ as value, a specific query will be used and no other variables will be fetched nor cached. Only the value of the variable in question here will be cached for subsequent use.
+而在参数值为__false__时，会使用明确的查询，其他变量不会被读取或缓存。只有指定的变量的值会被缓存，用于后续使用。
 
 
 [[apiExpressions]]
 
 
-=== Expressions
+=== 表达式 Expressions
 
-Activiti uses UEL for expression-resolving. UEL stands for _Unified Expression Language_ and is part of the EE6 specification (see link:$$http://docs.oracle.com/javaee/6/tutorial/doc/gjddd.html$$[ the EE6 specification] for detailed information). To support all features of latest UEL spec on ALL environments, we use a modified version of JUEL.
+Activiti使用UEL进行表达式解析。UEL代表__Unified Expression Language__，是EE6规范的一部分（查看link:$$http://docs.oracle.com/javaee/6/tutorial/doc/gjddd.html$$[EE6规范]了解更多信息）。为了在所有环境上支持UEL标准的所有最新特性，我们使用了修改JUEL的修改版本。
 
-Expressions can be used in for example <<bpmnJavaServiceTaskXML,Java Service tasks>>, <<executionListeners,Execution Listeners>>, <<taskListeners,Task Listeners>> and <<conditionalSequenceFlowXml,Conditional sequence flows>>. Although there are 2 types of expressions, value-expression and method-expression, Activiti abstracts  this so they can both be used where an +expression+ is needed.
+表达式可以用于例如<<bpmnJavaServiceTaskXML,Java服务任务 Java Service tasks>>, <<executionListeners,执行监听器 Execution Listeners>>, <<taskListeners,任务监听器 Task Listeners>> 与 <<conditionalSequenceFlowXml,条件流 Conditional sequence flows>>。尽管有值表达式与方法表达式两种表达式，Activiti进行了抽象，使它们都可以用在需要++expression++的地方。
 
-* *Value expression*: resolves to a value. By default, all process variables are available to use. Also all spring-beans (if using Spring) are available to use in expressions. Some examples:
+* **值表达式 Value expression**: 解析为一个值。默认情况下，所有流程变量都可以使用。（若使用Spring）所有的Spring bean也可以用在表达式里。例如：
 
 ----
 ${myVar}
@@ -426,7 +426,7 @@ ${myBean.myProperty}
 ----
 
 
-* *Method expression*: invokes a method, with or without parameters. *When invoking a method without parameters, be sure to add empty parentheses after the method-name (as this distinguishes the expression from a value expression).* The passed parameters can be literal values or expressions that are resolved themselves. Examples:
+* **方法表达式 Method expression**: 注入一个方法，可以带或不带参数。**当注入不带参数的方法时，要确保在方法名后添加空括号（以避免与值表达式混淆）。**传递的参数可以是字面值（literal value），也可以是表达式，它们会被自动解析。例如：
 
 ----
 ${printer.print()}
@@ -434,29 +434,29 @@ ${myBean.addNewOrder('orderName')}
 ${myBean.doSomething(myVar, execution)}
 ----
 
-Note that these expressions support resolving primitives (incl. comparing them), beans, lists, arrays and maps.
+请注意，表达式支持解析（包括比较）原始类型（primitive）、bean、list、array（数组）与map。
 
-On top of all process variables, there are a few default objects available to be used in expressions:
+除了所有流程变量外，还有一些默认对象可用于表达式：
 
-* ++execution++: The +DelegateExecution+ that holds additional information about the ongoing execution.
-* ++task++: The +DelegateTask+ that holds additional information about the current Task. *Note: Only works in expressions evaluated from task listeners.*
-* ++authenticatedUserId++: The id of the user that is currently authenticated. If no user is authenticated, the variable is not available.
+* ++execution++: 持有进行中执行（execution）额外信息的++DelegateExecution++。
+* ++task++: 持有当前任务（task）额外信息的++DelegateTask++。**请注意：只在任务监听器的表达式中可用。**
+* ++authenticatedUserId++: 当前已验证的用户id。如果没有验证的用户，该变量不可用。
 
-For more concrete usage and examples, check out <<springExpressions,Expressions in Spring>>, <<bpmnJavaServiceTaskXML,Java Service tasks>>, <<executionListeners,Execution Listeners>>,  <<taskListeners,Task Listeners>> or <<conditionalSequenceFlowXml,Conditional sequence flows>>.
+更多实际使用例子，请查看<<springExpressions,Spring中的表达式 Expressions in Spring>>, <<bpmnJavaServiceTaskXML,Java服务任务 Java Service tasks>>, <<executionListeners,执行监听器 Execution Listeners>>,  <<taskListeners,任务监听器Task Listeners>>或者<<conditionalSequenceFlowXml,条件流 Conditional sequence flows>>.
 
 
 [[apiUnitTesting]]
 
 
-=== Unit testing
+=== 单元测试 Unit testing
 
-Business processes are an integral part of software projects and they should be tested in the same way normal application logic is tested: with unit tests. Since Activiti is an embeddable Java engine, writing unit tests for business processes is as simple as writing regular unit tests.
+业务流程是软件项目的必要组成部分，也需要使用与测试一般应用逻辑相同的方法对它们进行测试，也就是单元测试。Activiti是嵌入式的Java引擎，因此为业务流程编写单元测试就与编写一般的单元测试一样简单。
 
-Activiti supports both JUnit versions 3 and 4 styles of unit testing. In the JUnit 3 style, the +org.activiti.engine.test.ActivitiTestCase+ must be extended. This will make the ProcessEngine and the services available through protected member fields. In the +setup()+ of the test,  the processEngine will be initialized by default with the +activiti.cfg.xml+ resource on the classpath.  To specify a different configuration file, override the _getConfigurationResource()_ method. Process engines are cached statically over multiple unit tests when the configuration resource is the same.
+Activiti支持JUnit版本3与4的单元测试风格。按照JUnit 3的风格，必须扩展（extended）++org.activiti.engine.test.ActivitiTestCase++。它通过保护（protected）成员变量提供对ProcessEngine与服务的访问。在测试的++setup()++中，processEngine会默认使用classpath中的++activiti.cfg.xml++资源初始化。如果要指定不同的配置文件，请覆盖__getConfigurationResource()__方法。当使用相同的配置资源时，流程引擎会静态缓存,可用于多个单元测试。
 
-By extending +ActivitiTestCase+, you can annotate test methods with +org.activiti.engine.test.Deployment+. Before the test is run, a resource file of the form +testClassName.testMethod.bpmn20.xml+ in the same package as the test class, will be deployed. At the end of the test, the deployment will be deleted, including all related process instances, tasks, etc. The +Deployment+ annotation also supports setting the resource location explicitly. See the class itself for more information.
+通过扩展++ActivitiTestCase++，你可以使用++org.activiti.engine.test.Deployment++注解测试方法。在测试运行前，会部署与测试类在同一个包下的格式为++testClassName.testMethod.bpmn20.xml++的资源文件。在测试结束时，会删除这个部署，包括所有相关的流程实例，任务，等等。也可以使用++Deployment++注解显式指定,资源位置。查看该类以获得更多信息。
 
-Taking all that in account, a JUnit 3 style test looks as follows.
+综上所述，JUnit 3风格的测试看起来类似：
 
 [source,java,linenums]
 ----
@@ -475,9 +475,9 @@ public class MyBusinessProcessTest extends ActivitiTestCase {
 }
 ----
 
-To get the same functionality when using the JUnit 4 style of writing unit tests, the +org.activiti.engine.test.ActivitiRule+ Rule must be used. Through this rule, the process engine and services are available through getters. As with the +ActivitiTestCase+ (see above), including this +Rule+ will enable the use of the +org.activiti.engine.test.Deployment+ annotation (see above for an explanation of its use and configuration) and it will look for the default configuration file on the classpath. Process engines are statically cached over multiple unit tests when using the same configuration resource.
+要使用JUnit 4的风格书写单元测试并达成同样的功能，必须使用++org.activiti.engine.test.ActivitiRule++ Rule。这样能够通过它的getter获得流程引擎与服务。对于++ActivitiTestCase++（上例），包含++Rule++就可以使用++org.activiti.engine.test.Deployment++注解（参见上例解释其用途及配置），并且会自动在classpath中寻找默认配置文件。当使用相同的配置资源时，流程引擎会静态缓存,可用于多个单元测试。
 
-The following code snippet shows an example of using the JUnit 4 style of testing and the usage of the +ActivitiRule+.
+下面的代码片段展示了JUnit 4风格的测试与++ActivitiRule++的使用。
 
 [source,java,linenums]
 ----
@@ -505,31 +505,31 @@ public class MyBusinessProcessTest {
 [[apiDebuggingUnitTest]]
 
 
-=== Debugging unit tests
+=== Debug单元测试(Debugging unit tests)
 
-When using the in-memory H2 database for unit tests, the following instructions allow to easily inspect the data in the Activiti database during a debugging session. The screenshots here are taken in Eclipse, but the mechanism should be similar for other IDEs.
+当使用H2内存数据库进行单元测试时，下面的介绍可以让你在debug过程中容易地检查Activiti数据库中的数据。截图来自Eclipse，但原理应该与其他IDE相似。
 
-Suppose we have put a _breakpoint_ somewhere in our unit test. In Eclipse this is done by double-clicking in the left border next to the code:
+假设我们的单元测试的某处放置了__breakpoint__（断点）。在Eclipse里可以通过在代码左侧条上双击实现：
 
 image::images/api.test.debug.breakpoint.png[align="center"]
 
-If we now run the unit test in _debug_ mode (right-click in test class, select 'Run as' and then 'JUnit test'), the test execution halts at our breakpoint, where we can now inspect the variables of our test as shown in the right upper panel.
+如果我们在__debug__模式（在测试类中右键，选择“Run as”，然后选择“JUnit test”）下运行单元测试，测试进程会在断点处暂停，这样我们就可以在右上窗口中查看测试中的变量。
 
 image::images/api.test.debug.view.png[align="center"]
 
-To inspect the Activiti data, open up the _'Display'_ window (if this window isn't there, open Window->Show View->Other and select _Display_.) and type (code completion is available) +org.h2.tools.Server.createWebServer("-web").start()+
+要检查Activiti的数据，打开__Display__窗口（如果没有找到这个窗口，打开 Window->Show View->Other，然后选择__Display__），并键入（可以使用代码补全）++org.h2.tools.Server.createWebServer("-web").start()++
 
 image::images/api.test.debug.start.h2.server.png[align="center"]
 
-Select the line you've just typed and right-click on it. Now select 'Display' (or execute the shortcut instead of right-clicking)
+选中刚键入的行并右键点击。然后选择'Display'（或者用快捷方式执行）
 
 image::images/api.test.debug.start.h2.server.2.png[align="center"]
 
-Now open up a browser and go to link:$$http://localhost:8082$$[http://localhost:8082], and fill in the JDBC URL to the in-memory database (by default this is ++jdbc:h2:mem:activiti++), and hit the connect button.
+现在打开浏览器并访问link:$$http://localhost:8082$$[http://localhost:8082]，填入内存数据库的JDBC URL（默认为++jdbc:h2:mem:activiti++），然后点击connect按钮。
 
 image::images/api.test.debug.h2.login.png[align="center"]
 
-You can now see the Activiti data and use it to understand how and why your unit test is executing your process in a certain way.
+现在你可以看到Activiti的数据，可以用来理解你的单元测试执行流程的方式是什么，以及为什么这样。
 
 image::images/api.test.debug.h2.tables.png[align="center"]
 
@@ -538,11 +538,11 @@ image::images/api.test.debug.h2.tables.png[align="center"]
 [[apiProcessEngineInWebApp]]
 
 
-=== The process engine in a web application
+=== Web应用中的流程引擎 The process engine in a web application
 
-The +ProcessEngine+ is a thread-safe class and can easily be shared among multiple threads. In a web application, this means it is possible to create the process engine once when the container boots and shut down the engine when the container goes down.
+++ProcessEngine++是线程安全的类，可以轻易在多个线程间共享。在web应用中，这意味着可以在容器启动时创建引擎，并在容器关闭时关闭引擎。
 
-The following code snippet shows how you can write a simple +ServletContextListener+ to initialize and destroy process engines in a plain Servlet environment:
+下面的代码片段展示了如何在纯Servlet环境中，简单的通过++ServletContextListener++初始化与销毁流程引擎。
 
 [source,java,linenums]
 ----
@@ -559,22 +559,21 @@ public class ProcessEnginesServletContextListener implements ServletContextListe
 }
 ----
 
-The +contextInitialized+ method will delegate to +ProcessEngines.init()+. That will look for +activiti.cfg.xml+ resource files on the classpath, and create a +ProcessEngine+ for the given configurations (e.g. multiple jars with a configuration file). If you have multiple such resource files on the classpath, make sure they all have different names. When the process engine is needed, it can be fetched using
+++contextInitialized++方法委托给++ProcessEngines.init()++。它会在classpath中查找++activiti.cfg.xml++资源文件，并为每个配置创建++ProcessEngine++（例如多个jar都包含配置文件）。如果在classpath中有多个这样的资源文件，请确保它们都使用不同的名字。需要使用流程引擎时，可以获取通过
 
 [source,java,linenums]
 ----
 ProcessEngines.getDefaultProcessEngine()
 ----
 
-or
+或者
 
 [source,java,linenums]
 ----
 ProcessEngines.getProcessEngine("myName");
 ----
 
-Of course, it is also possible to use any of the variants of creating a process engine,
-as described in the <<configuration,configuration section>>.
+当然，就像<<configuration,配置章节 configuration section>>中介绍的，还可以使用各种不同的方式创建流程引擎。
 
 
-The +contextDestroyed+ method of the context-listener delegates to +ProcessEngines.destroy()+. That will properly close all initialized process engines.
+context-listener的++contextDestroyed++方法委托给++ProcessEngines.destroy()++。它会妥善关闭所有已初始化的流程引擎。
