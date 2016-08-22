@@ -248,7 +248,7 @@ Log.info("Number of process instances: " + runtimeService.createProcessInstanceQ
 ==== 完成任务 Completing tasks
 
 
-When the process starts, the first step will be a user task. This is a step that must be performed by a user of the system. Typically, such a user will have an 'inbox of tasks' which lists all the tasks that need to be done by this user. Following code snippet shows how such a query might be performed:
+流程启动时，第一步是一个用户任务。这个步骤必须由系统用户操作。一般会提供“待办任务”列出所有需要该用户处理的任务。下面的代码片段展示如何进行这种列表的查询：
 
 [source,java,linenums]
 ----
@@ -260,7 +260,7 @@ for (Task task : tasks) {
 }
 ----
 
-To continue the process instance, we need to finish this task. For the Activiti engine, this means you need to +complete+ the task. Following snippet shows how this is done:
+我们需要结束这个任务才能使流程实例继续运行。对于Activiti引擎来说，就是++complete（完成）++这个任务。下面的代码片段展示了如何操作：
 
 [source,java,linenums]
 ----
@@ -273,16 +273,16 @@ taskService.complete(task.getId(), taskVariables);
 ----
 
 
-The process instance will now continue to the next step. In this example, the next step allows the employee to complete a form that adjusts their original vacation request. The employee can resubmit the vacation request which will cause the process to loop back to the start task.
+现在流程实例会继续向下一步进行。在这个例子里，下一步允许雇员填写一个表单，用来修改提交的请假申请。雇员可以重新提交请假申请，这会使流程从开始任务重新开始运行。
 
 
 [[api.services.suspend]]
 
 
-==== Suspending and activating a process
+==== 挂起与激活流程 Suspending and activating a process
 
 
-It's possible to suspend a process definition. When a process definition is suspended, new process instance can't be created (an exception will be thrown). Suspending the process definition is done through the ++RepositoryService++:
+可以挂起流程定义。当流程定义挂起后，不能再创建新的流程实例（会抛出异常）。使用++RepositoryService++挂起流程定义：
 
 [source,java,linenums]
 ----
@@ -295,27 +295,26 @@ try {
 ----
 
 
-To reactivate a process definition, simply call one of the +repositoryService.activateProcessDefinitionXXX+ methods.
+要重新激活流程定义，可以调用++repositoryService.activateProcessDefinitionXXX++方法。
 
-It's also possible to suspend a process instance. When suspended, the process cannot
- be continued (e.g. completing a task throws an exception) and no jobs (such as timers) will executed. Suspending a process instance can be done by calling the +runtimeService.suspendProcessInstance+ method. Activating the process instance again is done by calling the +runtimeService.activateProcessInstanceXXX+ methods.
+也可以挂起流程实例。当流程实例挂起后，不能进行流程操作（例如完成任务会抛出异常），作业（如定时器）也不会执行。可以调用++runtimeService.suspendProcessInstance++挂起流程实例。调用++runtimeService.activateProcessInstanceXXX++重新激活流程实例。
 
 [[api.services]]
 
 
-==== Further reading
+==== 扩展阅读 Further reading
 
 
-We've barely scratched the surface in the previous sections regarding Activiti functionality. We will expand these sections further in the future with additional coverage of the Activiti API. Of course, as with any open source project, the best way to learn is to inspect the code and read the Javadocs!
+在前面的章节，我们大致介绍了Acvtiviti的功能。我们会在未来扩展这些内容，覆盖更多的Activiti API。当然，与其他开源项目一样，最好的学习方法是研究代码与阅读Javadocs！
 
 
 [[queryAPI]]
 
 
-=== Query API
+=== 查询API (Query API)
 
 
-There are two ways of querying data from the engine: The query API and native queries. The Query API allows to program completely typesafe queries with a fluent API. You can add various conditions to your queries (all of which are applied together as a logical AND) and precisely one ordering. The following code shows an example:
+从引擎中查询数据有两种方式：查询API与原生(native)查询。查询API可以使用流畅的API，通过编程方式进行类型安全的查询。你可以在查询中增加各种条件（所有条件都用做AND逻辑），也可以精确指定一个排序。下面是示例代码：
 
 [source,java,linenums]
 ----
@@ -326,7 +325,7 @@ List<Task> tasks = taskService.createTaskQuery()
     .list();
 ----
 
-Sometimes you need more powerful queries, e.g. queries using an OR operator or restrictions you cannot express using the Query API. For these cases, we introduced native queries, which allow you to write your own SQL queries. The return type is defined by the Query object you use and the data is mapped into the correct objects, e.g. Task, ProcessInstance, Execution, etc.... Since the query will be fired at the database you have to use table and column names as they are defined in the database; this requires some knowledge about the internal data structure and it is recommended to use native queries with care. The table names can be retrieved via the API to keep the dependency as small as possible.
+有时你需要更强力的查询，例如使用OR操作符查询，或者使用查询API不能满足查询条件要求。我们为这种需求提供了原生查询，可以用于自己写SQL查询。返回类型由使用的查询对象决定，数据也会映射到正确的对象中，如Task, ProcessInstance, Execution....查询会在数据库中进行，因此你需要使用数据库中定义的表名与列名。这需要了解内部数据结构，因此建议小心使用原生查询。数据库表名可以通过API读取，这样可以将依赖关系减到最小。
 
 [source,java,linenums]
 ----
@@ -343,20 +342,20 @@ long count = taskService.createNativeTaskQuery()
 
 [[apiVariables]]
 
-=== Variables
+=== 变量 Variables
 
-Every process instance needs and uses data to execute the steps it exists of. In Activiti, this data is called _variables_, which are stored in the database. Variables can be used in expressions (for example to select the correct outgoing sequence flow in an exclusive gateway), in java service tasks when calling external services (for example to provide the input or store the result of the service call), etc.
+流程实例按步骤执行时，需要同时也使用一些数据。在Activiti中，这些数据称作__variables(变量)__，并会存储在数据库中。变量可以用在表达式中（例如在排他网关中用于选择正确的出口路径），用在java服务任务（java service task）中用于调用外部服务（例如为服务调用提供输入，或结果存储），等等。
 
-A process instance can have variables (called _process variables_), but also _executions_ (which are specific pointers to where the process is active) and user tasks can have variables. A process instance can have any number of variables. Each variable is stored in a row in the _ACT_RU_VARIABLE_ database table.
+流程实例可以拥有变量（称作__process variables，流程变量__），__执行(executions)__——流程当前活动节点的指针，以及用户任务也可以拥有变量。流程实例可以持有任意数量的变量，每个变量都存储在__ACT_RU_VARIABLE__数据库表的一行中。
 
-Any of the _startProcessInstanceXXX_ methods have an optional parameters to provide the variables when the process instance is created and started. For example, from the _RuntimeService_:
+任何__startProcessInstanceXXX__方法都有一个可选参数，用于在流程实例创建并启动时设置变量。例如，在__RuntimeService__中：
 
 [source,java,linenums]
 ----
 ProcessInstance startProcessInstanceByKey(String processDefinitionKey, Map<String, Object> variables);
 ----
 
-Variables can be added during process execution. For example (_RuntimeService_):
+也可以在流程执行中加入变量。例如(_RuntimeService_):
 
 [source,java,linenums]
 ----
@@ -366,9 +365,9 @@ void setVariables(String executionId, Map<String, ? extends Object> variables);
 void setVariablesLocal(String executionId, Map<String, ? extends Object> variables);
 ----
 
-Note that variables can be set _local_ for a given execution (remember a process instance consists of a tree of executions). The variable will only be visible on that execution, and not higher in the tree of executions. This can be useful if data shouldn't be propagated to the process instance level, or the variable has a new value for a certain path in the process instance (for example when using parallel paths).
+请注意可以为给定执行（请记住流程实例由一颗执行的树组成）设置__local__（局部）变量。变量将只在该执行中可见，而对执行树的上层则不可见。这可以用于 数据不应该在流程实例级别传播，或者变量在流程实例的不同路径中有不同的值（例如使用并行路径时）的情况。
 
-Variables can also be fetched again, as shown below. Note that similar methods exist on the _TaskService_. This means that tasks, like executions, can have local variables that are 'alive' just for the duration of the task.
+像下面展示的，变量可以重新获取。请注意__TaskService__中有类似的方法。这意味着任务与执行一样，可以持有局部变量，这种变量的生存期为任务持续的时间。
 
 [source,java,linenums]
 ----
@@ -380,7 +379,7 @@ Object getVariable(String executionId, String variableName);
 <T> T getVariable(String executionId, String variableName, Class<T> variableClass);
 ----
 
-Variables are often used in <<bpmnJavaServiceTask, Java delegates>>, <<apiExpressions, expressions>>, execution- or tasklisteners, scripts, etc. In those constructs, the current _execution_ or _task_ object is available and it can be used for variable setting and/or retrieval. The simplest methods are these:
+变量通常用于<<bpmnJavaServiceTask, Java代理（Java delegates）>>, <<apiExpressions, 表达式（expressions）>>, 执行（execution），任务监听器（tasklisteners），脚本（scripts）等等。在这些结构中，提供当前的__execution__或__task__对象，可用于变量的设置、读取。简单示例如下：
 
 [source,java,linenums]
 ----
@@ -392,7 +391,7 @@ execution.setVariables(Map<String, object> variables);
 execution.setVariable(String variableName, Object value);
 ----
 
-Note that a variant with _local_ is also available for all of the above.
+请注意也可以使用上例中的方法的__local__（局部变量）版本。
 
 For historical (and backwards compatible reasons), when doing any of the calls above, behind the scenes actually *all* variables will be fetched from the database. This means that if you have 10 variables, and only get one through _getVariable("myVariable")_, behind the scenes the other 9 will be fetched and cached. This is not bad, as subsequent calls will not hit the database again.  For example, when your process definition has three sequential service tasks (and thus one database transaction), using one call to fetch all variables in the first service task might be better then fetching the variables needed in each service task separately. Note that this applies *both* for getting and setting variables.
 
