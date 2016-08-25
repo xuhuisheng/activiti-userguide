@@ -2,11 +2,11 @@
 
 == 集成Spring (Spring integration)
 
-尽管完全可以不用Spring使用Activiti，While you can definitely use Activiti without Spring, 我们仍提供了很多非常好的集成特性，将在这一章节介绍。
+尽管完全可以脱离Spring使用Activiti，我们仍提供了很多非常好的集成特性，将在这一章节介绍。
 
 === ProcessEngineFactoryBean
 
-++ProcessEngine++可以被配置为普通的Srping bean。集成起点是++org.activiti.spring.ProcessEngineFactoryBean++类。这个bean处理流程引擎配置，并创建流程引擎。这意味着在Spring中创建与设定参数与<<configuration,配置章节 configuration section>>中记载的一样。Spring集成的配置与引擎bean像是这样：
+++ProcessEngine++可以被配置为普通的Spring bean。入口是++org.activiti.spring.ProcessEngineFactoryBean++类。这个bean处理流程引擎配置，并创建流程引擎。这意味着在Spring中，创建与设置参数与<<configuration,配置章节 configuration section>>中介绍的一样。集成Spring的配置与引擎bean为：
 
 [source,xml,linenums]
 ----
@@ -91,7 +91,7 @@
 </beans>
 ----
 
-首先使用任何Spring的方式创建应用上下文（application context）。在这个例子中，可以使用classpath中的XML资源配置Spring应用上下文：
+使用任何Spring的方式创建应用上下文（application context）。在这个例子中，可以使用classpath中的XML资源配置来创建Spring应用上下文：
 
 [source,java,linenums]
 ----
@@ -157,7 +157,7 @@ public class UserBean {
 
 === 表达式 Expressions
 
-当使用ProcessEngineFactoryBean时，默认BPMN流程中所有的<<apiExpressions,表达式 expressions>>都可以“看见”所有的Spring bean。通过可以配置的map，可以限制表达式能使用的bean，甚至可以完全禁止表达式使用bean。下面的例子只暴露了一个bean（printer），可以使用“printer”作为key访问。**要完全禁止表达式使用bean，可以将SpringProcessEngineConfiguration的‘beans’参数设为空list。如果不设置‘beans’参数，则所有上下文中的bean都将可以使用。**
+当使用ProcessEngineFactoryBean时，默认BPMN流程中所有的<<apiExpressions,表达式 expressions>>都可以“看见”所有的Spring bean。通过可以配置的map，可以限制表达式能使用的bean，甚至可以完全禁止表达式使用bean。下面的例子只暴露了一个bean（printer），可以使用“printer”作为key访问。**要完全禁止表达式使用bean，可以将SpringProcessEngineConfiguration的‘beans’参数设为空list。如果不设置‘beans’参数，则上下文中的所有bean都将可以使用。**
 
 [source,xml,linenums]
 ----
@@ -173,7 +173,7 @@ public class UserBean {
 <bean id="printer" class="org.activiti.examples.spring.Printer" />
 ----
 
-现在可以在表达式中使用这个暴露的bean了：例如，SpringTransactionIntegrationTest ++hello.bpmn20.xml++展示了如何通过UEL方法表达式注入Spring bean：
+现在可以在表达式中使用这个暴露的bean了：例如，SpringTransactionIntegrationTest ++hello.bpmn20.xml++展示了如何通过UEL方法表达式(method expression)注入Spring bean：
 
 
 [source,xml,linenums]
@@ -240,13 +240,13 @@ Spring bean配置（上面已经展示过）为：
 </bean>
 ----
 
-默认情况下，这个配置会将符合这个过滤器的所有资源组织在一起，作为Activiti引擎的一个部署。避免重复部署未改变资源的重复检测过滤器将作用于整个部署。有时这不是你想要的。例如，如果用这种方式部署了一组资源，即使只有其中的一个资源发生了改变，整个部署都会被认为已经改变，因此这个部署中所有的所有流程定义都会被重新部署。这将导致每个流程定义都会刷新版本号（流程定义id会变化），即使实际上只有一个流程发生了变化。
+默认情况下，这个配置会将符合这个过滤器的所有资源组织在一起，作为Activiti引擎的一个部署。重复检测过滤器将作用于整个部署，避免重复地部署未改变资源。有时这不是你想要的。例如，如果用这种方式部署了一组资源，即使只有其中的一个资源发生了改变，整个部署都会被认为已经改变，因此这个部署中所有的所有流程定义都会被重新部署。这将导致每个流程定义都会刷新版本号（流程定义id会变化），即使实际上只有一个流程发生了变化。
 
-可以使用++SpringProcessEngineConfiguration++中的额外参数+deploymentMode+，定制部署的决定方式。这个参数定义了在一组符合过滤器的资源中，确定部署的方式。默认这个参数有3个可用值：
+可以使用++SpringProcessEngineConfiguration++中的额外参数+deploymentMode+，定制部署的选择方式。这个参数定义了在一组符合过滤器的资源中，组织部署的方式。默认这个参数有3个可用值：
 
-* ++default++: 将所有资源组织在一个部署中，整体用于重复检测过滤。这是默认值，在参数未指定值时也会用这个值。
+* ++default++: 将所有资源组织在一个部署中，整体用于重复检测过滤。这是默认值，在未设置这个参数时也会用这个值。
 * ++single-resource++: 为每个资源创建一个单独的部署，并用于重复检测过滤。当你希望单独部署每一个流程定义，并且在它发生变化时创建新的流程定义版本，应该使用这个值。
-* ++resource-parent-folder++: 为同一个目录下的资源创建一个单独的部署，并用于重复检测过滤。这个参数值可以为大多数资源创建独立的部署，同时仍可以将部分资源放在同一个目录下，以便将它们组织在一起。这里有一个将++deploymentMode++设置为++single-resource++的例子：
+* ++resource-parent-folder++: 为同一个目录下的资源创建一个单独的部署，并用于重复检测过滤。这个参数值可以为大多数资源创建独立的部署。同时仍可以通过将部分资源放在同一个目录下，将它们组织在一起。这里有一个将++deploymentMode++设置为++single-resource++的例子：
 
 
 [source,xml,linenums]
@@ -259,7 +259,7 @@ Spring bean配置（上面已经展示过）为：
 </bean>
 ----
 
-如果上述++deploymentMode++的参数值不能满足要求，还可以自定义确定部署的行为。创建++SpringProcessEngineConfiguration++的子类，并覆盖++getAutoDeploymentStrategy(String deploymentMode)++方法。这个方法决定了对于给定的++deploymentMode++参数值，使用何种部署策略。
+如果上述++deploymentMode++的参数值不能满足要求，还可以自定义组织部署的行为。创建++SpringProcessEngineConfiguration++的子类，并覆盖++getAutoDeploymentStrategy(String deploymentMode)++方法。这个方法决定了对于给定的++deploymentMode++参数值，使用何种部署策略。
 
 
 [[springUnitTest]]
@@ -267,7 +267,7 @@ Spring bean配置（上面已经展示过）为：
 
 === 单元测试 Unit testing
 
-与Spring集成后，业务流程可以非常简单地使用标准的 <<apiUnitTesting,Activiti测试工具Activiti testing facilities>>进行测试。下面的例子展示了如何通过典型的基于Spring的单元测试，对业务流程进行测试：
+与Spring集成后，业务流程可以非常简单地使用标准的 <<apiUnitTesting,Activiti测试工具 Activiti testing facilities>>进行测试。下面的例子展示了如何通过典型的基于Spring的单元测试，对业务流程进行测试：
 
 [source,java,linenums]
 ----
@@ -484,9 +484,9 @@ Number of tasks after process start : 1
 
 ==== 更换数据源与连接池 Changing the database and connection pool
 
-上面也提到过，Spring Boot的约定大雨配置。默认情况下，如果classpath中只有H2，就会创建内存数据库，并传递给Activiti流程引擎配置。
+上面也提到过，Spring Boot的约定大于配置。默认情况下，如果classpath中只有H2，就会创建内存数据库，并传递给Activiti流程引擎配置。
 
-要更换数据源，简单地通过提供Datasource bean覆盖默认配置。我们在这里使用__DataSourceBuilder__类，这是Spring Boot的辅助类。如果classpath中有Tomcat, HikariCP 或者 Commons DBCP，会（按照这个顺序，先是Tomcat）选择一个。例如，要切换到MySQL数据库：
+可以简单地通过提供Datasource bean来覆盖默认配置，来更换数据源。我们在这里使用__DataSourceBuilder__类，这是Spring Boot的辅助类。如果classpath中有Tomcat, HikariCP 或者 Commons DBCP，就会（按照这个顺序，先是Tomcat）选择一个（作为连接池）。例如，要切换到MySQL数据库：
 
 [source,java,linenums]
 ----
@@ -529,7 +529,7 @@ org.activiti.engine.impl.db.DbSqlSession   : performing create on identity with 
 
 ==== REST支持 (REST support)
 
-通常在嵌入的Activiti引擎之上，需要REST API（与公司的不同服务交互）。Spring Boot让这个变得很容易。在classpath中添加下列依赖：
+通常在嵌入的Activiti引擎之上，需要提供REST API（用于与公司的不同服务交互）。Spring Boot让这变得很容易。在classpath中添加下列依赖：
 
 [source,xml,linenums]
 ----
@@ -849,7 +849,7 @@ curl http://localhost:8080/tasks?assignee=1
 
 ==== 扩展阅读 Further Reading
 
-很明显还有很多Spring　Boot相关的内容还没有提及，例如简单的JTA集成，构建能在主流应用服务器上运行的war文件。还有很多关于Spring Boot的内容：
+很明显还有很多Spring　Boot相关的内容还没有提及，例如简单的JTA集成，构建能在主流应用服务器上运行的war文件。还有很多关于Spring Boot集成的内容：
 
 * Actuator支持
 * Spring Integration支持
