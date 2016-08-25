@@ -265,9 +265,9 @@ Spring bean配置（上面已经展示过）为：
 [[springUnitTest]]
 
 
-=== Unit testing
+=== 单元测试 Unit testing
 
-When integrating with Spring, business processes can be tested very easily using the standard <<apiUnitTesting,Activiti testing facilities>>. The following example shows how a business process is tested in a typical Spring-based unit test:
+与Spring集成后，业务流程可以非常简单地使用标准的 <<apiUnitTesting,Activiti测试工具Activiti testing facilities>>进行测试。下面的例子展示了如何通过典型的基于Spring的单元测试，对业务流程进行测试：
 
 [source,java,linenums]
 ----
@@ -299,7 +299,7 @@ public class MyBusinessProcessTest {
 }
 ----
 
-Note that for this to work, you need to define a _org.activiti.engine.test.ActivitiRule_ bean in the Spring configuration (which is injected by auto-wiring in the example above).
+请注意要让这个例子可以正常工作，需要在Spring配置中定义__org.activiti.engine.test.ActivitiRule__ bean（在上面的例子中通过auto-wiring注入）。
 
 [source,xml,linenums]
 ----
@@ -311,9 +311,9 @@ Note that for this to work, you need to define a _org.activiti.engine.test.Activ
 
 
 
-=== JPA with Hibernate 4.2.x
+=== 通过Hibernate 4.2.x使用JPA (JPA with Hibernate 4.2.x)
 
-When using Hibernate 4.2.x JPA in service task or listener logic in the Activiti Engine an additional dependency to Spring ORM is needed. This is not needed for Hibernate 4.1.x or lower. The following dependency should be added:
+要在Activiti引擎的服务任务或者监听器逻辑中使用Hibernate 4.2.x JPA，需要添加Spring ORM的额外依赖。对Hibernate 4.1.x或更低则不需要。需要添加的依赖为：
 
 [source,xml,linenums]
 ----
@@ -330,19 +330,19 @@ When using Hibernate 4.2.x JPA in service task or listener logic in the Activiti
 
 === Spring Boot
 
-Spring Boot is an application framework which, according to link:$$http://projects.spring.io/spring-boot/$$[its website], _makes it easy to create stand-alone, production-grade Spring based Applications that can you can "just run". It takes an opinionated view of the Spring platform and third-party libraries so you can get started with minimum fuss. Most Spring Boot applications need very little Spring configuration_.
+Spring Boot是一个应用框架，按照link:$$http://projects.spring.io/spring-boot/$$[官网]的介绍，可以__轻松地创建独立运行的，生产级别的，基于Spring的应用，并且可以“直接运行”。坚持使用Spring框架与第三方库，使你可以轻松地开始使用。大多数Spring Boot应用只需要很少的Spring配置__。
 
-For more information on Spring Boot, see link:$$http://projects.spring.io/spring-boot/$$[http://projects.spring.io/spring-boot/]
+要获得更多关于Spring Boot的信息，请查阅link:$$http://projects.spring.io/spring-boot/$$[http://projects.spring.io/spring-boot/]
 
-The Spring Boot - Activiti integration is currently experimental. It has been developer together with Spring committers, but it is still early days. We welcome all to try it out and provide feedback. 
+Activiti与Spring Boot的集成目前只是试验性的。我们已经与Spring的提交者共同开发，但为时尚早。我们欢迎试用并提供反馈。
 
-==== Compatibility
+==== 兼容性 Compatibility
 
-Spring Boot requires a JDK 7 runtime. It can be made to work with JDK6, but it will need configuration tweaks. Please check the Spring Boot documentation.
+Spring Boot需要JDK 7运行时环境。可以通过调整配置，在JDK6下运行。请查阅Spring Boot的文档。
 
-==== Getting started
+==== 开始 Getting started
 
-Spring Boot is all about convention over configuration. To get started, simply add the _spring-boot-starters-basic_ dependency to your project. For example for Maven:
+Spring Boot提倡约定大于配置。要开始工作，简单地在你的项目中添加__spring-boot-starters-basic__依赖。例如在Maven中：
 
 
 [source,xml,linenums]
@@ -354,7 +354,7 @@ Spring Boot is all about convention over configuration. To get started, simply a
 </dependency>
 ----
 
-That's all that's needed. This dependency will transitively add the correct Activiti and Spring dependencies to the classpath. You can now write the Spring Boot application:
+就这么简单。这个依赖会自动向classpath添加正确的Activiti与Spring依赖。现在你可以编写Spring Boot应用了：
 
 [source,java,,linenums]
 ----
@@ -375,7 +375,7 @@ public class MyApplication {
 }
 ----
 
-Activiti needs a database to store its data. If you would run the code above, it would give you an informative exception message that you need to add a database driver dependency to the classpath. For now, add the H2 database dependency:
+Activiti需要数据库存储数据。如果你运行上面的代码，会得到提示性的异常信息，指出需要在classpath中添加数据库驱动依赖。现在添加H2数据库依赖：
 
 [source,xml,linenums]
 ----
@@ -386,7 +386,7 @@ Activiti needs a database to store its data. If you would run the code above, it
 </dependency>
 ----
 
-The application can now be started. You will see output like this:
+应用这次可以启动了。你会看到类似这样的输出：
 
 ----
   .   ____          _            __ _ _
@@ -411,14 +411,14 @@ o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on
 MyApplication                            : Started MyApplication in 2.019 seconds (JVM running for 2.294)
 ----
 
-So by just adding the dependency to the classpath and using the _@EnableAutoConfiguration_ annotation a lot has happened behind the scenes:
+只是在classpath中添加依赖，并使用__@EnableAutoConfiguration__注解，就会在幕后发生很多事情：
 
-* An in-memory datasource is created automatically (since the H2 driver is on the classpath) and passed to the Activiti process engine configuration
-* An Activiti ProcessEngine bean is created and exposed
-* All the Activiti services are exposed as Spring beans
-* The Spring Job Executor is created
+* 自动创建了内存数据库（因为classpath中有H2驱动），并传递给Activiti流程引擎配置
+* 创建并暴露了Activiti ProcessEngine bean
+* 所有的Activiti服务都暴露为Spring bean
+* 创建了Spring Job Executor
 
-Also, any BPMN 2.0 process definition in the _processes_ folder would be automatically deployed. Create a folder _processes_ and add a dummy process definition (named _one-task-process.bpmn20.xml_) to this folder. 
+并且，__processes__目录下的任何BPMN 2.0流程定义都会被自动部署。创建__processes__目录，并在其中创建示例流程定义（命名为__one-task-process.bpmn20.xml__）:
 
 [source,xml,linenums]
 ----
@@ -439,7 +439,7 @@ Also, any BPMN 2.0 process definition in the _processes_ folder would be automat
 </definitions>
 ----
 
-Also add following code lines to test if the deployment actually worked. The _CommandLineRunner_ is a special kind of Spring bean that is executed when the application boots:
+然后添加下列代码，以测试部署是否生效。__CommandLineRunner__是一个特殊的Spring bean，在应用启动时执行：
 
 [source,java,linenums]
 ----
@@ -473,7 +473,7 @@ public class MyApplication {
 }
 ----
 
-The output will be as expected:
+会得到这样的输出：
 
 ----
 Number of process definitions : 1
@@ -482,11 +482,11 @@ Number of tasks after process start : 1
 ----
 
 
-==== Changing the database and connection pool
+==== 更换数据源与连接池 Changing the database and connection pool
 
-As stated above, Spring Boot is about convention over configuration. By default, by having only H2 on the classpath, it created an in memory datasource and passed that to the Activiti process engine configuration.
+上面也提到过，Spring Boot的约定大雨配置。默认情况下，如果classpath中只有H2，就会创建内存数据库，并传递给Activiti流程引擎配置。
 
-To change the datasource, simply override the default by providing a Datasource bean. We're using the _DataSourceBuilder_ class here, which is a helper class from Spring Boot. If Tomcat, HikariCP or Commons DBCP are on the classpath one of them will be selected (in that order with Tomcat first). For example, to switch to a MySQL database:
+要更换数据源，简单地通过提供Datasource bean覆盖默认配置。我们在这里使用__DataSourceBuilder__类，这是Spring Boot的辅助类。如果classpath中有Tomcat, HikariCP 或者 Commons DBCP，会（按照这个顺序，先是Tomcat）选择一个。例如，要切换到MySQL数据库：
 
 [source,java,linenums]
 ----
@@ -501,7 +501,7 @@ public DataSource database() {
 }
 ----
 
-Remove H2 from the Maven dependencies and add the MySQL driver and the Tomcat connection pooling to the classpath:
+从Maven依赖中移除H2，并为classpath添加MySQL驱动与Tomcat连接池：
 
 [source,xml,linenums]
 ----
@@ -517,7 +517,7 @@ Remove H2 from the Maven dependencies and add the MySQL driver and the Tomcat co
 </dependency>
 ----
 
-When the app is now booted up, you'll see it uses MySQL as database (and the Tomcat connection pooling framework):
+应用这次启动后，可以看到使用了MySQL作为数据库（也使用了Tomcat连接池框架）：
 
 ----
 org.activiti.engine.impl.db.DbSqlSession   : performing create on engine with resource org/activiti/db/create/activiti.mysql.create.engine.sql
@@ -525,11 +525,11 @@ org.activiti.engine.impl.db.DbSqlSession   : performing create on history with r
 org.activiti.engine.impl.db.DbSqlSession   : performing create on identity with resource org/activiti/db/create/activiti.mysql.create.identity.sql
 ----
 
-When you reboot the application multiple times, you'll see the number of tasks go up (the H2 in-memory database does not survive a shutdown, the MySQL does).
+多次重启应用，会发现任务的数量增加了（H2内存数据库在关闭后会丢失，而MySQL不会）。
 
-==== REST support
+==== REST支持 (REST support)
 
-Often, a REST API is needed on top of the embedded Activiti engine (interacting with the different services in a company). Spring Boot makes this really easy. Add following dependency to the classpath:
+通常在嵌入的Activiti引擎之上，需要REST API（与公司的不同服务交互）。Spring Boot让这个变得很容易。在classpath中添加下列依赖：
 
 [source,xml,linenums]
 ----
@@ -540,7 +540,7 @@ Often, a REST API is needed on top of the embedded Activiti engine (interacting 
 </dependency>
 ----
 
-Create a new class, a Spring service, and create two methods: one to start our process and one to get a task list for a given assignee. We simply wrap Activiti calls here, but in real-life scenario's this obviously will be more complex obviously.
+创建一个新的Spring服务类，并创建两个方法：一个用于启动流程，另一个用于获得给定任务办理人的任务列表。在这里我们简单地包装了Activiti调用，但很明显在实际使用场景中会比这复杂得多。
 
 [source,java,linenums]
 ----
@@ -566,7 +566,7 @@ public class MyService {
 }
 ----
 
-We can now create a REST endpoint by annotating a class with _@RestController_. Here, we simply delegate to the service defined above.
+现在可以用__@RestController__来注解类，以创建REST端点（endpoint）。在这里我们简单地委派给了上面定义的服务。
 
 [source,java,linenums]
 ----
@@ -619,7 +619,7 @@ public class MyRestController {
 }
 ----
 
-Both the _@Service_ and the _@RestController_ will be found by the automatic component scan (_@ComponentScan_) we added to our application class. Run the application class again. We can now interact with the REST API by using for example cURL:
+自动组件扫描(_@ComponentScan_)会找到我们添加在应用类上的__@Service__与__@RestController__。再次运行应用类，现在可以与REST API交互了。例如使用cURL：
 
 ----
 curl http://localhost:8080/tasks?assignee=kermit
@@ -631,9 +631,9 @@ curl http://localhost:8080/tasks?assignee=kermit
 ----
 
 
-==== JPA support
+==== JPA支持 (JPA support)
 
-To add in JPA support for Activiti in Spring Boot, add following dependency:
+要为Spring Boot中的Activiti添加JPA支持，增加下列依赖：
 
 [source,xml,linenums]
 ----
@@ -644,9 +644,9 @@ To add in JPA support for Activiti in Spring Boot, add following dependency:
 </dependency>
 ----
 
-This will add in the Spring configuration and beans for using JPA. By default the JPA provider will be Hibernate.
+这会加入Spring的配置，以及JPA用的bean。默认使用Hibernate作为JPA提供者。
 
-Let's create a simple Entity class:
+创建一个简单的实体类：
 
 [source,java,linenums]
 ----
@@ -717,13 +717,13 @@ class Person {
 }
 ----
 
-By default, when not using an in-memory database, the tables won't be created automatically. Create a file _application.properties_ on the classpath and add following property:
+默认情况下，如果没有使用内存数据库，不会自动创建数据库表。在classpath中创建__application.properties_文件并加入下列参数：
 
 ----
 spring.jpa.hibernate.ddl-auto=update
 ----
 
-Add following class:
+添加下列类：
 
 [source,java,linenums]
 ----
@@ -734,13 +734,13 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 }
 ----
 
-This is a Spring repository, which offers CRUD out of the box. We add the method to find a Person by username. Spring will automagically implement this based on conventions (i.e. the property names used).
+这是一个Spring存储(repository)，提供了直接可用的增删改查。我们添加了通过username查找Person的方法。Spring会基于约定自动实现它（也就是使用names属性）。
 
-We now enhance our service further:
+现在进一步增强我们的服务：
 
-* by adding _@Transactional_ to the class. Note that by adding the JPA dependency above, the DataSourceTransactionManager which we were using before is now automatically swapped out by a JpaTransactionManager. 
-* The _startProcess_ now gets an assignee username in, which is used to look up the Person, and put the Person JPA object as a process variable in the process instance.
-* A method to create Dummy users is added. This is used in the CommandLineRunner to populate the database.
+* 在类上添加__@Transactional__。请注意，通过上面添加的JPA依赖，之前使用的DataSourceTransactionManager会自动替换为JpaTransactionManager。
+* __startProcess__增加了任务办理人参数，用于查找Person，并将Person JPA对象作为流程变量存入流程实例。
+* 添加了创建示例用户的方法。CommandLineRunner使用它打桩数据库。
 
 [source,java,linenums]
 ----
@@ -780,7 +780,7 @@ public class MyService {
 }
 ----
 
-The CommandLineRunner now looks like:
+CommandLineRunner现在为：
 
 [source,java,linenums]
 ----
@@ -796,7 +796,7 @@ public CommandLineRunner init(final MyService myService) {
 }
 ----
 
-The RestController is also slightly changed to incorporate the changes above (only showing new methods) and the HTTP POST now has a body that contains the assignee username:
+RestController也有小改动（只展示新方法），以配合上面的改动。HTTP POST现在有了body，存有办理人用户名：
 
 ----
 @RestController
@@ -826,20 +826,20 @@ public class MyRestController {
     }
 ----
 
-And lastly, to try out the Spring-JPA-Activiti integration, we assign the task using the id of the Person JPA object in the process definition:
+最后，为了试用Spring-JPA-Activiti集成，我们在流程定义中，将Person JPA对象的id指派为任务办理人：
 
 [source,xml,linenums]
 ----
 <userTask id="theTask" name="my task" activiti:assignee="${person.id}"/>
 ----
 
-We can now start a new process instance, providing the user name in the POST body:
+现在可以通过在POST body中提供用户名，启动一个新的流程实例：
 
 ----
 curl -H "Content-Type: application/json" -d '{"assignee" : "jbarrez"}' http://localhost:8080/process
 ----
 
-And the task list is now fetched using the person id:
+也可以使用Person id获取任务列表：
 
 ----
 curl http://localhost:8080/tasks?assignee=1
@@ -847,14 +847,13 @@ curl http://localhost:8080/tasks?assignee=1
 [{"id":"12505","name":"my task"}]
 ----
 
-==== Further Reading
+==== 扩展阅读 Further Reading
 
-Obviously there is a lot about Spring Boot that hasn't been touched yet, like very easy JTA integration or building a war file that can be run on major application servers. And there is a lot more to the Spring Boot integration: 
+很明显还有很多Spring　Boot相关的内容还没有提及，例如简单的JTA集成，构建能在主流应用服务器上运行的war文件。还有很多关于Spring Boot的内容：
 
-* Actuator support
-* Spring Integration support
-* Rest API integration: boot up the Activiti Rest API embedded within the Spring application
-* Spring Security support
+* Actuator支持
+* Spring Integration支持
+* Rest API集成：启动Spring应用中嵌入的Activiti Rest API
+* Spring Security支持
 
-All these areas are a first version at the moment, but they will evolved in the future further.
-
+目前这些领域都是初版，未来会不断演进。
