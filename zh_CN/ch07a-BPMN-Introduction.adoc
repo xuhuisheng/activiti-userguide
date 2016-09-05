@@ -18,7 +18,7 @@
 
 [NOTE]
 ====
-这个介绍的写作，基于使用link:$$http://eclipse.org/$$[Eclipse IDE]创建与编辑文件，但只有很少的部分是Eclipse的特性。可以使用你喜欢的任何其他工具创建包含BPMN 2.0的XML文件。
+这个介绍的写作，基于使用link:$$http://eclipse.org/$$[Eclipse IDE]创建与编辑文件。但其实只有很少的部分使用了Eclipse的特性。可以使用你喜欢的任何其他工具创建包含BPMN 2.0的XML文件。
 
 ====
 
@@ -200,7 +200,7 @@ Deployment deployment = repositoryService.createDeployment()
 ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("financialReport");
 ----
 
-这会创建流程实例，并首先通过开始事件。在开始事件后，会沿着所有出口顺序流（在这个例子中只有一个）继续，并到达第一个任务（'撰写月度金融报告 write monthly financial report'）。这时，Activiti引擎会在持久化数据库中存储一个任务。同时，会解析这个任务附加的分配用户或组，也保存在数据库中。请注意，Activiti引擎会持续执行流程步骤，直到到达__等待状态 wait state__，例如用户任务。在这种等待状态时，流程实例的当前状态会存储在数据库中，并保持这个状态，直到用户决定完成任务。这时，引擎会继续执行，直到遇到新的等待状态，或者流程结束。如果在这期间引擎重启或崩溃，流程的状态也在数据库中安全并妥善的保存。
+这会创建流程实例，并首先通过开始事件。在开始事件后，会沿着所有出口顺序流（在这个例子中只有一个）继续，并到达第一个任务（'撰写月度金融报告 write monthly financial report'）。这时，Activiti引擎会在持久化数据库中存储一个任务。同时，会解析这个任务附加的分配用户或组，也保存在数据库中。请注意，Activiti引擎会持续执行流程步骤，直到到达__等待状态 wait state__，例如用户任务。在这种等待状态时，流程实例的当前状态会存储在数据库中，并保持这个状态，直到用户决定完成任务。这时，引擎会继续执行，直到遇到新的等待状态，或者流程结束。如果在这期间引擎重启或崩溃，流程的状态也仍在数据库中安全并妥善的保存。
 
 在任务创建后，++startProcessInstanceByKey++方法会返回，因为用户任务活动是一个__等待状态__。在这个例子里，这个任务分配给一个组。这意味着这个组的每一个成员都是处理这个任务的**候选人 candidate**。
 
@@ -264,11 +264,11 @@ TaskService taskService = processEngine.getTaskService();
 List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup("accountancy").list();
 ----
 
-因为我们将++ProcessEngine++配置为使用与演示配置中相同的数据库，因此可以登录ink:$$http://localhost:8080/activiti-explorer/$$[Activiti Explorer]。默认情况下，__accountancy__组中没有用户。使用kermit/kermit登录，点击Groups，然后"Create group (创建组)"。然后点击Users，并向组中添加fozzie。现在使用fozzie/fozzie登录，就会发现在选择了__Processes__页面，点击__'Monthly financial report （月度金融报告）'__的__'Actions'__栏的__'Start Process （开始流程）'__链接后，可以启动我们的业务流程。
+因为我们将++ProcessEngine++配置为使用与演示配置中相同的数据库，因此可以登录link:$$http://localhost:8080/activiti-explorer/$$[Activiti Explorer]。默认情况下，__accountancy__组中没有用户。使用kermit/kermit登录，点击Groups，然后"Create group (创建组)"。然后点击Users，并向组中添加fozzie。现在使用fozzie/fozzie登录，就会发现在选择了__Processes__页面，点击__'Monthly financial report （月度金融报告）'__的__'Actions'__栏的__'Start Process （开始流程）'__链接后，可以启动我们的业务流程。
 
 image::images/bpmn.financial.report.example.start.process.png[align="center"]
 
-前面已经解释过，流程会执行到第一个用户任务。如果使用kermit登录，就可以看到在启动流程实例后，他有一个新的候选任务（candidate task）。选择__Tasks__页面来查看这个新任务。请注意即使流程是由其他人启动的，accountancy组中的每一个人仍然都能看到这个候选任务。
+前面已经解释过，流程会执行到第一个用户任务。因为使用Fozzie登录，就可以看到在启动流程实例后，他有一个新的候选任务（candidate task）。选择__Tasks__页面来查看这个新任务。请注意即使流程是由其他人启动的，accountancy组中的每一个人仍然都能看到这个候选任务。
 
 
 image::images/bpmn.financial.report.example.task.assigned.png[align="center"]
@@ -312,7 +312,7 @@ taskService.complete(task.getId());
 
 对于Activiti引擎来说，这是个外部信号，指示流程实例需要继续执行。任务本身会从运行时数据中移除，并继续这个任务唯一的出口转移（outgoing transition），将执行移至第二个任务（__'verification of the report 审核月度报告'__）。与上面介绍的第一个任务使用的相同的机制，会用于为第二个任务分配执行人。有一点小区别，这个任务会分配给__management__组。
 
-在演示设置中，完成任务可以通过点击任务列表中的__complete__按钮。因为Fozzie不是经理，我们需要登出Activiti Explorer，并用__kermit__（他是经理）。第二个任务现在可以在未分配任务列表中看到。
+在演示设置中，完成任务可以通过点击任务列表中的__complete__按钮。因为Fozzie不是经理，我们需要登出Activiti Explorer，并用__kermit__（他是经理）登录。第二个任务现在可以在未分配任务列表中看到。
 
 
 [[bpmnFirstExampleEndingProcess]]
@@ -417,10 +417,10 @@ public class TenMinuteTutorial {
 ==== 继续提高 Future enhancements
 
 
-可以看到这个业务流程太简单了，不能用于实际。然而，随着浏览Activiti中可用的BPMN 2.0结构，可以增强业务流程通过：
+可以看出这个业务流程太简单了，不能实际使用。然而，随着继续浏览Activiti中可用的BPMN 2.0结构，可以增强业务流程通过：
 
 
-* 定义**网关 gateway**执行选择。这样，经理可以驳回金融报告，并可以重新为会计师创建任务。
+* 定义**网关 gateway**执行选择。这样，经理可以驳回金融报告，并重新为会计师创建任务。
 * 定义并使用**变量 variables**。这样可以存储或引用报告，并可以在表单中显示它。
 * 在流程结束处定义**服务任务 service task**，将报告发送给每一个投资人。
 * 等等。
