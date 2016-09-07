@@ -1,50 +1,50 @@
 ﻿[[bpmnConstructs]]
 
-== BPMN 2.0 Constructs
+== BPMN 2.0 结构 BPMN 2.0 Constructs
 
-This chapter covers the BPMN 20 constructs supported by  Activiti as well as custom extensions to the BPMN standard.
+本章节包含了Activiti支持的BPMN 2.0结构，以及对BPMN标准的自定义扩展。
 
 [[bpmnCustomExtensions]]
 
 
-=== Custom extensions
+=== 自定义扩展 Custom extensions
 
 
-The BPMN 2.0 standard is a good thing for all parties involved. End-users don't suffer from a vendor lock-in that comes by depending on a proprietary solution. Frameworks, and particularly open-source frameworks such as Activiti, can implement a solution that has the same (and often better implemented ;-) features as those of a big vendor.  Due to the BPMN 2.0 standard, the transition from such a big vendor solution towards Activiti is an easy and smooth path.
+BPMN 2.0标准对流程的所有的参与者都是个好东西。最终用户不需要因为依赖专利解决方案，而被供应商“绑架”。类似Activiti的开源框架，也可以提供与大型供应商的解决方案相同（经常是更好;-）的实现。有了BPMN 2.0标准，从大型供应商解决方案向Activiti的转变，就变得简单平滑。
 
-The downside of a standard however, is the fact that it is always the result of many discussions and compromises between different companies (and often visions). As a developer reading the BPMN 2.0 XML of a process definition, sometimes it feels like certain constructs or way to do things are too cumbersome. Since Activiti puts ease of development as a top-priority, we introduced something called the *'Activiti BPMN extensions'*. These 'extensions' are new constructs or ways to simplify certain constructs that are not in the BPMN 2.0 specification.
+然而标准的缺点，是它通常是不同公司（不同观点）大量讨论与妥协的结果。作为阅读BPMN 2.0 XML流程定义的开发者，有时会觉得某些结构或做事方法太笨重了。Activiti将开发者的感受放在最高优先，因此引入了一些**'Activiti BPMN extensions（扩展）'**。这些“扩展”并不在BPMN 2.0规格中，有些是新结构，有些是对特定结构的简化。
 
-Although the BPMN 2.0 specification clearly states that it was made for custom extension, we make sure that:
+尽管BPMN 2.0规格明确指出可以支持自定义扩展，我们仍做了如下保证：
 
-* The prerequisite of such a custom extension is that there *always* must be a simple transformation to the *standard way of doing things*. So when you decide to use a custom extension, you don't have to be afraid  that there is no way back.
-* When using a custom extension, this is always clearly indicated by giving the new XML element, attribute, etc. the *activiti:* namespace prefix.
+* 自定义扩展的前提是，**做事情的标准方式****总**可以进行更简化的改造。因此当你决定使用自定义扩展时，不用担心无路可退（仍然可以用标准方式）。
+* 使用自定义扩展时，总是通过为新的XML元素、属性等提供**activiti:**命名空间前缀，明确标识出来。
 
-So whether you want to use a custom extension or not, is completely up to you. Several factors will influence this decision (graphical editor usage, company policy, etc.). We only provide them since we believe that some points in the standard can be done simpler or more efficient. Feel free to give us (positive and/or negative) feedback on our extensions, or to post new ideas for custom extensions. Who knows, some day your idea might pop up in the specification!
+因此是否使用自定义扩展，完全取决于你自己。有些其他因素会影响选择（图形化编辑器的使用，公司策略，等等）。我们提供扩展，只是因为相信，标准中的某些地方可以用更简单或效率更高的方式处理。请不要吝啬给我们反馈对扩展的评价（正面的和/或负面的），也可以给我们提供关于自定义扩展的新想法。说不定某一天，你的想法会成为规格的一部分！
 
 
 [[bpmnEvents]]
 
-=== Events
+=== 事件 Events
 
-Events are used to model something that happens during the lifetime process. Events are always visualized as a circle. In BPMN 2.0, there exist two main event categories: _catching_ or _throwing_ event.
+事件通常用于为流程生命周期中发生的事情建模。事件总是图形化为圆圈。在BPMN 2.0中，有两种主要的事件分类：__catching（捕获）__与__throwing（抛出）__事件。
 
-* *Catching:* when process execution arrives in the event, it will wait for a trigger to happen. The type of trigger is defined by the inner icon or the type declaration in the XML. Catching events are visually differentiated from a throwing event by the inner icon that is not filled (i.e. it is white).
-* *Throwing:* when process execution arrives in the event, a trigger is fired. The type of trigger is defined by the inner icon or the type declaration in the XML. Throwing events are visually differentiated from a catching event by the inner icon that is filled with black.
+* **捕获:** 当流程执行到达这个事件时，会等待直到触发器动作。触发器的类型，由其中的图标，或者说XML中的类型声明，而定义。捕获事件与抛出事件显示上的区别，是其内部的图标没有填充（也就是说，是白色的）。
+* **抛出:** 当流程执行到达这个事件时，会触发一个触发器。触发器的类型，由其中的图标，或者说XML中的类型声明，而定义。抛出事件与捕获事件显示上的区别，是其内部的图标填充为黑色。
 
 [[eventDefinitions]]
 
 
-==== Event Definitions
+==== 事件定义 Event Definitions
 
-Event definitions define the semantics of an event. Without an event definition, an event "does nothing special". For instance a start event without and event definition does not specify what exactly starts the process. If we add an event definition to the start event (like for instance a timer event definition) we declare what "type" of event starts the process (in the case of a timer event definition the fact that a certain point in time is reached).
+事件定义，定义了事件的语义。没有事件定义的话，事件就“不做什么特别的事情”。例如一个没有事件定义的开始事件，并不限定具体是什么启动了流程。如果为这个开始事件添加事件定义（例如定时器事件定义），就声明了启动流程的“类型”（例如对于定时器事件定义，就是到达了特定的时间点）。
 
 
 [[timerEventDefinitions]]
 
 
-==== Timer Event Definitions
+==== 定时器事件定义 Timer Event Definitions
 
-Timer events are events which are triggered by defined timer. They can be used as <<bpmnTimerStartEvent,start event>>, <<bpmnIntermediateCatchingEvent,intermediate event>> or <<bpmnTimerBoundaryEvent,boundary event>>. The behavior of the time event depends on the business calendar used. Every timer event has a default business calendar, but the business calendar can also be defined on the timer event definition.
+定时器事件，是由定义的定时器触发的事件。可以用于<<bpmnTimerStartEvent,开始事件 start event>>，<<bpmnIntermediateCatchingEvent,中间捕获事件 intermediate event>>，或<<bpmnTimerBoundaryEvent,边界事件 boundary event>>。定时器事件的行为，取决于所使用的业务日历（business calendar）。定时器事件有默认的业务日历，但也可以为每个定时器事件定义，定义业务日历。
 
 [source,xml,linenums]
 ----
@@ -52,11 +52,12 @@ Timer events are events which are triggered by defined timer. They can be used a
     ...
 </timerEventDefinition>
 ----
-Where businessCalendarName points to business calendar in process engine configuration. When business calendar is omitted default business calendars are used.
+其中businessCalendarName指向流程引擎配置中的业务日历。如果省略业务日历定义，就是用默认业务日历。
 
-Timer definition must have exactly one element from the following:
+定时器定义必须且只能使用下列的一种元素：
 
-* *timeDate*. This format specifies fixed date in link:$$http://en.wikipedia.org/wiki/ISO_8601#Dates$$[ISO 8601] format, when trigger will be fired. Example:
+* **timeDate**。这个方式指定了link:$$http://en.wikipedia.org/wiki/ISO_8601#Dates$$[ISO 8601]格式的固定时间。
+在这个时间点，会触发触发器。例如：
 
 
 [source,xml,linenums]
@@ -67,7 +68,7 @@ Timer definition must have exactly one element from the following:
 ----
 
 
-* *timeDuration*. To specify how long the timer should run before it is fired, a _timeDuration_ can be specified as sub-element of _timerEventDefinition_. The format used is the link:$$http://en.wikipedia.org/wiki/ISO_8601#Durations$$[ISO 8601] format (as required by the BPMN 2.0 specification). Example (interval lasting 10 days):
+* **timeDuration**。要定义在触发前，定时器需要等待多长时间，可以用__timeDuration__作为__timerEventDefinition__的子元素来指定。使用link:$$http://en.wikipedia.org/wiki/ISO_8601#Durations$$[ISO 8601]格式（BPMN 2.0规格要求）。例如（等待10天）：
 
 [source,xml,linenums]
 ----
@@ -76,7 +77,7 @@ Timer definition must have exactly one element from the following:
 </timerEventDefinition>
 ----
 
-* *timeCycle*. Specifies repeating interval, which can be useful for starting process periodically, or for sending multiple reminders for overdue user task. Time cycle element can be in two formats. First is the format of recurring time duration, as specified by link:$$http://en.wikipedia.org/wiki/ISO_8601#Repeating_intervals$$[ISO 8601] standard. Example (3 repeating intervals, each lasting 10 hours):
+* **timeCycle**. Specifies repeating interval, which can be useful for starting process periodically, or for sending multiple reminders for overdue user task. Time cycle element can be in two formats. First is the format of recurring time duration, as specified by link:$$http://en.wikipedia.org/wiki/ISO_8601#Repeating_intervals$$[ISO 8601] standard. Example (3 repeating intervals, each lasting 10 hours):
 
 There is also the possibility to specify the _endDate_ as an optional attribute on the _timeCycle_ or either in the end of the time expression as follows: +R3/PT10H/${EndDate}+.
 When the endDate is reached the application will stop creating other jobs for this task.
