@@ -1,50 +1,50 @@
 ﻿[[bpmnConstructs]]
 
-== BPMN 2.0 Constructs
+== BPMN 2.0 结构 BPMN 2.0 Constructs
 
-This chapter covers the BPMN 20 constructs supported by  Activiti as well as custom extensions to the BPMN standard.
+本章节包含了Activiti支持的BPMN 2.0结构，以及对BPMN标准的自定义扩展。
 
 [[bpmnCustomExtensions]]
 
 
-=== Custom extensions
+=== 自定义扩展 Custom extensions
 
 
-The BPMN 2.0 standard is a good thing for all parties involved. End-users don't suffer from a vendor lock-in that comes by depending on a proprietary solution. Frameworks, and particularly open-source frameworks such as Activiti, can implement a solution that has the same (and often better implemented ;-) features as those of a big vendor.  Due to the BPMN 2.0 standard, the transition from such a big vendor solution towards Activiti is an easy and smooth path.
+BPMN 2.0标准对流程的所有的参与者都是个好东西。最终用户不需要因为依赖专利解决方案，而被供应商“绑架”。类似Activiti的开源框架，也可以提供与大型供应商的解决方案相同（经常是更好;-）的实现。有了BPMN 2.0标准，从大型供应商解决方案向Activiti的转变，就变得简单平滑。
 
-The downside of a standard however, is the fact that it is always the result of many discussions and compromises between different companies (and often visions). As a developer reading the BPMN 2.0 XML of a process definition, sometimes it feels like certain constructs or way to do things are too cumbersome. Since Activiti puts ease of development as a top-priority, we introduced something called the *'Activiti BPMN extensions'*. These 'extensions' are new constructs or ways to simplify certain constructs that are not in the BPMN 2.0 specification.
+然而标准的缺点，是它通常是不同公司（不同观点）大量讨论与妥协的结果。作为阅读BPMN 2.0 XML流程定义的开发者，有时会觉得某些结构或做事方法太笨重了。Activiti将开发者的感受放在最高优先，因此引入了一些**'Activiti BPMN extensions（扩展）'**。这些“扩展”并不在BPMN 2.0规格中，有些是新结构，有些是对特定结构的简化。
 
-Although the BPMN 2.0 specification clearly states that it was made for custom extension, we make sure that:
+尽管BPMN 2.0规格明确指出可以支持自定义扩展，我们仍做了如下保证：
 
-* The prerequisite of such a custom extension is that there *always* must be a simple transformation to the *standard way of doing things*. So when you decide to use a custom extension, you don't have to be afraid  that there is no way back.
-* When using a custom extension, this is always clearly indicated by giving the new XML element, attribute, etc. the *activiti:* namespace prefix.
+* 自定义扩展的前提是，**做事情的标准方式****总**可以进行更简化的改造。因此当你决定使用自定义扩展时，不用担心无路可退（仍然可以用标准方式）。
+* 使用自定义扩展时，总是通过为新的XML元素、属性等提供**activiti:**命名空间前缀，明确标识出来。
 
-So whether you want to use a custom extension or not, is completely up to you. Several factors will influence this decision (graphical editor usage, company policy, etc.). We only provide them since we believe that some points in the standard can be done simpler or more efficient. Feel free to give us (positive and/or negative) feedback on our extensions, or to post new ideas for custom extensions. Who knows, some day your idea might pop up in the specification!
+因此是否使用自定义扩展，完全取决于你自己。有些其他因素会影响选择（图形化编辑器的使用，公司策略，等等）。我们提供扩展，只是因为相信，标准中的某些地方可以用更简单或效率更高的方式处理。请不要吝啬给我们反馈对扩展的评价（正面的和/或负面的），也可以给我们提供关于自定义扩展的新想法。说不定某一天，你的想法会成为规格的一部分！
 
 
 [[bpmnEvents]]
 
-=== Events
+=== 事件 Events
 
-Events are used to model something that happens during the lifetime process. Events are always visualized as a circle. In BPMN 2.0, there exist two main event categories: _catching_ or _throwing_ event.
+事件通常用于为流程生命周期中发生的事情建模。事件总是图形化为圆圈。在BPMN 2.0中，有两种主要的事件分类：__catching（捕获）__与__throwing（抛出）__事件。
 
-* *Catching:* when process execution arrives in the event, it will wait for a trigger to happen. The type of trigger is defined by the inner icon or the type declaration in the XML. Catching events are visually differentiated from a throwing event by the inner icon that is not filled (i.e. it is white).
-* *Throwing:* when process execution arrives in the event, a trigger is fired. The type of trigger is defined by the inner icon or the type declaration in the XML. Throwing events are visually differentiated from a catching event by the inner icon that is filled with black.
+* **捕获:** 当流程执行到达这个事件时，会等待直到触发器动作。触发器的类型，由其中的图标，或者说XML中的类型声明，而定义。捕获事件与抛出事件显示上的区别，是其内部的图标没有填充（也就是说，是白色的）。
+* **抛出:** 当流程执行到达这个事件时，会触发一个触发器。触发器的类型，由其中的图标，或者说XML中的类型声明，而定义。抛出事件与捕获事件显示上的区别，是其内部的图标填充为黑色。
 
 [[eventDefinitions]]
 
 
-==== Event Definitions
+==== 事件定义 Event Definitions
 
-Event definitions define the semantics of an event. Without an event definition, an event "does nothing special". For instance a start event without and event definition does not specify what exactly starts the process. If we add an event definition to the start event (like for instance a timer event definition) we declare what "type" of event starts the process (in the case of a timer event definition the fact that a certain point in time is reached).
+事件定义，定义了事件的语义。没有事件定义的话，事件就“不做什么特别的事情”。例如一个没有事件定义的开始事件，并不限定具体是什么启动了流程。如果为这个开始事件添加事件定义（例如定时器事件定义），就声明了启动流程的“类型”（例如对于定时器事件定义，就是到达了特定的时间点）。
 
 
 [[timerEventDefinitions]]
 
 
-==== Timer Event Definitions
+==== 定时器事件定义 Timer Event Definitions
 
-Timer events are events which are triggered by defined timer. They can be used as <<bpmnTimerStartEvent,start event>>, <<bpmnIntermediateCatchingEvent,intermediate event>> or <<bpmnTimerBoundaryEvent,boundary event>>. The behavior of the time event depends on the business calendar used. Every timer event has a default business calendar, but the business calendar can also be defined on the timer event definition.
+定时器事件，是由定义的定时器触发的事件。可以用于<<bpmnTimerStartEvent,开始事件 start event>>，<<bpmnIntermediateCatchingEvent,中间捕获事件 intermediate event>>，或<<bpmnTimerBoundaryEvent,边界事件 boundary event>>。定时器事件的行为，取决于所使用的业务日历（business calendar）。定时器事件有默认的业务日历，但也可以为每个定时器事件定义，定义业务日历。
 
 [source,xml,linenums]
 ----
@@ -52,11 +52,12 @@ Timer events are events which are triggered by defined timer. They can be used a
     ...
 </timerEventDefinition>
 ----
-Where businessCalendarName points to business calendar in process engine configuration. When business calendar is omitted default business calendars are used.
+其中businessCalendarName指向流程引擎配置中的业务日历。如果省略业务日历定义，就是用默认业务日历。
 
-Timer definition must have exactly one element from the following:
+定时器定义必须且只能使用下列的一种元素：
 
-* *timeDate*. This format specifies fixed date in link:$$http://en.wikipedia.org/wiki/ISO_8601#Dates$$[ISO 8601] format, when trigger will be fired. Example:
+* **timeDate**。这个方式指定了link:$$http://en.wikipedia.org/wiki/ISO_8601#Dates$$[ISO 8601]格式的固定时间。
+在这个时间点，会触发触发器。例如：
 
 
 [source,xml,linenums]
@@ -67,7 +68,7 @@ Timer definition must have exactly one element from the following:
 ----
 
 
-* *timeDuration*. To specify how long the timer should run before it is fired, a _timeDuration_ can be specified as sub-element of _timerEventDefinition_. The format used is the link:$$http://en.wikipedia.org/wiki/ISO_8601#Durations$$[ISO 8601] format (as required by the BPMN 2.0 specification). Example (interval lasting 10 days):
+* **timeDuration**。要定义在触发前，定时器需要等待多长时间，可以用__timeDuration__作为__timerEventDefinition__的子元素来指定。使用link:$$http://en.wikipedia.org/wiki/ISO_8601#Durations$$[ISO 8601]格式（BPMN 2.0规格要求）。例如（等待10天）：
 
 [source,xml,linenums]
 ----
@@ -76,11 +77,7 @@ Timer definition must have exactly one element from the following:
 </timerEventDefinition>
 ----
 
-* *timeCycle*. Specifies repeating interval, which can be useful for starting process periodically, or for sending multiple reminders for overdue user task. Time cycle element can be in two formats. First is the format of recurring time duration, as specified by link:$$http://en.wikipedia.org/wiki/ISO_8601#Repeating_intervals$$[ISO 8601] standard. Example (3 repeating intervals, each lasting 10 hours):
-
-There is also the possibility to specify the _endDate_ as an optional attribute on the _timeCycle_ or either in the end of the time expression as follows: +R3/PT10H/${EndDate}+.
-When the endDate is reached the application will stop creating other jobs for this task.
-It accepts as value either static values link:$$http://en.wikipedia.org/wiki/ISO_8601#Dates$$[ISO 8601] standard for example _"2015-02-25T16:42:11+00:00"_ or variables _${EndDate}_
+* **timeCycle**。指定重复周期，可用于周期性启动流程，或者为超期用户任务多次发送提醒。这个元素可以使用两种格式。第一种是按照link:$$http://en.wikipedia.org/wiki/ISO_8601#Repeating_intervals$$[ISO 8601]标准定义的循环时间周期。例如（三次重复间隔，每次间隔为10小时）：
 
 [source,xml,linenums]
 ----
@@ -89,6 +86,10 @@ It accepts as value either static values link:$$http://en.wikipedia.org/wiki/ISO
 </timerEventDefinition>
 ----
 
+也可以指定__endDate__，作为__timeCycle__的可选属性，或者像这样直接写在时间表达式的结尾：++R3/PT10H/${EndDate}++。
+当到达endDate时，应用会停止，并为该任务创建其他作业。
+可以使用link:$$http://en.wikipedia.org/wiki/ISO_8601#Dates$$[ISO 8601]标准的静态值，比如__"2015-02-25T16:42:11+00:00"__。也可以使用变量__${EndDate}__
+
 [source,xml,linenums]
 ----
 <timerEventDefinition>
@@ -96,11 +97,11 @@ It accepts as value either static values link:$$http://en.wikipedia.org/wiki/ISO
 </timerEventDefinition>
 ----
 
-If both are specified then the endDate specified as attribute will be used by the system.
+如果同时使用了两种指定方式，则系统会使用属性方式定义的endDate。
 
-Currently only the _BoundaryTimerEvents_ and _CatchTimerEvent_ supports _EndDate_ functionality.
+目前只有__BoundaryTimerEvents__与__CatchTimerEvent__支持__EndDate__功能。
 
-Additionally, you can specify time cycle using cron expressions, example below shows trigger firing every 5 minutes, starting at full hour:
+另外，也可以使用cron表达式指定定时周期。下面的例子展示了一个整点启动，每5分钟触发的触发器：
 
 
 ----
@@ -108,15 +109,14 @@ Additionally, you can specify time cycle using cron expressions, example below s
 ----
 
 
-Please see link:$$http://www.quartz-scheduler.org/docs/tutorials/crontrigger.html$$[this tutorial] for using cron expressions.
+请参考link:$$http://www.quartz-scheduler.org/docs/tutorials/crontrigger.html$$[这个教程]了解如何使用cron表达式。
 
-*Note:* The first symbol denotes seconds, not minutes as in normal Unix cron.
+**请注意:** 与普通的Unix cron不同，第一个符号代表的是秒。
 
-The recurring time duration is better suited for handling relative timers, which are calculated with respect to some particular point in time (e.g. time when user task was started), while cron expressions can handle absolute timers - which is particularly useful for <<timerStartEventDescription,timer start events>>.
+重复时间周期更适用于使用相对时间，也就是从某个特定时间点开始计算（比如用户任务开始的时间）。而cron表达式可以使用绝对时间，因此绝对适合用于<<timerStartEventDescription,定时启动事件 timer start events>>。
 
 
-You can use expressions for the timer event definitions, by doing so you can influence the timer definition
-based on process variables. The process variables must contain the ISO 8601 (or cron for cycle type) string for appropriate timer type.
+可以在定时事件定义中使用表达式，也就是使用流程变量调整定时器定义。这个流程变量必须是包含合适时间格式的字符串，ISO 8601（或者对于循环类型，cron）。
 
 [source,xml,linenums]
 ----
@@ -127,15 +127,15 @@ based on process variables. The process variables must contain the ISO 8601 (or 
 </boundaryEvent>
 ----
 
-*Note:* timers are only fired when the job or async executor is enabled (i.e. _jobExecutorActivate_ or _asyncExecutorActivate_ needs to be set to +true+ in the +activiti.cfg.xml+, since the job and async executor are disabled by default).
+**请注意：**定时器只有在作业或者异步执行器启用时才能触发（也就是说，在++activiti.cfg.xml++中，__jobExecutorActivate__或者__asyncExecutorActivate__需要设置为++true++，因为默认情况下，作业或者异步执行器是禁用的）。
 
 
 [[bpmnErrorEventDefinition]]
 
 
-==== Error Event Definitions
+==== 错误事件定义 Error Event Definitions
 
-*Important note:* a BPMN error is NOT the same as a Java exception. In fact, the two have nothing in common. BPMN error events are a way of modeling _business exceptions_. Java exceptions are handled in <<serviceTaskExceptionHandling,their own specific way>>.
+**重要提示：** BPMN错误与Java异常**不**是一回事。事实上，这两者毫无共同点。BPMN错误事件是建模__业务异常（business exceptions）__的方式。而Java异常使用<<serviceTaskExceptionHandling,它们自己的方式>>处理。
 
 [source,xml,linenums]
 ----
@@ -148,28 +148,28 @@ based on process variables. The process variables must contain the ISO 8601 (or 
 [[bpmnSignalEventDefinition]]
 
 
-==== Signal Event Definitions
+==== 信号事件定义 Signal Event Definitions
 
 
-Signal events are events which reference a named signal. A signal is an event of global scope (broadcast semantics) and is delivered to all active handlers (waiting process instances/catching signal events).
+信号事件，是引用具名信号的事件。信号是全局范围（广播）的事件，并会被传递给所有激活的处理器（等待中的流程实例/捕获信号事件 catching signal events）。
 
 
-A signal event definition is declared using the +signalEventDefinition+ element. The attribute +signalRef+ references a +signal+ element declared as a child element of the +definitions+ root element. The following is an excerpt of a process where a signal event is thrown and caught by intermediate events.
+信号事件定义使用++signalEventDefinition++元素声明。++signalRef++属性引用一个++signal++元素，该++signal++元素需要声明为++definitions++根元素的子元素。下面摘录一个流程，使用中间事件（intermediate event）抛出与捕获信号事件。
 
 [source,xml,linenums]
 ----
 <definitions... >
-	<!-- declaration of the signal -->
+	<!-- 声明信号 -->
 	<signal id="alertSignal" name="alert" />
 
 	<process id="catchSignal">
 		<intermediateThrowEvent id="throwSignalEvent" name="Alert">
-			<!-- signal event definition -->
+			<!-- 信号事件定义 -->
 			<signalEventDefinition signalRef="alertSignal" />
 		</intermediateThrowEvent>
 		...
 		<intermediateCatchEvent id="catchSignalEvent" name="On Alert">
-			<!-- signal event definition -->
+			<!-- 信号事件定义 -->
 			<signalEventDefinition signalRef="alertSignal" />
 		</intermediateCatchEvent>
 		...
@@ -178,15 +178,15 @@ A signal event definition is declared using the +signalEventDefinition+ element.
 ----
 
 
-The ++signalEventDefinition++s reference the same +signal+ element.
+两个++signalEventDefinition++引用同一个++signal++元素。
 
 
 [[bpmnSignalEventDefinitionThrow]]
 
 
-===== Throwing a Signal Event
+===== 抛出信号事件 Throwing a Signal Event
 
-A signal can either be thrown by a process instance using a BPMN construct or programmatically using java API. The following methods on the +org.activiti.engine.RuntimeService+ can be used to throw a signal programmatically:
+信号可以由流程实例使用BPMN结构抛出，也可以通过编程方式使用java API抛出。下面++org.activiti.engine.RuntimeService++中的方法可以用于编程方式抛出信号：
 
 [source,java,linenums]
 ----
@@ -194,25 +194,25 @@ RuntimeService.signalEventReceived(String signalName);
 RuntimeService.signalEventReceived(String signalName, String executionId);
 ----
 
-The difference between +signalEventReceived(String signalName);+ and +signalEventReceived(String signalName, String executionId);+ is that the first method throws the signal globally to all subscribed handlers (broadcast semantics) and the second method delivers the signal to a specific execution only.
+++signalEventReceived(String signalName);++与++signalEventReceived(String signalName, String executionId);++的区别，是前者在全局范围，为所有已订阅处理器抛出信号（广播），而后者只为指定的执行传递信号。
 
 
 [[bpmnSignalEventDefinitionCatch]]
 
 
-===== Catching a Signal Event
+===== 捕获信号事件 Catching a Signal Event
 
 
-A signal event can be caught by an intermediate catch signal event or a signal boundary event.
+信号事件可用信号捕获中间事件（intermediate catch signal event）或者信号边界事件（signal boundary event）捕获。
 
 
 [[bpmnSignalEventDefinitionQuery]]
 
 
-===== Querying for Signal Event subscriptions
+===== 查询信号事件订阅 Querying for Signal Event subscriptions
 
 
-It is possible to query for all executions which have subscribed to a specific signal event:
+可以查询所有订阅了某一信号事件的所有执行：
 
 [source,java,linenums]
 ----
@@ -221,59 +221,59 @@ It is possible to query for all executions which have subscribed to a specific s
       .list();
 ----
 
-We could then use the +signalEventReceived(String signalName, String executionId)+ method to deliver the signal to these executions.
+可以使用++signalEventReceived(String signalName, String executionId)++方法为这些执行传递这个信号。
 
 
 [[bpmnSignalEventDefinitionScope]]
 
 
-===== Signal event scope
+===== 信号事件范围 Signal event scope
 
-By default, signals are _broadcast process engine wide_. This means that you can throw a signal event in a process instance, and other process instances with different process definitions can react on the occurrence of this event.
+默认情况下，信号事件在__流程引擎全局广播__。这意味着你可以在一个流程实例中抛出一个信号事件，而不同流程定义的不同流程实例都会响应这个事件。
 
-However, sometimes it is wanted to react to a signal event only within the _same process instance_. A use case for example is a synchronization mechanism in the process instance, if two or more activities are mutually exclusive.
+然而，有事也会希望只在__同一个流程实例__中响应信号事件。例如在流程实例中使用异步机制，而两个或多个活动彼此互斥的时候。
 
-To restrict the _scope_ of the signal event, add the (non-BPMN 2.0 standard!) _scope attribute_ to the signal event definition:
+要限制信号事件的__范围（scope）__，在信号事件定义中添加（非BPMN 2.0标准！）__scope属性__：
 
 [source,xml,linenums]
 ----
 <signal id="alertSignal" name="alert" activiti:scope="processInstance"/>
 ----
 
-The default value for this is attribute is _"global"_.
+这个属性的默认值为__"global（全局）"__。
 
 
 [[bpmnSignalEventDefinitionExample]]
 
 
-===== Signal Event example(s)
+===== 信号事件示例 Signal Event example(s)
 
-The following is an example of two separate processes communicating using signals. The first process is started if an insurance policy is updated or changed. After the changes have been reviewed by a human participant, a signal event is thrown, signaling that a policy has changed:
+下面是一个关于两个不同的流程通过信号通信的例子。第一个流程在保险政策更新或变更时启动。在变更由人工审核之后，会抛出信号事件，指出政策已经发生了变更：
 
 image::images/bpmn.signal.event.throw.png[align="center"]
 
-This event can now be caught by all process instances which are interested. The following is an example of a process subscribing to the event.
+这个事件可以被所有感兴趣的流程实例捕获。下面是一个订阅这个事件的流程的例子。
 
 image::images/bpmn.signal.event.catch.png[align="center"]
 
-*Note:* it is important to understand that a signal event is broadcast to *all* active handlers. This means in the case of the example given above, that all instances of the process catching the signal would receive the event. In this case this is what we want. However, there are also situations where the broadcast behavior is unintended. Consider the following process:
+**请注意：**要理解信号事件会广播给**所有**激活的处理器，这很重要。这意味着在上面的例子中，所有捕获这个信号的流程实例，都会接收这个信号。在这个例子中这就是我们期望的。然而，有的情况下，不希望使用广播方式。考虑下面的流程：
 
 image::images/bpmn.signal.event.warning.1.png[align="center"]
 
 
-The pattern described in the process above is not supported by Activiti. The idea is that the error thrown while performing the "do something" task  is caught by the boundary error event and would be propagated to the parallel path of execution using the signal throw event and then interrupt the "do something in parallel" task. So far Activiti would perform as expected. The signal would be propagated to the catching boundary event and interrupt the task. *However, due to the broadcast semantics of the signal, it would also be propagated to all other process instances which have subscribed to the signal event.* In this case, this might not be what we want.
+Activiti不支持上面流程中描述的模式。理想情况是，在执行"do something"任务时抛出的错误，由边界错误事件捕获，并通过信号抛出事件传播至执行的并行分支，最终中断"do something in parallel"任务。到目前为止Activiti会按照预期效果执行。**然而，由于信号的广播效应，它也会被传播至所有其他订阅了这个信号事件的流程实例。**这可能并我们希望的效果。
 
-*Note:* the signal event does not perform any kind of correlation to a specific process instance. On the contrary, it is broadcast to all process instances. If you need to deliver a signal to a specific process instance only, perform correlation manually and use  +signalEventReceived(String signalName, String executionId)+ and the appropriate <<bpmnSignalEventDefinitionQuery,query mechanisms>>.
+**请注意：**信号事件与特定的流程实例无关，而是会广播给所有流程实例。如果你需要只为某一特定的流程实例传递信号，则需要使用++signalEventReceived(String signalName, String executionId)++手动建立关联，并使用适当的的<<bpmnSignalEventDefinitionQuery,查询机制 query mechanisms>>。
 
 
 [[bpmnMessageEventDefinition]]
 
 
-==== Message Event Definitions
+==== 消息事件定义 Message Event Definitions
 
-Message events are events which reference a named message. A message has a name and a payload. Unlike a signal, a message event is always directed at a single receiver.
+消息事件，是指引用具名消息的事件。消息具有名字与载荷。与信号不同，消息事件只有一个接收者。
 
-A message event definition is declared using the +messageEventDefinition+ element. The attribute +messageRef+ references a +message+ element declared as a child element of the +definitions+ root element. The following is an excerpt of a process where two message events is declared and referenced by a start event and an intermediate catching message event.
+消息事件定义使用++messageEventDefinition++元素声明。++messageRef++属性引用一个++message++元素，该++message++元素需要声明为++definitions++根元素的子元素。下面摘录一个流程，声明了两个消息事件，并由开始事件与消息捕获中间事件（intermediate catching message event）引用。
 
 [source,xml,linenums]
 ----
@@ -307,12 +307,12 @@ A message event definition is declared using the +messageEventDefinition+ elemen
 [[bpmnMessageEventDefinitionThrow]]
 
 
-===== Throwing a Message Event
+===== 抛出消息事件 Throwing a Message Event
 
 
-As an embeddable process engine, Activiti is not concerned with actually receiving a message. This would be environment dependent and entail platform-specific activities like connecting to a JMS (Java Messaging Service) Queue/Topic or processing a Webservice or REST request. The reception of messages is therefore something you have to implement as part of the application or infrastructure into which the process engine is embedded.
+作为可嵌入的流程引擎，Activiti不关心实际接收消息。因为这可能与环境相关，并需要进行平台定义的操作，例如连接至JMS（Java Messaging Service Java消息服务）队列（Queue）/主题（Topic），或者处理Webservice或者REST请求。因此接收消息需要作为应用的一部分，或者是流程引擎所嵌入的基础框架中的一部分，由你实现。
 
-After you have received a message inside your application, you must decide what to do with it. If the message should trigger the start of a new process instance, choose between the following methods offered by the runtime service:
+在应用中接收到消息后，需要决定如何处理它。如果这个消息需要启动新的流程实例，可以选择下面由runtime服务提供的方法中的一种：
 
 [source,java,linenums]
 ----
@@ -321,9 +321,9 @@ ProcessInstance startProcessInstanceByMessage(String messageName, Map<String, Ob
 ProcessInstance startProcessInstanceByMessage(String messageName, String businessKey, Map<String, Object> processVariables);
 ----
 
-These methods allow starting a process instance using the referenced message.
+这些方法可以使用引用的消息启动流程实例。
 
-If the message needs to be received by an existing process instance, you first have to correlate the message to a specific process instance (see next section) and then trigger the continuation of the waiting execution. The runtime service offers the following methods for triggering an execution based on a message event subscription:
+如果需要由已有的流程实例接收消息，需要首先将消息与特定的流程实例关联（查看后续章节），然后触发等待中的执行，让其继续。runtime服务提供了下列方法，根据消息事件的订阅，触发执行：
 
 [source,java,linenums]
 ----
@@ -335,10 +335,10 @@ void messageEventReceived(String messageName, String executionId, HashMap<String
 [[bpmnMessageEventDefinitionQuery]]
 
 
-===== Querying for Message Event subscriptions
+===== 查询消息事件订阅 Querying for Message Event subscriptions
 
 
-* In the case of a message start event, the message event subscription is associated with a particular _process definition_. Such message subscriptions can be queried using a ++ProcessDefinitionQuery++:
+* 对于消息启动事件，消息事件的订阅与特定的__流程定义__相关。这种类型的消息订阅，可以使用++ProcessDefinitionQuery++查询：
 
 [source,java,linenums]
 ----
@@ -347,11 +347,9 @@ ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQ
       .singleResult();
 ----
 
-Since there can only be one process definition for a specific message subscription, the query always returns zero or one results. If a process definition is updated,
-only the newest version of the process definition has a subscription to the message event.
+因为对于一个消息，只能有一个流程定义订阅，因此这个查询总是返回0或1个结果。如果流程定义更新了，只有该流程定义的最新版本会订阅这个消息事件。
 
-* In the case of an intermediate catch message event, the message event subscription is associated with a
-particular _execution_. Such message event subscriptions can be queried using a ++ExecutionQuery++:
+* 对于消息捕获中间事件（intermediate catch message event），消息事件的订阅与特定的__执行__相关。这种类型的消息订阅，可以使用++ExecutionQuery++查询：
 
 [source,java,linenums]
 ----
@@ -361,42 +359,42 @@ Execution execution = runtimeService.createExecutionQuery()
       .singleResult();
 ----
 
-Such queries are called correlation queries and usually require knowledge about the processes (in this case that there will be at most one process instance for a given orderId).
+这种查询通常有关联查询，并且通常需要了解流程（在这个例子里，对于给定的orderId，至多只有一个流程实例）。
 
 
 [[bpmnMessageEventDefinitionExample]]
 
 
-===== Message Event example(s)
+===== 消息事件示例 Message Event example(s)
 
 
-The following is an example of a process which can be started using two different messages:
+下面是一个流程的例子，可以使用两种不同的消息启动：
 
 image::images/bpmn.start.message.event.example.1.png[align="center"]
 
-This is useful if the process needs alternative ways to react to different start events but eventually continues in a uniform way.
+在流程需要通过不同的方式响应不同的启动事件，但是后续使用统一的方式处理时，这就很有用。
 
 
 [[bpmnStartEvents]]
 
 
-==== Start Events
+==== 启动事件 Start Events
 
 
-A start event indicates where a process starts. The type of start event (process starts on arrival of message, on specific time intervals, etc.), defining _how_ the process is started is shown as a small icon in the visual representation of the event. In the XML representation, the type is given by the declaration of a sub-element.
+启动事件指明了流程的起点。启动事件的类型（流程在消息到达时启动，在指定的时间间隔后启动，等等），定义了流程__如何__启动，并显示为启动事件中的小图标。在XML中，类型由子元素声明来定义。
 
-Start events *are always catching*: conceptually the event is (at any time) waiting until a certain trigger happens.
+启动事件“随时捕获”：概念上，事件（随时）等候，知道特定的触发器被触发。
 
-In a start event, following Activiti-specific properties can be specified:
+在启动事件中，可以使用下列Activiti专用参数：
 
-* *initiator*: identifies the variable name in which the authenticated user id will be stored when the process is started.  Example:
+* *initiator*: 指明认证用户（authenticated user）id的变量名。在流程启动时，该id会使用这个变量名被保存。例如：
 
 [source,xml,linenums]
 ----
 <startEvent id="request" activiti:initiator="initiator" />
 ----
 
-The authenticated user must be set with the method +IdentityService.setAuthenticatedUserId(String)+ in a try-finally block like this:
+认证用户必须通过++IdentityService.setAuthenticatedUserId(String)++方法，在try-finally块中设置，像这样：
 
 [source,java,linenums]
 ----
@@ -409,35 +407,35 @@ try {
 
 ----
 
-This code is baked into the Activiti Explorer application.  So it works in combination with <<forms>>.
+这段代码在集成在Activiti Explorer应用中。因此可以与<<forms,表单>>一起使用。
 
 
 [[bpmnNoneStartEvent]]
 
 
-==== None Start Event
+==== 空启动事件 None Start Event
 
 [[noneStartEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-A 'none' start event technically means that the trigger for starting the process instance is unspecified. This means that the engine cannot anticipate when the process instance must be started. The none start event is used when the process instance is started through the API by calling one of the _startProcessInstanceByXXX_ methods.
+“空”启动事件，技术上指的是没有特别指定启动流程实例的触发器。这意味着引擎无法预知何时启动流程实例。空启动事件用于流程实例通过调用下列__startProcessInstanceByXXX__ API方法启动的情况。
 
 [source,java,linenums]
 ----
 ProcessInstance processInstance = runtimeService.startProcessInstanceByXXX();
 ----
 
-_Note:_ a subprocess always has a none start event.
+__请注意：__子流程（subprocess）总是有空启动事件。
 
 
 [[noneStartEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-A none start event is visualized as a circle with no inner icon (i.e. no trigger type).
+空启动事件用空心圆圈表示，中间没有图标（也就是说没有触发器）。
 
 image::images/bpmn.none.start.event.png[align="center"]
 
@@ -446,10 +444,10 @@ image::images/bpmn.none.start.event.png[align="center"]
 [[noneStartEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-The XML representation of a none start event is the normal start event declaration, without any sub-element (other start event types all have a sub-element declaring the type).
+空启动事件的XML表示格式，就是普通的启动事件声明，而没有任何子元素（其他种类的启动事件都有子元素，用于声明其类型）。
 
 [source,xml,linenums]
 ----
@@ -462,9 +460,9 @@ The XML representation of a none start event is the normal start event declarati
 [[noneStartEventCustomExtension]]
 
 
-===== Custom extensions for the none start event
+===== 空启动事件的自定义扩展 Custom extensions for the none start event
 
-*formKey*: references to a form template that users have to fill in when starting a new process instance.  More information can be found in <<forms,the forms section>> Example:
+*formKey*: 引用表单模板，用户需要在启动新流程实例时填写该表单。可以在<<forms,表单章节>>找到更多信息。例如：
 
 [source,xml,linenums]
 ----
@@ -475,28 +473,28 @@ The XML representation of a none start event is the normal start event declarati
 [[bpmnTimerStartEvent]]
 
 
-==== Timer Start Event
+==== 定时器启动事件 Timer Start Event
 
 [[timerStartEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-A timer start event is used to create process instance at given time. It can be used both for processes which should start only once and for processes that should start in specific time intervals.
+定时器启动事件，用于在指定时间创建流程实例。在流程只需要启动一次，与流程需要在特定的时间间隔重复启动时，都可以使用。
 
-_Note:_ a subprocess cannot have a timer start event.
+__请注意：__子流程不能有定时器启动事件。
 
-_Note:_ a start timer event is scheduled as soon as process is deployed. There is no need to call startProcessInstanceByXXX, although calling start process methods is not restricted and will cause one more starting of the process at the time of startProcessInstanceByXXX Invocation.
+__请注意：__定时器启动事件，在流程部署的同时就开始计时。不需要调用startProcessInstanceByXXX，尽管也不禁止使用启动流程的方法。调用startProcessInstanceByXXX时也会启动流程。
 
-_Note:_ when a new version of a process with a start timer event is deployed, the job corresponding with the previous timer will be removed. The reasoning is that normally it is not wanted to keep automatically starting new process instances of this old version of the process.
+__请注意：__当部署带有定时器启动事件的流程的新版本时，上一版本的定时器作业会被移除。这是因为通常并不希望旧版本的流程仍然自动启动新的流程实例。
 
 
 [[timerStartEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-A timer start event is visualized as a circle with clock inner icon.
+定时器启动事件，用空心圆圈，其中有一个钟表图标，来表示。
 
 image::images/bpmn.clock.start.event.png[align="center"]
 
@@ -504,13 +502,13 @@ image::images/bpmn.clock.start.event.png[align="center"]
 [[timerStartEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-The XML representation of a timer start event is the normal start event declaration, with timer definition sub-element. Please refer to <<timerEventDefinitions,timer definitions>> for configuration details.
+定时器启动事件的XML表示格式，是普通的启动事件声明，加上定时器定义子元素。请参考<<timerEventDefinitions,定时器定义>>了解详细配置方法。
 
 
-Example: process will start 4 times, in 5 minute intervals, starting on 11th march 2011, 12:13
+示例：流程会启动4次，间隔5分钟，从2011年3月11日，12:13开始
 
 [source,xml,linenums]
 ----
@@ -521,7 +519,7 @@ Example: process will start 4 times, in 5 minute intervals, starting on 11th mar
 </startEvent>
 ----
 
-Example: process will start once, on selected date
+示例：流程会在选定的时间启动一次
 
 [source,xml,linenums]
 ----
@@ -536,23 +534,23 @@ Example: process will start once, on selected date
 [[bpmnMessageStartEvent]]
 
 
-==== Message Start Event
+==== 消息启动事件 Message Start Event
 
 [[messageStartEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-A <<bpmnMessageEventDefinition,message>> start event can be used to start a process instance using a named message. This effectively allows us to _select_ the right start event from a set of alternative start events using the message name.
+<<bpmnMessageEventDefinition,消息>>启动事件，可用于使用具名消息启动流程实例。它让我们可以有效地使用消息名，有效地在一组可选的启动事件中__选择__正确的启动事件。
 
-When *deploying* a process definition with one or more message start events, the following considerations apply:
+当**部署**具有一个或多个消息启动事件的流程定义时，会考虑下列因素：
 
-* The name of the message start event must be unique across a given process definition. A process definition must not have multiple message start events with the same name. Activiti throws an exception upon deployment of a process definition such that two or more message start events reference the same message	of if two or more message start events reference messages with the same message name.
-* The name of the message start event must be unique across all deployed process definitions. Activiti throws an exception upon deployment of a process definition such that one or more message start events reference a message with the same name as a message start event already deployed by a different process definition.
-* Process versioning: Upon deployment of a new version of a process definition, the message subscriptions of the previous version are cancelled. This is also true for message events that are not present in the new version.
+* 消息启动事件的名字，在给定流程定义中，必须是唯一的。一个流程定义不得包含多个同名的消息启动事件。如果流程定义中有两个或多个消息启动事件引用同一个消息，也即两个或多个消息启动事件引用了具有相同消息名字的消息，则Activiti在部署这个流程定义时，会抛出异常。
+* 消息启动事件的名字，在所有已部署的流程定义中，必须是唯一的。如果流程定义中，一个或多个消息启动事件，引用了已经部署的另一流程定义中的消息启动事件，已经使用的消息名，则Activiti在部署这个流程定义时，会抛出异常。
+* 流程版本：在部署流程定义的新版本时，会取消上一版本的消息订阅。即使新版本中并没有这个消息事件，仍然这样（取消上版本的消息订阅）。
 
-When *starting* a process instance, a message start event can be triggered using the following methods on the ++RuntimeService++:
+当**启动**流程实例时，可以使用下列++RuntimeService++中的方法，触发消息启动事件：
 
 [source,java,linenums]
 ----
