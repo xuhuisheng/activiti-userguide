@@ -494,7 +494,7 @@ __请注意：__当部署带有定时器启动事件的流程的新版本时，�
 
 ===== 图示 Graphical notation
 
-定时器启动事件，用空心圆圈，其中有一个钟表图标，来表示。
+定时器启动事件，用其中有一个钟表图标的圆圈来表示。
 
 image::images/bpmn.clock.start.event.png[align="center"]
 
@@ -542,9 +542,9 @@ image::images/bpmn.clock.start.event.png[align="center"]
 ===== 描述 Description
 
 
-<<bpmnMessageEventDefinition,消息>>启动事件，可用于使用具名消息启动流程实例。它让我们可以有效地使用消息名，有效地在一组可选的启动事件中__选择__正确的启动事件。
+<<bpmnMessageEventDefinition,消息>>启动事件，使用具名消息启动流程实例。它让我们可以使用消息名，有效地在一组可选的启动事件中__选择__正确的启动事件。
 
-当**部署**具有一个或多个消息启动事件的流程定义时，会考虑下列因素：
+当**部署**具有一个或多个消息启动事件的流程定义时，请考虑下列因素：
 
 * 消息启动事件的名字，在给定流程定义中，必须是唯一的。一个流程定义不得包含多个同名的消息启动事件。如果流程定义中有两个或多个消息启动事件引用同一个消息，也即两个或多个消息启动事件引用了具有相同消息名字的消息，则Activiti在部署这个流程定义时，会抛出异常。
 * 消息启动事件的名字，在所有已部署的流程定义中，必须是唯一的。如果流程定义中，一个或多个消息启动事件，引用了已经部署的另一流程定义中的消息启动事件，已经使用的消息名，则Activiti在部署这个流程定义时，会抛出异常。
@@ -560,25 +560,25 @@ ProcessInstance startProcessInstanceByMessage(String messageName, String busines
 ----
 
 
-The +messageName+ is the name given in the +name+ attribute of the +message+ element referenced by the +messageRef+ attribute of the +messageEventDefinition+. The following considerations apply when *starting* a process instance:
+++messageName++是由++message++元素的++name++属性决定的名字。++message++元素被++messageEventDefinition++的++messageRef++属性引用。当**启动**流程实例时，请考虑下列因素：
 
-* Message start events are only supported on top-level processes. Message start events are not supported on embedded sub processes.
-* If a process definition has multiple message start events, +runtimeService.startProcessInstanceByMessage(...)+ allows to select the appropriate start event.
-* If a process definition has multiple message start events and a single none start event, +runtimeService.startProcessInstanceByKey(...)+ and +runtimeService.startProcessInstanceById(...)+ starts a process instance using the none start event.
-* If a process definition has multiple message start events and no none start event, +runtimeService.startProcessInstanceByKey(...)+ and +runtimeService.startProcessInstanceById(...)+ throw an exception.
-* If a process definition has a single message start event, +runtimeService.startProcessInstanceByKey(...)+ and +runtimeService.startProcessInstanceById(...)+ start a new process instance using the message start event.
-* If a process is started from a call activity, message start event(s) are only supported if
-** in addition to the message start event(s), the process has a single none start event
-** the process has a single message start event and no other start events.
+* 只有顶层流程（top-level process）才支持消息启动事件。嵌入式子流程不支持消息启动事件。
+* 如果一个流程定义中有多个消息启动事件，++runtimeService.startProcessInstanceByMessage(...)++允许选择合适的启动事件。
+* 如果一个流程定义中有多个消息启动事件，与一个空启动事件，则++runtimeService.startProcessInstanceByKey(...)++与++runtimeService.startProcessInstanceById(...)++会使用空启动事件启动流程实例。
+* 如果一个流程定义中有多个消息启动事件，而没有空启动事件，则++runtimeService.startProcessInstanceByKey(...)++与++runtimeService.startProcessInstanceById(...)++会抛出异常。
+* 如果一个流程定义中只有一个消息启动事件，则++runtimeService.startProcessInstanceByKey(...)++与++runtimeService.startProcessInstanceById(...)++会使用这个消息启动事件启动新流程实例。
+* 如果流程由调用活动（call activity）启动，则消息启动事件只有在下列情况下才被支持
+** 除了消息启动事件，流程还有唯一的空启动事件
+** 或者流程只有唯一的消息启动事件，而没有其他启动事件。
 
 
 [[messageStartEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
 
-A message start event is visualized as a circle with a message event symbol. The symbol is unfilled, to visualize the catching (receiving) behavior.
+消息启动事件，用其中有一个消息事件标志的圆圈表示。这个标志并未填充，用以表示捕获（接收）行为。
 
 image::images/bpmn.start.message.event.png[align="center"]
 
@@ -587,10 +587,10 @@ image::images/bpmn.start.message.event.png[align="center"]
 [[messageStartEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-The XML representation of a message start event is the normal start event declaration with a messageEventDefinition child-element:
+消息启动事件的XML表示格式，为普通启动事件声明，加上messageEventDefinition子元素：
 
 [source,xml,linenums]
 ----
@@ -620,27 +620,27 @@ The XML representation of a message start event is the normal start event declar
 [[bpmnSignalStartEvent]]
 
 
-==== Signal Start Event
+==== 信号启动事件 Signal Start Event
 
 [[bpmnSignalStartEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-A <<bpmnSignalEventDefinition,signal>> start event can be used to start a process instance using a named signal. The signal can be 'fired' from within a process instance using the intermediary signal throw event or through the API (__runtimeService.signalEventReceivedXXX__ methods). In both cases, all process definitions that have a signal start event with the same name will be started.
+<<bpmnSignalEventDefinition,信号>>启动事件，使用具名信号启动流程实例。这个信号可以由流程实例中的信号中间抛出事件，或者API（__runtimeService.signalEventReceivedXXX__方法）触发。这些情况下，所有拥有相同名字信号启动事件的流程定义都会被启动。
 
-Note that in both cases, it is also possible to choose between a synchronous and asynchronous starting of the process instances.
+请注意这些情况下，都可以选择异步还是同步启动流程实例。
 
-The +signalName+ that must be passed in the API is the name given in the +name+ attribute of the +signal+ element referenced by the +signalRef+ attribute of the +signalEventDefinition+.
+需要为API传递的++signalName++，是由++signal++元素的++name++属性决定的名字。++signal++元素被++signalEventDefinition++的++signalRef++属性所引用。
 
 
 [[signalStartEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
 
-A signal start event is visualized as a circle with a signal event symbol. The symbol is unfilled, to visualize the catching (receiving) behavior.
+信号启动事件，用其中有一个信号事件标志的圆圈表示。这个标志并未填充，用以表示捕获（接收）行为。
 
 image::images/bpmn.start.signal.event.png[align="center"]
 
@@ -649,10 +649,10 @@ image::images/bpmn.start.signal.event.png[align="center"]
 [[signalStartEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-The XML representation of a signal start event is the normal start event declaration with a signalEventDefinition child-element:
+信号启动事件的XML表示格式，为普通启动事件声明，加上signalEventDefinition子元素：
 
 
 [source,xml,linenums]
@@ -673,7 +673,7 @@ The XML representation of a signal start event is the normal start event declara
 [[bpmnErrorStartEvent]]
 
 
-==== Error Start Event
+==== 错误启动事件 Error Start Event
 
 [[errorStartEventDescription]]
 
