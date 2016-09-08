@@ -44,7 +44,7 @@ BPMN 2.0标准对流程的所有的参与者都是个好东西。最终用户不
 
 ==== 定时器事件定义 Timer Event Definitions
 
-定时器事件，是由定义的定时器触发的事件。可以用于<<bpmnTimerStartEvent,开始事件 start event>>，<<bpmnIntermediateCatchingEvent,中间捕获事件 intermediate event>>，或<<bpmnTimerBoundaryEvent,边界事件 boundary event>>。定时器事件的行为，取决于所使用的业务日历（business calendar）。定时器事件有默认的业务日历，但也可以为每个定时器事件定义，定义业务日历。
+定时器事件，是由定义的定时器触发的事件。可以用于<<bpmnTimerStartEvent,开始事件 start event>>，<<bpmnIntermediateCatchingEvent,中间事件 intermediate event>>，或<<bpmnTimerBoundaryEvent,边界事件 boundary event>>。定时器事件的行为，取决于所使用的业务日历（business calendar）。定时器事件有默认的业务日历，但也可以为每个定时器事件定义，定义业务日历。
 
 [source,xml,linenums]
 ----
@@ -627,7 +627,7 @@ image::images/bpmn.start.message.event.png[align="center"]
 
 ===== 描述 Description
 
-<<bpmnSignalEventDefinition,信号>>启动事件，使用具名信号启动流程实例。这个信号可以由流程实例中的信号中间抛出事件，或者API（__runtimeService.signalEventReceivedXXX__方法）触发。这些情况下，所有拥有相同名字信号启动事件的流程定义都会被启动。
+<<bpmnSignalEventDefinition,信号>>启动事件，使用具名信号启动流程实例。这个信号可以由流程实例中的信号抛出中间事件，或者API（__runtimeService.signalEventReceivedXXX__方法）触发。这些情况下，所有拥有相同名字信号启动事件的流程定义都会被启动。
 
 请注意这些情况下，都可以选择异步还是同步启动流程实例。
 
@@ -678,20 +678,20 @@ image::images/bpmn.start.signal.event.png[align="center"]
 [[errorStartEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-An <<bpmnErrorEventDefinition,error>> start event can be used to trigger an Event Sub-Process. *An error start event cannot be used for starting a process instance*.
+<<bpmnErrorEventDefinition,错误>>启动事件，可用于触发事件子流程（Event Sub-Process）。**错误启动事件不能用于启动流程实例**。
 
-An error start event is always interrupting.
+错误启动事件总是中断。
 
 
 [[errorStartEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
 
-An error start event is visualized as a circle with an error event symbol. The symbol is unfilled, to visualize the catching (receiving) behavior.
+错误启动事件，用其中有一个错误事件标志的圆圈表示。这个标志并未填充，用以表示捕获（接收）行为。
 
 image::images/bpmn.start.error.event.png[align="center"]
 
@@ -700,9 +700,9 @@ image::images/bpmn.start.error.event.png[align="center"]
 [[errorStartEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
-The XML representation of an error start event is the normal start event declaration with an errorEventDefinition child-element:
+错误启动事件的XML表示格式，为普通启动事件声明，加上errorEventDefinition子元素：
 
 [source,xml,linenums]
 ----
@@ -718,31 +718,31 @@ The XML representation of an error start event is the normal start event declara
 [[bpmnEndEvent]]
 
 
-==== End Events
+==== 结束事件 End Events
 
 
-An end event signifies the end (of a path) of a (sub)process. An end event is *always throwing*. This means that when process execution arrives in the end event, a _result_ is thrown. The type of result is depicted by the inner black icon of the event. In the XML representation, the type is given by the declaration of a sub-element.
+结束事件标志着（子）流程的（分支的）结束。结束事件**总是抛出（型）事件**。这意味着当流程执行到达结束事件时，会抛出一个__结果__。结果的类型由事件内部的黑色图标描绘。在XML表示中，类型由子元素声明给出。
 
 
 [[bpmnNoneEndEvent]]
 
 
-==== None End Event
+==== 空结束事件 None End Event
 
 [[noneEndEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-A 'none' end event means that the _result_ thrown when the event is reached is unspecified. As such, the engine will not do anything extra besides ending the current path of execution.
+“空”结束事件，意味着当到达这个事件时，抛出的__结果__没有特别指定。因此，引擎除了结束当前执行分支之外，不会多做任何事情。
 
 
 [[bpmnNoneEndEventDescription]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-A none end event is visualized as a circle with a thick border with no inner icon (no result type).
+空结束事件，用其中没有图标（没有结果类型）的粗圆圈表示。
 
 image::images/bpmn.none.end.event.png[align="center"]
 
@@ -751,9 +751,9 @@ image::images/bpmn.none.end.event.png[align="center"]
 [[bpmnNoneStartEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
-The XML representation of a none end event is the normal end event declaration, without any sub-element (other end event types all have a sub-element declaring the type).
+空事件的XML表示格式，为普通结束事件声明，没有任何子元素（其它种类的结束事件都有子元素，用于声明其类型）。
 
 
 [source,xml,linenums]
@@ -765,22 +765,22 @@ The XML representation of a none end event is the normal end event declaration, 
 [[bpmnErrorEndEvent]]
 
 
-==== Error End Event
+==== 错误结束事件 Error End Event
 
 [[bpmnErrorEndEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-When process execution arrives in an *error end event*, the current path of execution is ended and an error is thrown. This error can <<bpmnBoundaryErrorEvent,caught by a matching intermediate boundary error event>>. In case no matching boundary error event is found, an exception will be thrown.
+当流程执行到达**错误结束事件**时，结束执行的当前分支，并抛出错误。这个错误可以<<bpmnBoundaryErrorEvent,使用匹配的错误边界中间事件 intermediate boundary error event 捕获>>。如果找不到匹配的错误边界事件，将会抛出异常。
 
 
 [[bpmnErrorEndEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-An error end event is visualized as a typical end event (circle with thick border), with the error icon inside. The error icon is completely black, to indicate the throwing semantics.
+错误结束事件事件，用内部有一个错误图标的标准结束事件（粗圆圈）表示。错误图标完全是黑色，代表抛出的含义。
 
 image::images/bpmn.error.end.event.png[align="center"]
 
@@ -788,9 +788,9 @@ image::images/bpmn.error.end.event.png[align="center"]
 [[bpmnErrorEndEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
-And error end event is represented as an end event, with an _errorEventDefinition_ child element.
+错误结束事件，表示为结束事件，加上___errorEventDefinition___子元素：
 
 [source,xml,linenums]
 ----
