@@ -939,7 +939,7 @@ image::images/bpmn.cancel.end.event.png[align="center"]
 ===== 描述 Description
 
 
-定时器边界事件的行为像是秒表与闹钟。当执行到达了边界事件所依附的活动时，启动定时器。当定时器触发时（例如在特定间隔后），活动会被中断，沿着边界事件继续执行。
+定时器边界事件的行为像是秒表与闹钟。当执行到达了边界事件所依附的活动时，启动定时器。当定时器触发时（例如在特定事件间隔后），活动会被中断，沿着边界事件继续执行。
 
 
 [[bpmnTimerBoundaryEventGraphicalNotation]]
@@ -1258,10 +1258,10 @@ image::images/bpmn.boundary.cancel.event.png[align="center"]
 [[bpmnBoundaryCompensationEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
 
-A compensation boundary event is visualized as a typical intermediate event (Circle with smaller circle inside) on the boundary, with the compensation icon inside. The compensation icon is white (unfilled), to indicate the _catching_ semantics. In addition to a compensation boundary event, the following figure shows a compensation handler associated with the boundary event using a unidirectional association:
+补偿边界事件，用内部有一个补偿图标的标准中间事件（两层圆圈）表示。补偿图标是白色的（未填充），代表__捕获__的含义。另外，补偿边界事件使用单向连接关联补偿处理器，如下图所示：
 
 image::images/bpmn.boundary.compensation.event.png[align="center"]
 
@@ -1269,10 +1269,10 @@ image::images/bpmn.boundary.compensation.event.png[align="center"]
 [[bpmnBoundaryCompensationEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-A compensation boundary event is defined as a typical <<bpmnBoundaryEvent,boundary event>>:
+补偿边界事件与标准<<bpmnBoundaryEvent,边界事件>>一样定义：
 
 [source,xml,linenums]
 ----
@@ -1285,16 +1285,15 @@ A compensation boundary event is defined as a typical <<bpmnBoundaryEvent,bounda
 <serviceTask id="undoBookHotel" isForCompensation="true" activiti:class="..." />
 ----
 
-Since the compensation boundary event is activated after the activity has completed successfully, the +cancelActivity+ attribute is not supported.
+补偿边界事件是在活动完成后才激活，因此不支持++cancelActivity++属性。
 
 
 [[bpmnIntermediateCatchingEvent]]
 
 
-==== Intermediate Catching Events
+==== 捕获中间事件 Intermediate Catching Events
 
-
-All intermediate catching events are defined in the same way:
+所有的捕获中间事件都使用相同方式定义：
 
 [source,xml,linenums]
 ----
@@ -1303,31 +1302,32 @@ All intermediate catching events are defined in the same way:
 </intermediateCatchEvent>
 ----
 
-An intermediate catching event is defined with
+捕获中间事件由下列（元素）定义
 
-* A unique identifier (process-wide)
-* An XML sub-element of the form _XXXEventDefinition_ (e.g. _TimerEventDefinition_, etc.) defining the type of the intermediate catching event. See the specific catching event types for more details.
+* 唯一标识符（流程范围）
+* 定义了捕获中间事件类型的，__XXXEventDefinition__形式的XML子元素（例如__TimerEventDefinition__等）。查阅特定中间捕获事件类型，以了解更多细节。
 
 
 [[bpmnTimerIntermediateEvent]]
 
 
-==== Timer Intermediate Catching Event
+==== 定时器捕获中间事件 Timer Intermediate Catching Event
 
 [[bpmnTimerIntermediateEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-A timer intermediate event acts as a stopwatch. When an execution arrives in catching event activity, a timer is started. When the timer fires (e.g. after a specified interval), the sequence flow going out of the timer intermediate event is followed.
+定时器捕获中间事件的行为像是秒表。当执行到达捕获事件活动（catching event activity）时，启动定时器；当定时器触发时（例如在一段时间间隔后），沿定时器中间事件的出口顺序流继续执行。
 
 
 [[bpmnTimerIntermediateEventGraphicalNotation]]
 
 
-===== Graphical Notation
+===== 图示 Graphical Notation
 
-A timer intermediate event is visualized as an intermediate catching event, with the timer icon on the inside.
+
+定时器中间事件，用内部有定时器图标的中间捕获事件表示。
 
 image::images/bpmn.intermediate.timer.event.png[align="center"]
 
