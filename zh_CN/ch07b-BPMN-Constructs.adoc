@@ -127,8 +127,7 @@ BPMN 2.0标准对流程的所有的参与者都是个好东西。最终用户不
 </boundaryEvent>
 ----
 
-**请注意：**定时器只有在作业或者异步执行器启用时才能触发（也就是说，在++activiti.cfg.xml++中，__jobExecutorActivate__或者__asyncExecutorActivate__需要设置为++true++，因为默认情况下，作业或者异步执行器是禁用的）。
-
+**请注意：**定时器只有在作业或者异步执行器启用时才能触发（也就是说，需要在++activiti.cfg.xml++中，将__jobExecutorActivate__或者__asyncExecutorActivate__设置为++true++。因为默认情况下，作业与异步执行器都是禁用的）。
 
 [[bpmnErrorEventDefinition]]
 
@@ -261,7 +260,7 @@ image::images/bpmn.signal.event.catch.png[align="center"]
 image::images/bpmn.signal.event.warning.1.png[align="center"]
 
 
-Activiti不支持上面流程中描述的模式。理想情况是，在执行"do something"任务时抛出的错误，由边界错误事件捕获，并通过信号抛出事件传播至执行的并行分支，最终中断"do something in parallel"任务。到目前为止Activiti会按照预期效果执行。**然而，由于信号的广播效应，它也会被传播至所有其他订阅了这个信号事件的流程实例。**这可能并我们希望的效果。
+Activiti不支持上面流程中描述的模式。理想情况是，在执行"do something"任务时抛出的错误，由错误边界事件捕获，并通过信号抛出事件传播至执行的并行分支，最终中断"do something in parallel"任务。到目前为止Activiti会按照预期效果执行。**然而，由于信号的广播效应，它也会被传播至所有其他订阅了这个信号事件的流程实例。**这可能并我们希望的效果。
 
 **请注意：**信号事件与特定的流程实例无关，而是会广播给所有流程实例。如果你需要只为某一特定的流程实例传递信号，则需要使用++signalEventReceived(String signalName, String executionId)++手动建立关联，并使用适当的的<<bpmnSignalEventDefinitionQuery,查询机制 query mechanisms>>。
 
@@ -780,7 +779,7 @@ image::images/bpmn.none.end.event.png[align="center"]
 
 ===== 图示 Graphical notation
 
-错误结束事件事件，用内部有一个错误图标的标准结束事件（粗圆圈）表示。错误图标完全是黑色，代表抛出的含义。
+错误结束事件事件，用内部有一个错误图标的标准结束事件（粗圆圈）表示。错误图标是全黑的，代表抛出的含义。
 
 image::images/bpmn.error.end.event.png[align="center"]
 
@@ -800,7 +799,7 @@ image::images/bpmn.error.end.event.png[align="center"]
 
 ----
 
-The _errorRef_ attribute can reference an _error_ element that is defined outside the process:
+__errorRef__属性可以引用在流程外定义的__error__元素：
 
 [source,xml,linenums]
 ----
@@ -810,7 +809,7 @@ The _errorRef_ attribute can reference an _error_ element that is defined outsid
 ...
 ----
 
-The *errorCode* of the _error_ will be used to find the matching catching boundary error event. If the _errorRef_ does not match any defined _error_, then the _errorRef_ is used as a shortcut for the _errorCode_. This is an Activiti specific shortcut. More concretely, following snippets are equivalent in functionality.
+__error__的**errorCode**用于查找匹配的错误捕获边界事件。如果__errorRef__不匹配任何已定义的__error__，则该__errorRef__会用做__errorCode__的快捷方式。这个快捷方式是Activiti特有的。下面的代码片段在功能上是相同的。
 
 [source,xml,linenums]
 ----
@@ -824,7 +823,7 @@ The *errorCode* of the _error_ will be used to find the matching catching bounda
 ...
 ----
 
-is equivalent with
+与下面的功能相同
 
 [source,xml,linenums]
 ----
@@ -833,30 +832,30 @@ is equivalent with
 </endEvent>
 ----
 
-Note that the _errorRef_ must comply with the BPMN 2.0 schema, and must be a valid QName.
+请注意__errorRef__必须遵从BPMN 2.0概要（schema），且必须是合法的QName。
 
 [[bpmnCancelEndEvent]]
 
-==== Terminate End Event
+==== 终止结束事件 Terminate End Event
 
-===== Description
+===== 描述 Description
 
-When a _terminate end event_ is reached, the current process instance or sub-process will be terminated. Conceptually, when an execution arrives in a terminate end event, the first _scope_ (process or sub-process) will be determined and ended. Note that in BPMN 2.0, a sub-process can be an embedded sub-process, call activity, event sub-process or transaction sub-process. This rule applies in general: when for example there is a multi-instance call activity or embedded subprocess, only that instance will be ended, the other instances and the process instance are not affected.
+当到达__终止结束事件__时，当前的流程实例或子流程会被终止。概念上说，当执行到达终止结束事件时，会判断第一个__范围 scope__（流程或子流程）并终止它。请注意在BPMN 2.0中，子流程可以是嵌入式子流程，调用活动，事件子流程，或事务子流程。有一条通用规则：当存在多实例的调用过程或嵌入式子流程时，只会终止一个实例，其他的实例与流程实例不会受影响。
 
-There is an optional attribute _terminateAll_ that can be added. When _true_, regardless of the placement of the terminate end event in the process definition and regardless of being in a sub-process (even nested), the (root) process instance will be terminated.
+可以添加一个可选属性__terminateAll__。当其为__true__时，无论该终止结束事件在流程定义中的位置，也无论它是否在子流程（甚至是嵌套子流程）中，都会终止（根）流程实例。
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-A cancel end event visualized as a typical end event (circle with thick outline), with a full black circle inside.
+终止结束事件，用内部有一个全黑圆的标准结束事件（粗圆圈）表示。
 
 image::images/bpmn.terminate.end.event.png[align="center"]
 
 
-===== XML representation
+===== XML表示 XML representation
 
-A terminate end event is represented as an end event, with a _terminateEventDefinition_ child element.
+终止结束事件，表示为结束事件，加上__terminateEventDefinition__子元素。
 
-Note that the _terminateAll_ attribute is optional (and _false_ by default).
+请注意__terminateAll__属性是可选的（默认为__false__）。
 
 [source,xml,linenums]
 ----
@@ -866,22 +865,22 @@ Note that the _terminateAll_ attribute is optional (and _false_ by default).
 ----
 
 
-==== Cancel End Event
+==== 取消结束事件 Cancel End Event
 
 <<experimental, [EXPERIMENTAL]>>[[bpmnCancelEndEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-The cancel end event can only be used in combination with a bpmn transaction subprocess. When the cancel end event is reached, a cancel event is thrown which must be caught by a cancel boundary event. The cancel boundary event then cancels the transaction and triggers compensation.
+取消结束事件，只能与bpmn事务子流程（bpmn transaction subprocess）一起使用。当到达取消结束事件时，会抛出取消事件，且必须由取消边界事件（cancel boundary event）捕获。之后这个取消边界事件将取消事务，并触发补偿（compensation）。
 
 
 [[bpmnCancelEndEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-A cancel end event visualized as a typical end event (circle with thick outline), with the cancel icon inside. The cancel icon is completely black, to indicate the throwing semantics.
+取消结束事件，用内部有一个取消图标的标准结束事件（粗圆圈）表示。取消图标是全黑的，代表抛出的含义。
 
 image::images/bpmn.cancel.end.event.png[align="center"]
 
@@ -890,10 +889,10 @@ image::images/bpmn.cancel.end.event.png[align="center"]
 [[bpmnCancelEndEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-A cancel end event is represented as an end event, with a _cancelEventDefinition_ child element.
+取消结束事件，表示为结束事件，加上__cancelEventDefinition__子元素。
 
 [source,xml,linenums]
 ----
@@ -908,11 +907,11 @@ A cancel end event is represented as an end event, with a _cancelEventDefinition
 [[bpmnBoundaryEvent]]
 
 
-==== Boundary Events
+==== 边界事件 Boundary Events
 
-Boundary events are _catching_ events that are attached to an activity (a boundary event can never be throwing). This means that while the activity is running, the event is _listening_ for a certain type of trigger. When the event is _caught_, the activity is interrupted and the sequence flow going out of the event are followed.
+边界事件是__捕获__（型）事件，依附在活动（activity）上（边界事件永远不会抛出）。这意味着当活动运行时，事件在__监听__特定类型的触发器。当事件__捕获__时，活动会被终止，并沿该事件的出口顺序流继续。
 
-All boundary events are defined in the same way:
+所有的边界事件都用相同的方式定义：
 
 [source,xml,linenums]
 ----
@@ -921,35 +920,34 @@ All boundary events are defined in the same way:
 </boundaryEvent>
 ----
 
-A boundary event is defined with
+边界事件由下列（元素）定义：
 
-* A unique identifier (process-wide)
-* A reference to the activity to which the event is attached through the *attachedToRef* attribute.
- Note that a boundary event is defined on the same level as the activities to which they are attached (i.e. no inclusion of the boundary event inside the activity).
-* An XML sub-element of the form _XXXEventDefinition_ (e.g. _TimerEventDefinition_, _ErrorEventDefinition_, etc.) defining the type of the boundary event. See the specific boundary event types for more details.
+* 唯一标识符（流程范围）
+* 通过**attachedToRef**属性定义的，对该事件所依附的活动的引用。请注意边界事件，与其所依附的活动，定义在相同级别（也就是说，边界事件并不包含在活动内部）。
+* 定义了边界事件的类型的，__XXXEventDefinition__形式的XML子元素（例如__TimerEventDefinition__，__ErrorEventDefinition__，等等）。查阅特定边界事件类型，以了解更多细节。
 
 
 
 [[bpmnTimerBoundaryEvent]]
 
 
-==== Timer Boundary Event
+==== 定时器边界事件 Timer Boundary Event
 
 [[timerBoundaryEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-A timer boundary event acts as a stopwatch and alarm clock. When an execution arrives in the activity where the boundary event is attached to, a timer is started. When the timer fires (e.g. after a specified interval), the activity is interrupted boundary event are followed.
+定时器边界事件的行为像是秒表与闹钟。当执行到达了边界事件所依附的活动时，启动定时器。当定时器触发时（例如在特定间隔后），活动会被中断，沿着边界事件继续执行。
 
 
 [[bpmnTimerBoundaryEventGraphicalNotation]]
 
 
-===== Graphical Notation
+===== 图示 Graphical Notation
 
-A timer boundary event is visualized as a typical boundary event (i.e. circle on the border), with the timer icon on the inside.
+定时器边界事件，用内部有一个定时器图标的标准边界事件（圆圈）表示。
 
 image::images/bpmn.boundary.timer.event.png[align="center"]
 
@@ -958,10 +956,10 @@ image::images/bpmn.boundary.timer.event.png[align="center"]
 [[bpmnTimerBoundaryEventXml]]
 
 
-===== XML Representation
+===== XML表示 XML Representation
 
 
-A timer boundary event is defined as a <<bpmnBoundaryEvent,regular boundary event>>. The specific type sub-element is in this case a *timerEventDefinition* element.
+定时器边界事件与<<bpmnBoundaryEvent,一般边界事件>>一样定义。其中类型子元素为**timerEventDefinition**元素。
 
 [source,xml,linenums]
 ----
@@ -972,31 +970,31 @@ A timer boundary event is defined as a <<bpmnBoundaryEvent,regular boundary even
 </boundaryEvent>
 ----
 
-Please refer to <<timerEventDefinitions,timer event definition>> for details on timer configuration.
+请参考<<timerEventDefinitions,定时器事件定义>>了解定时器配置的细节。
 
-In the graphical representation, the line of the circle is dotted as you can see in this example above:
+上面的例子在图示中，圆圈画为虚线：
 
 image::images/bpmn.non.interrupting.boundary.timer.event.png[align="center"]
 
-A typical use case is sending an escalation email additionally but not interrupt the normal process flow.
+其典型使用场景，是发送额外的升级邮件，但不中断正常的流程流向。
 
-Since BPMN 2.0 there is the difference between the interrupting and non interrupting timer event. The interrupting is the default. The non-interrupting leads to the original activity is *not* interrupted but the activity stays there. Instead an additional executions is created and send over the outgoing transition of the event. In the XML representation, the _cancelActivity_ attribute is set to false:
+在BPMN 2.0中，中断与非中断定时器事件是不同的。默认为中断。非中断意味着最初的活动**不会**被中断，而会保留。并会创建额外的执行，用于处理事件的出口转移（outgoing transition）。在XML表示中，__cancelActivity__属性设置为false。
 
 [source,xml,linenums]
 ----
 <boundaryEvent id="escalationTimer" cancelActivity="false" attachedToRef="firstLineSupport"/>
 ----
 
-*Note:* boundary timer events are only fired when the job or async executor is enabled (i.e. _jobExecutorActivate_ or _asyncExecutorActivate_ needs to be set to +true+ in the +activiti.cfg.xml+, since the job and async executor are disabled by default).
+**请注意：**定时器边界事件只有在作业或异步执行器启用时才能触发（也就是说，需要在++activiti.cfg.xml++中，将__jobExecutorActivate__或者__asyncExecutorActivate__设置为++true++。因为默认情况下，作业与异步执行器都是禁用的。）
 
 
 [[bpmnKnownIssueBoundaryEvent]]
 
 
-===== Known issue with boundary events
+===== 边界事件的已知问题 Known issue with boundary events
 
 
-There is a known issue regarding concurrency when using boundary events of any type. Currently, it is not possible to have multiple outgoing sequence flow attached to a boundary event (see issue link:$$https://activiti.atlassian.net/browse/ACT-47$$[ACT-47]). A solution to this problem is to use one outgoing sequence flow that goes to a parallel gateway.
+所有类型的边界事件，都有一个关于并发的已知问题。不能在边界事件上附加多个出口顺序流（查看问题link:$$https://activiti.atlassian.net/browse/ACT-47$$[ACT-47]）。这个问题的解决方案，是使用一条出口顺序流，指向并行网关。
 
 image::images/bpmn.known.issue.boundary.event.png[align="center"]
 
@@ -1005,38 +1003,38 @@ image::images/bpmn.known.issue.boundary.event.png[align="center"]
 [[bpmnBoundaryErrorEvent]]
 
 
-==== Error Boundary Event
+==== 错误边界事件 Error Boundary Event
 
 [[bpmnBoundaryErrorEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-An intermediate _catching_ error on the boundary of an activity, or *boundary error event* for short, catches errors that are thrown within the scope of the activity on which it is defined.
+在活动边界上的错误__捕获__中间（事件），或简称**错误边界事件**，捕获其依附的活动范围内抛出的错误。
 
 
-Defining a boundary error event makes most sense on an <<bpmnSubProcess,embedded subprocess>>, or a <<bpmnCallActivity,call activity>>, as a subprocess creates a scope for all activities inside the subprocess. Errors are thrown by <<bpmnErrorEndEvent,error end events>>. Such an error will propagate its parent scopes upwards until a scope is found on which a boundary error event is defined that matches the error event definition.
+在<<bpmnSubProcess,嵌入式子流程>>或者<<bpmnCallActivity,调用活动>>上定义错误边界事件最有意义，因为子流程会为其中的所有活动创建范围。错误由<<bpmnErrorEndEvent,错误结束事件>>抛出。这样的错误会逐层向其上级父范围传播，直到找到一个错误边界事件的范围，定义了匹配的错误事件定义。
 
-When an error event is caught, the activity on which the boundary event is defined is destroyed, also destroying all current executions within (e.g. concurrent activities, nested subprocesses, etc.). Process execution continues following the outgoing sequence flow of the boundary event.
+当错误事件被捕获时，边界事件定义所在的活动会被销毁，同时销毁其中所有的当前执行（例如，并行活动，嵌套子流程，等等）。流程执行沿着边界事件的出口顺序流继续。
 
 
 [[bpmnBoundaryErrorEventgraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-A boundary error event is visualized as a typical intermediate event (circle with smaller circle inside) on the boundary, with the error icon inside. The error icon is white, to indicate the _catch_ semantics.
+错误边界事件，用内部有一个错误图标的标准中间事件（两层圆圈）表示。错误图标是白色的，代表__捕获__的含义。
 
 image::images/bpmn.boundary.error.event.png[align="center"]
 
 [[bpmnBoundaryErrorEventXml]]
 
 
-===== Xml representation
+===== XML表示 Xml representation
 
 
-A boundary error event is defined as a typical <<bpmnBoundaryEvent,boundary event>>:
+错误边界事件与标准<<bpmnBoundaryEvent,边界事件>>一样定义：
 
 [source,xml,linenums]
 ----
@@ -1045,7 +1043,7 @@ A boundary error event is defined as a typical <<bpmnBoundaryEvent,boundary even
 </boundaryEvent>
 ----
 
-As with the <<bpmnErrorEndEvent,error end event>>, the _errorRef_ references an error defined outside the process element:
+在<<bpmnBoundaryEvent,边界事件>>中，__errorRef__引用一个流程元素外定义的错误：
 
 [source,xml,linenums]
 ----
@@ -1056,51 +1054,50 @@ As with the <<bpmnErrorEndEvent,error end event>>, the _errorRef_ references an 
 
 ----
 
-The *errorCode* is used to match the errors that are caught:
+**errorCode**用于匹配捕获的错误：
 
-* If _errorRef_ is omitted, the boundary error event will catch *any error event*, regardless of the errorCode of the _error_.
-* In case an _errorRef_ is provided and it references an existing _error_, the boundary event will *only catch errors with the same error code*.
-* In case an _errorRef_ is provided, but no _error_ is defined in the BPMN 2.0 file, then the *errorRef is used as errorCode* (similar for with error end events).
+* 如果省略了__errorRef__，错误边界事件会捕获**所有错误事件**，无论__error__的errorCode是什么。
+* 如果提供了__errorRef__，并且其引用了存在的__error__，则边界事件**只会捕获相同错误代码的错误**。
+* 如果提供了__errorRef__，但BPMN 2.0文件中没有定义__error__，则**errorRef会用作errorCode**（与错误结束事件类似）。
 
 
 [[bpmnBoundaryErrorEventExample]]
 
 
-===== Example
+===== 示例 Example
 
 
-Following example process shows how an error end event can be used. When the _'Review profitability'_ user task is completed by stating that not enough information is provided, an error is thrown. When this error is caught on the boundary of the subprocess, all active activities within the _'Review sales lead'_ subprocess are destroyed (even if _'Review customer rating'_ was not yet completed), and the _'Provide additional details'_ user task is created.
+下面的示例流程展示了如何使用错误结束事件。当__'Review profitability (审核盈利能力)'__用户任务完成，并指出提供的信息不足时，会抛出错误。当这个错误被子流程边界捕获时，__'Review sales lead (审核销售线索)'__子流程中的所有运行中活动都会被销毁（即使__'Review customer rating 审核客户等级'__还没有完成），并创建__'Provide additional details (提供更多信息)'__用户任务。
 
 image::images/bpmn.boundary.error.example.png[align="center"]
 
-This process is shipped as example in the demo setup. The process XML and unit test can be found in the _org.activiti.examples.bpmn.event.error_ package.
+这个流程作为演示配置的示例提供。可以在__org.activiti.examples.bpmn.event.error__包中找到流程XML与单元测试。
 
 
 [[bpmnBoundarySignalEvent]]
 
 
-==== Signal Boundary Event
+==== 信号边界事件 Signal Boundary Event
 
 [[bpmnBoundarySignalEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-An attached intermediate _catching_ <<bpmnSignalEventDefinition,signal>> on the boundary of an activity, or *boundary signal event* for short, catches signals with the same signal name as the referenced signal definition.
+依附在活动边界上的<<bpmnSignalEventDefinition,信号>>捕获中间（事件），或简称**信号边界事件**，捕获与其信号定义具有相同信号名的信号。
 
-*Note:* contrary to other events like the boundary error event, a boundary signal event does not only catch signal events thrown from the scope it is attached to. On the contrary, a signal event has global scope (broadcast semantics) meaning that the signal can be thrown from any place, even from a different process instance.
+**请注意：**与其他事件例如错误边界事件相反的是，信号边界事件不只是捕获其所依附范围抛出的信号。信号边界事件为全局范围（广播）的，意味着信号可以从任何地方抛出，甚至是不同的流程实例。
 
-*Note:* contrary to other events like an error event, a signal is not consumed if it is caught. If you have two active signal boundary events catching the same signal event, both boundary events are triggered, even if they are part of different process instances.
+**请注意：**与其他事件例如错误事件不同，信号在被捕获后不会被消耗。如果有两个激活的信号边界事件，捕获相同的信号事件，则两个边界事件都会被激活，哪怕它们不在同一个流程实例里。
 
 
 [[bpmnBoundarySignalEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-
-A boundary signal event is visualized as a typical intermediate event (Circle with smaller circle inside) on the boundary, with the signal icon inside. The signal icon is white (unfilled), to indicate the _catch_ semantics.
+信号边界事件，用内部有一个信号图标的标准中间事件（两层圆圈）表示。信号图标是白色的，代表__捕获__的含义。
 
 image::images/bpmn.boundary.signal.event.png[align="center"]
 
@@ -1108,9 +1105,9 @@ image::images/bpmn.boundary.signal.event.png[align="center"]
 [[bpmnBoundarySignalEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
-A boundary signal event is defined as a typical <<bpmnBoundaryEvent,boundary event>>:
+信号边界事件与标准<<bpmnBoundaryEvent,边界事件>>一样定义：
 
 [source,xml,linenums]
 ----
@@ -1125,44 +1122,44 @@ A boundary signal event is defined as a typical <<bpmnBoundaryEvent,boundary eve
 [[bpmnBoundarySignalEventExample]]
 
 
-===== Example
+===== 示例 Example
 
 
-See section on <<bpmnSignalEventDefinition,signal event definitions>>.
+查看<<bpmnSignalEventDefinition,信号事件定义>>章节内容。
 
 
 [[bpmnBoundaryMessageEvent]]
 
 
-==== Message Boundary Event
+==== 消息边界事件 Message Boundary Event
 
 [[bpmnBoundaryMessageEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-An attached intermediate _catching_ <<bpmnMessageEventDefinition,message>> on the boundary of an activity, or *boundary message event* for short, catches messages with the same message name as the referenced message definition.
+在活动边界上的<<bpmnMessageEventDefinition,消息>>__捕获__中间（事件），或简称**消息边界事件**，捕获与其消息定义具有相同消息名的消息。
 
 
 [[bpmnBoundaryMessageEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-A boundary message event is visualized as a typical intermediate event (Circle with smaller circle inside) on the boundary, with the message icon inside. The message icon is white (unfilled), to indicate the _catch_ semantics.
+消息边界事件，用内部有一个消息图标的标准中间事件（两层圆圈）表示。信号图标是白色的，代表__捕获__的含义。
 
 image::images/bpmn.boundary.message.event.png[align="center"]
 
-Note that boundary message event can be both interrupting (right hand side) and non-interrupting (left hand side).
+请注意消息边界事件既可以是中断型的（右手边），也可以是非中断型的（左手边）。
 
 
 [[bpmnBoundaryMessageEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-A boundary message event is defined as a typical <<bpmnBoundaryEvent,boundary event>>:
+消息边界事件与标准<<bpmnBoundaryEvent,边界事件>>一样定义：
 
 [source,xml,linenums]
 ----
@@ -1177,40 +1174,40 @@ A boundary message event is defined as a typical <<bpmnBoundaryEvent,boundary ev
 [[bpmnBoundaryMessageEventExample]]
 
 
-===== Example
+===== 示例 Example
 
 
-See section on <<bpmnMessageEventDefinition,message event definitions>>.
+查看<<bpmnMessageEventDefinition,消息事件定义>>章节内容。
 
 
 [[bpmnBoundaryCancelEvent]]
 
 
-==== Cancel Boundary Event
+==== 取消边界事件 Cancel Boundary Event
 
 <<experimental, [EXPERIMENTAL]>>[[bpmnBoundaryCancelEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-An attached intermediate _catching_ cancel on the boundary of a transaction subprocess, or *boundary cancel event* for short, is triggered when a transaction is cancelled. When the cancel boundary event is triggered, it first interrupts all executions active in the current scope. Next, it starts compensation of all active compensation boundary events in the scope of the transaction. Compensation is performed synchronously, i.e. the boundary event waits before compensation is completed before leaving the transaction. When compensation is completed, the transaction subprocess is left using the sequence flow(s) running out of the cancel boundary event.
+依附在事务子流程边界上的取消__捕获__中间（事件），或简称**取消边界事件**，在事务取消时触发。当取消边界事件触发时，首先会中断当前范围的所有活动执行。接下来，启动事务范围内所有有效的的补偿边界事件（compensation boundary event）。补偿会同步执行，也就是说在离开事务前，边界事件会等待补偿完成。当补偿完成时，使用取消边界事件的出口顺序流，离开事务子流程。
 
 
-*Note:* Only a single cancel boundary event is allowed for a transaction subprocess.
+**请注意：**一个事务子流程只允许一个取消边界事件。
 
-*Note:* If the transaction subprocess hosts nested subprocesses, compensation is only triggered for subprocesses that have completed successfully.
+**请注意：**如果事务子流程中有嵌套的子流程，只有成功完成的子流程才会触发补偿。
 
-*Note:* If a cancel boundary event is placed on a transaction subprocess with multi instance characteristics, if one instance triggers cancellation, the boundary event cancels all instances.
+**请注意：**如果取消边界事件放置在具有多实例特性的事务子流程上，如果一个实例触发了取消，则边界事件将取消所有实例。
 
 
 [[bpmnBoundaryCancelEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
 
-A cancel boundary event is visualized as a typical intermediate event (Circle with smaller circle inside) on the boundary, with the cancel icon inside. The cancel icon is white (unfilled), to indicate the _catching_ semantics.
+取消边界事件，用内部有一个取消图标的标准中间事件（两层圆圈）表示。取消图标是白色的（未填充），代表__捕获__的含义。
 
 image::images/bpmn.boundary.cancel.event.png[align="center"]
 
@@ -1219,10 +1216,10 @@ image::images/bpmn.boundary.cancel.event.png[align="center"]
 [[bpmnBoundarySignalEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-A cancel boundary event is defined as a typical <<bpmnBoundaryEvent,boundary event>>:
+取消边界事件与标准<<bpmnBoundaryEvent,边界事件>>一样定义：
 
 [source,xml,linenums]
 ----
@@ -1231,31 +1228,31 @@ A cancel boundary event is defined as a typical <<bpmnBoundaryEvent,boundary eve
 </boundaryEvent>
 ----
 
-Since the cancel boundary event is always interrupting, the +cancelActivity+ attribute is not required.
+因为取消边界事件总是中断型的，因此不需要++cancelActivity++属性。
 
 
 [[bpmnBoundaryCompensationEvent]]
 
 
-==== Compensation Boundary Event
+==== 补偿边界事件 Compensation Boundary Event
 
 <<experimental, [EXPERIMENTAL]>>[[bpmnBoundaryCompensationEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-An attached intermediate _catching_ compensation on the boundary of an activity or *compensation boundary event* for short, can be used to attach a compensation handler to an activity.
+依附在活动边界上的补偿__捕获__中间（事件），或简称**补偿边界事件**，可以为活动附加补偿处理器。
 
-The compensation boundary event must reference a single compensation handler using a directed association.
+补偿边界事件必须通过直接关联的方式，引用单个的补偿处理器。
 
-A compensation boundary event has a different activation policy from other boundary events. Other boundary events like for instance the signal boundary event are activated when the activity they are attached to is started. When the activity is left, they are deactivated and the corresponding event subscription is cancelled. The compensation boundary event is different. The compensation boundary event is activated when the activity it is attached to *completes successfully*. At this point, the corresponding subscription to the compensation events is created. The subscription is removed either when a compensation event is triggered or when the corresponding process instance ends. From this, it follows:
+补偿边界事件与其它边界事件的活动策略不同。其它边界事件，例如信号边界事件，当其依附的活动启动时激活；当离开该活动时，会被解除，并取消相应的事件订阅。而补偿边界事件不是这样。补偿边界事件在其依附的活动**成功完成**时激活。同时，创建补偿事件的相应订阅。当补偿事件被触发，或者相应的流程实例结束时，才会移除订阅。因此如下判断：
 
-* When compensation is triggered, the compensation handler associated with the compensation boundary event is invoked the same number of times the activity it is attached to completed successfully.
-* If a compensation boundary event is attached to an activity with multiple instance characteristics, a compensation event subscription is created for each instance.
-*	If a compensation boundary event is attached to an activity which is contained inside a loop, a compensation event subscription is created for each time the activity is executed.
-* If the process instance ends, the subscriptions to compensation events are cancelled.
+* 当补偿被触发时，补偿边界事件关联的补偿处理器会被调用，次数与其依附的活动成功完成的次数相同。
+* 如果补偿边界事件依附在具有多实例特性的活动上，则会为每一个实例创建补偿事件订阅。
+* 如果补偿边界事件依附在位于循环内部的活动上，则每次该活动执行时，都会创建一个补偿事件订阅。
+* 如果流程实例结束，则取消补偿事件的订阅。
 
-*Note:* the compensation boundary event is not supported on embedded subprocesses.
+**请注意：**嵌入式子流程不支持补偿边界事件。
 
 
 [[bpmnBoundaryCompensationEventGraphicalNotation]]
