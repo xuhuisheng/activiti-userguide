@@ -1087,9 +1087,9 @@ image::images/bpmn.boundary.error.example.png[align="center"]
 
 依附在活动边界上的<<bpmnSignalEventDefinition,信号>>捕获中间（事件），或简称**信号边界事件**，捕获与其信号定义具有相同信号名的信号。
 
-**请注意：**与其他事件例如错误边界事件相反的是，信号边界事件不只是捕获其所依附范围抛出的信号。信号边界事件为全局范围（广播）的，意味着信号可以从任何地方抛出，甚至是不同的流程实例。
+**请注意：**与其他事件例如错误边界事件不同的是，信号边界事件不只是捕获其所依附范围抛出的信号。信号边界事件为全局范围（广播）的，意味着信号可以从任何地方抛出，甚至是不同的流程实例。
 
-**请注意：**与其他事件例如错误事件不同，信号在被捕获后不会被消耗。如果有两个激活的信号边界事件，捕获相同的信号事件，则两个边界事件都会被激活，哪怕它们不在同一个流程实例里。
+**请注意：**与其他事件如错误事件不同，信号在被捕获后不会被消耗。如果有两个激活的信号边界事件，捕获相同的信号事件，则两个边界事件都会被触发，哪怕它们不在同一个流程实例里。
 
 
 [[bpmnBoundarySignalEventGraphicalNotation]]
@@ -1331,15 +1331,12 @@ image::images/bpmn.boundary.compensation.event.png[align="center"]
 
 image::images/bpmn.intermediate.timer.event.png[align="center"]
 
-
-
 [[bpmnTimerIntermediateEventXml]]
 
 
-===== XML Representation
+===== XML表示 XML Representation
 
-
-A timer intermediate event is defined as an <<bpmnIntermediateCatchingEvent,intermediate catching event>>. The specific type sub-element is in this case a *timerEventDefinition* element.
+定时器中间事件与<<bpmnIntermediateCatchingEvent,捕获中间事件>>一样定义。指定类型的子元素为**timerEventDefinition**元素。
 
 [source,xml,linenums]
 ----
@@ -1350,42 +1347,38 @@ A timer intermediate event is defined as an <<bpmnIntermediateCatchingEvent,inte
 </intermediateCatchEvent>
 ----
 
-See <<timerEventDefinitions,timer event definitions>> for configuration details.
+查看<<timerEventDefinitions,定时器事件定义>>了解详细配置。
 
 
 [[bpmnIntermediateSignalEvent]]
 
 
-==== Signal Intermediate Catching Event
+==== 信号捕获中间事件 Signal Intermediate Catching Event
 
 [[bpmnIntermediateSignalEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-An intermediate _catching_ <<bpmnSignalEventDefinition,signal>> event catches signals with the same signal name as the referenced signal definition.
+<<bpmnSignalEventDefinition,信号>>__捕获__中间事件，捕获与其引用的信号定义具有相同信号名称的信号。
 
-*Note:* contrary to other events like an error event, a signal is not consumed if it is caught. If you have two active signal boundary events catching the same signal event, both boundary events are triggered, even if they are part of different process instances.
+**请注意：**与其他事件如错误事件不同，信号在被捕获后不会被消耗。如果有两个激活的信号中间事件，捕获相同的信号事件，则两个中间事件都会被触发，哪怕它们不在同一个流程实例里。
 
 
 [[bpmnIntermediateSignalEventGraphicalNotation]]
 
+===== 图示 Graphical notation
 
-
-===== Graphical notation
-
-An intermediate signal catch event is visualized as a typical intermediate event (Circle with smaller circle inside), with the signal icon inside. The signal icon is white (unfilled), to indicate the _catch_ semantics.
+信号捕获中间事件，用内部有信号图标的标准中间事件（两层圆圈）表示。信号图标是白色的（未填充），代表__捕获__的含义。
 
 image::images/bpmn.intermediate.signal.catch.event.png[align="center"]
 
 
 [[bpmnIntermediateSignalEventXml]]
 
+===== XML表示 XML representation
 
-===== XML representation
-
-
-A signal intermediate event is defined as an <<bpmnIntermediateCatchingEvent,intermediate catching event>>. The specific type sub-element is in this case a *signalEventDefinition* element.
+信号中间事件与<<bpmnIntermediateCatchingEvent,捕获中间事件>>一样定义。指定类型的子元素为**signalEventDefinition**元素。
 
 [source,xml,linenums]
 ----
@@ -1394,37 +1387,33 @@ A signal intermediate event is defined as an <<bpmnIntermediateCatchingEvent,int
 </intermediateCatchEvent>
 ----
 
-
-
-
 [[bpmnIntermediateSignalEventExample]]
 
+===== 示例 Example
 
-===== Example
 
-
-See section on <<bpmnSignalEventDefinition,signal event definitions>>.
+查看<<bpmnSignalEventDefinition,信号事件定义>>章节。
 
 
 [[bpmnIntermediateMessageEvent]]
 
 
-==== Message Intermediate Catching Event
+==== 消息捕获中间事件 Message Intermediate Catching Event
 
 [[bpmnIntermediateMessageEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-An intermediate _catching_ <<bpmnMessageEventDefinition,message>> event catches messages with a specified name.
+<<bpmnMessageEventDefinition,消息>>__捕获__中间事件，捕获特定名字的消息。
 
 
 [[bpmnIntermediateMessageEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-An intermediate catching message event is visualized as a typical intermediate event (Circle with smaller circle inside), with the message icon inside. The message icon is white (unfilled), to indicate the _catch_ semantics.
+消息捕获中间事件，用内部有消息图标的标准中间事件（两层圆圈）表示。消息图标是白色的（未填充），代表__捕获__的含义。
 
 image::images/bpmn.intermediate.message.catch.event.png[align="center"]
 
@@ -1433,9 +1422,9 @@ image::images/bpmn.intermediate.message.catch.event.png[align="center"]
 [[bpmnIntermediateSignalEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
-A message intermediate event is defined as an <<bpmnIntermediateCatchingEvent,intermediate catching event>>. The specific type sub-element is in this case a *messageEventDefinition* element.
+消息中间事件与<<bpmnIntermediateCatchingEvent,捕获中间事件>>一样定义。指定类型的子元素为**messageEventDefinition**元素。
 
 [source,xml,linenums]
 ----
@@ -1450,18 +1439,17 @@ A message intermediate event is defined as an <<bpmnIntermediateCatchingEvent,in
 [[bpmnIntermediateMessageEventExample]]
 
 
-===== Example
+===== 示例 Example
 
-See section on <<bpmnMessageEventDefinition,message event definitions>>.
+查看<<bpmnMessageEventDefinition,消息事件定义>>章节。
 
 
 [[bpmnIntermediateThrowEvent]]
 
 
-==== Intermediate Throwing Event
+==== 抛出中间事件 Intermediate Throwing Event
 
-
-All intermediate throwing events are defined in the same way:
+所有的抛出中间事件都使用相同方式定义：
 
 [source,xml,linenums]
 ----
@@ -1470,21 +1458,21 @@ All intermediate throwing events are defined in the same way:
 </intermediateThrowEvent>
 ----
 
-An intermediate throwing event is defined with
+抛出中间事件由下列（元素）定义
 
-* A unique identifier (process-wide)
-* An XML sub-element of the form _XXXEventDefinition_ (e.g. _signalEventDefinition_, etc.) defining the type of the intermediate throwing event. See the specific throwing event types for more details.
+* 唯一标识符（流程范围）
+* 定义了抛出中间事件类型的，__XXXEventDefinition__形式的XML子元素（例如__signalEventDefinition__等）。查阅特定中间抛出事件类型，以了解更多细节。
 
 [[bpmnIntermediateThrowNoneEvent]]
 
 
-==== Intermediate Throwing None Event
+==== 空抛出中间事件 Intermediate Throwing None Event
 
-The following process diagram shows a simple example of an intermediate none event, which is often used to indicate some state achieved in the process.
+下面的流程图展示了空中间事件的简单例子，其用于指示流程已经到达了某种状态。
 
 image::images/bpmn.intermediate.none.event.png[align="center"]
 
-This can be a good hook to monitor some KPI's, basically by adding an <<executionListeners,execution listener>>.
+基本上添加一个<<executionListeners,执行监听器 execution listener>>后，空中间事件就可以成为很好的监视某些KPI（Key Performance Indicators 关键绩效指标）的钩子。
 
 [source,xml,linenums]
 ----
@@ -1497,34 +1485,34 @@ This can be a good hook to monitor some KPI's, basically by adding an <<executio
 ----
 
 
-There you can add some own code to maybe send some event to your BAM tool or DWH. The engine itself doesn't do anything in that event, it just passes through.
+你也可以添加一些自己的代码，将部分事件发送给你的BAM（Business Activity Monitoring 业务活动监控）工具，或者DWH（Data Warehouse 数据仓库）。引擎本身不会在事件中做任何事情，只是从中穿过。
 
 
 [[bpmnIntermediateThrowSignalEvent]]
 
 
-==== Signal Intermediate Throwing Event
+==== 信号捕获中间事件 Signal Intermediate Throwing Event
 
 [[bpmnIntermediateThrowSignalEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-An intermediate _throwing_ <<bpmnSignalEventDefinition,signal>> event throws a signal event for a defined signal.
+<<bpmnSignalEventDefinition,信号>>__抛出__中间事件，抛出已定义信号的信号事件。
 
-In Activiti, the signal is broadcast to all active handlers (i.e. all catching signal events). Signals can be published synchronous or asynchronous.
+在Activiti中，信号会广播至所有的活动中的处理器（也就是说，所有的捕获信号事件）。信号可以同步或异步地发布。
 
-* In the default configuration, the signal is delivered *synchronously*. This means that the throwing process instance waits until the signal is delivered to all catching process instances. The catching process instances are also notified in the same transaction as the throwing process instance, which means that if one of the notified instances produces a technical error (throws an exception), all involved instances fail.
-* A signal can also be delivered *asynchronously*. In that case it is determined which handlers are active at the time the throwing signal event is reached. For each active handler, an asynchronous notification message (Job) is stored and delivered by the JobExecutor.
+* 在默认配置中，信号**同步地**传递。这意味着抛出（信号的）流程实例会等待，直到信号传递至所有的捕获（信号的）流程实例。所有的捕获流程实例也会在与抛出流程实例相同的事务中，也就是说如果收到通知的流程实例中，有一个实例产生了技术错误（抛出异常），则所有相关的实例都会失败。
+* 信号也可以**异步地**传递。这是由到达抛出信号事件时，活动的是哪一个（发送）处理器来决定的。对于每个活动的处理器，JobExecutor会为其存储并传递一个异步通知消息 asynchronous notification message（作业 Job）。
 
 
 [[bpmnIntermediateThrowSignalEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-An intermediate signal throw event is visualized as a typical intermediate event (Circle with smaller circle inside), with the signal icon inside. The signal icon is black (filled), to indicate the _throw_ semantics.
+消息抛出中间事件，用内部有信号图标的标准中间事件（两层圆圈）表示。信号图标是黑色的（已填充），代表__抛出__的含义。
 
 image::images/bpmn.intermediate.signal.throw.event.png[align="center"]
 
@@ -1533,10 +1521,10 @@ image::images/bpmn.intermediate.signal.throw.event.png[align="center"]
 [[bpmnIntermediateThrowSignalEventXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-A signal intermediate event is defined as an <<bpmnIntermediateThrowEvent,intermediate throwing event>>. The specific type sub-element is in this case a *signalEventDefinition* element.
+信号中间事件与<<bpmnIntermediateThrowEvent,抛出中间事件>>一样定义。指定类型的子元素为**signalEventDefinition**元素。
 
 [source,xml,linenums]
 ----
@@ -1545,7 +1533,7 @@ A signal intermediate event is defined as an <<bpmnIntermediateThrowEvent,interm
 </intermediateThrowEvent>
 ----
 
-An asynchronous signal event would look like this:
+异步信号事件像这样定义：
 
 [source,xml,linenums]
 ----
@@ -1560,58 +1548,58 @@ An asynchronous signal event would look like this:
 [[bpmnIntermediateSignalEventExample]]
 
 
-===== Example
+===== 示例 Example
 
 
-See section on <<bpmnSignalEventDefinition,signal event definitions>>.
+查看<<bpmnSignalEventDefinition,信号事件定义>>章节。
 
 
 [[bpmnIntermediateThrowCompensationEvent]]
 
 
-==== Compensation Intermediate Throwing Event
+==== 补偿抛出中间事件 Compensation Intermediate Throwing Event
 
 <<experimental, [EXPERIMENTAL]>>[[bpmnIntermediateThrowCompensationEventDescription]]
 
 
-===== Description
+===== 描述 Description
 
-An intermediate _throwing_ compensation event can be used to trigger compensation.
+补偿__抛出__中间事件，可用于触发补偿。
 
 
-*Triggering compensation:* Compensation can either be triggered for a designated activity or for the scope which hosts the compensation event. Compensation is performed through execution of the compensation handler associated with an activity.
+**触发补偿：**补偿既可以为设计的活动触发，也可以为补偿事件所在的范围触发。补偿由活动所关联的补偿处理器执行。
 
-* When compensation is thrown for an activity, the associated compensation handler is executed the same number of times the activity competed successfully.
-* If compensation is thrown for the current scope, all activities within the current scope are compensated, which includes activities on concurrent branches.
-* Compensation is triggered hierarchically: if an activity to be compensated is a subprocess, compensation is triggered for all activities contained in the subprocess. If the subprocess has nested activities, compensation is thrown recursively. However, compensation is not propagated to the "upper levels" of the process: if compensation is triggered within a subprocess, it is not propagated to activities outside of the subprocess scope. The BPMN specification states that compensation is triggered for activities at "the same level of subprocess".
-* In Activiti compensation is performed in reverse order of execution. This means that whichever activity completed last is compensated first, etc.
-* The intermediate throwing compensation event can be used to compensate transaction subprocesses which competed successfully.
+* 当一个活动抛出补偿时，关联的补偿处理器执行的次数，与活动成功完成的次数相同。
+* 如果为当前范围抛出了补偿，则当前范围中所有的活动都会被补偿，包括并行分支上的活动。
+* 补偿分层触发：如果将要被补偿的活动是一个子流程，则该子流程中所有的活动都会触发补偿。如果该子流程有嵌套的活动，则会递归地抛出补偿。然而，补偿不会传播至流程的**上层**：如果子流程中触发了补偿，该补偿不会传播至子流程范围外的活动。BPMN规范支出，补偿为“与子流程在相同级别”的活动触发。
+* 在Activiti中，补偿按照执行的相反顺序运行。这意味着最后完成的活动会第一个补偿，等等。
+* 补偿抛出中间事件，可用于补偿已经成功完成的事务子流程。
 
-*Note:* If compensation is thrown within a scope which contains a subprocess and the subprocess contains activities with compensation handlers, compensation is only propagated to the subprocess if it has completed successfully when compensation is thrown. If some of the activities nested inside the subprocess have completed and have attached compensation handlers, the compensation handlers are not executed if the subprocess containing these activities is not completed yet. Consider the following example:
+**请注意：**如果抛出补偿的范围中有一个子流程，而该子流程包含有关联了补偿处理器的活动，则当抛出补偿时，只有当该子流程成功完成的情况，补偿才会传播至该子流程。如果子流程内嵌套的部分活动已经完成，并附加了补偿处理器，则如果包含这些活动的子流程还没有完成，这些补偿处理器不会执行。参考下面的例子：
 
 image::images/bpmn.throw.compensation.example1.png[align="center"]
 
-In this process we have two concurrent executions, one executing the embedded subprocess and one executing the "charge credit card" activity. Let's assume both executions are started and the first concurrent execution is waiting for a user to complete the "review bookings" task. The second execution performs the "charge credit card" activity and an error is thrown, which causes the "cancel reservations" event to trigger compensation. At this point the parallel subprocess is not yet completed which means that the compensation event is not propagated to the subprocess and thus the "cancel hotel reservation"  compensation handler is not executed. If the user task (and thus the embedded subprocess) completes before the "cancel reservations" is performed, compensation is propagated to the embedded subprocess.
+在这个流程中，有两个并行的执行。一个执行嵌入子流程，另一个执行“charge credit card（信用卡付款）”活动。假定两个执行都已开始，且第一个并行执行正等待用户完成“review bookings（检查预定）”任务。第二个执行进行了“charge credit card（信用卡付款）”活动的操作，抛出了一个错误，导致“cancel reservations（取消预订）”事件触发补偿。这时并行子流程还未完成，意味着补偿不会传播至该子流程，因此不会执行“cancel hotel reservation（取消酒店预订）”补偿处理器。而如果“cancel reservations（取消预订）”运行前，这个用户任务（因此该嵌入式子流程也）已经完成，则补偿会传播至该嵌入式子流程。
 
-*Process variables:* When compensating an embedded subprocess, the execution used for executing the compensation handlers has access to the local process variables of the subprocess in the state they were in when the subprocess completed execution. To achieve this, a snapshot of the process variables associated with the scope execution (execution created for executing the subprocess) is taken. Form this, a couple of implications follow:
+**流程变量：**当补偿嵌入式子流程时，用于执行补偿处理器的执行，可以以变量在子流程完成时所处的状态，访问子流程的局部流程变量。要实现这一点，会为范围执行（为执行子流程所创建的执行）所关联的流程变量，进行快照。意味着：
 
-* The compensation handler does not have access to variables added to concurrent executions created inside the subprocess scope.
-* Process variables associated with executions higher up in the hierarchy, (for instance process variables associated with the process instance execution are not contained in the snapshot: the compensation handler has access to these process variables in the state they are in when compensation is thrown.
-* A variable snapshot is only taken for embedded subprocesses, not for other activities.
+* 子流程范围内创建的并行执行所添加的变量，补偿执行器无法访问。
+* 上层的执行关联的流程变量（例如流程实例的执行关联的流程变量），不在该快照中：补偿处理器（本就）可以以其在抛出补偿时所处的状态，访问这些流程变量。
+* 只会为嵌入式子流程，而不会为其他活动，进行变量快照。
 
-*Current limitations:*
+**目前的限制：**
 
-* +waitForCompletion="false"+ is currently unsupported. When compensation is triggered using the intermediate throwing compensation event, the event is only left, after compensation completed successfully.
-* Compensation itself is currently performed by concurrent executions. The concurrent executions are started in reverse order in which the compensated activities completed. Future versions of activity might include an option to perform compensation sequentially.
-* Compensation is not propagated to sub process instances spawned by call activities.
+* 目前不支持++waitForCompletion="false"++。当补偿抛出中间事件触发补偿时，只有在补偿成功完成时，才会离开该事件。
+* 补偿现在由并行执行来运行。该并行执行按照补偿活动完成的逆序启动。Activiti的后续版本可能会添加选项，使补偿可以按（活动的）顺序运行。
+* 补偿不会传播至调用活动（call activity）生成的子流程。
 
 
 [[bpmnIntermediateThrowCompensationEventGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-An intermediate compensation throw event is visualized as a typical intermediate event (Circle with smaller circle inside), with the compensation icon inside. The compensation icon is black (filled), to indicate the _throw_ semantics.
+补偿抛出中间事件，用内部有补偿图标的标准中间事件（两层圆圈）表示。补偿图标是黑色的（已填充），代表__抛出__的含义。
 
 image::images/bpmn.intermediate.compensation.throw.event.png[align="center"]
 
@@ -1623,7 +1611,7 @@ image::images/bpmn.intermediate.compensation.throw.event.png[align="center"]
 ===== Xml representation
 
 
-A compensation intermediate event is defined as an <<bpmnIntermediateThrowEvent,intermediate throwing event>>. The specific type sub-element is in this case a *compensateEventDefinition* element.
+补偿中间事件与<<bpmnIntermediateThrowEvent,抛出中间事件>>一样定义。指定类型的子元素为**compensateEventDefinition**元素。
 
 [source,xml,linenums]
 ----
@@ -1632,7 +1620,7 @@ A compensation intermediate event is defined as an <<bpmnIntermediateThrowEvent,
 </intermediateThrowEvent>
 ----
 
-In addition, the optional argument +activityRef+ can be used to trigger compensation of a specific scope / activity:
+另外，++activityRef++可选项可用于为指定的范围/活动触发补偿：
 
 [source,xml,linenums]
 ----
@@ -1645,64 +1633,56 @@ In addition, the optional argument +activityRef+ can be used to trigger compensa
 [[bpmnSequenceFlow]]
 
 
-=== Sequence Flow
+=== 顺序流 Sequence Flow
 
 [[sequenceFlowDescription]]
 
 
-==== Description
+==== 描述 Description
 
-A sequence flow is the connector between two elements of a process. After an element is visited during process execution, all outgoing sequence flow will be followed. This means that the default nature of BPMN 2.0 is to be parallel: two outgoing sequence flow will create two separate, parallel paths of execution.
+顺序流是流程中两个元素间的连接器。当流程执行中，一个元素被访问后，会沿着所有的出口顺序流继续。这意味着BPMN 2.0的默认性质是并行的：两个出口顺序流，会创建两个分开的，并行的执行路径。
 
 
 [[sequenceFlowGraphicalNotation]]
 
 
-==== Graphical notation
+==== 图示 Graphical notation
 
-A sequence flow is visualized as an arrow going from the source element towards the target element. The arrow always points towards the target.
+顺序流，用从源元素指向目标元素的箭头表示。箭头总是指向目标元素。
 
 image::images/bpmn.sequence.flow.png[align="center"]
-
-
 
 [[sequenceFlowXml]]
 
 
-==== XML representation
+==== XML表示 XML representation
 
 
-Sequence flow need to have a process-unique *id*, and a reference to an existing *source* and *target* element.
+顺序流需要有流程唯一的**id**，以及对存在的**源**与**目标**元素的引用。
 
 [source,xml,linenums]
 ----
 <sequenceFlow id="flow1" sourceRef="theStart" targetRef="theTask" />
 ----
 
-
-
-
 [[bpmnConditionalSequenceFlow]]
 
-
-==== Conditional sequence flow
+==== 条件顺序流 Conditional sequence flow
 
 [[condSeqFlowDescription]]
 
-
 ===== Description
 
-A sequence flow can have a condition defined on it. When a BPMN 2.0 activity is left, the default behavior is to evaluate the conditions on the outgoing sequence flow. When a condition evaluates to _true_, that outgoing sequence flow is selected. When multiple sequence flow are selected that way, multiple _executions_ will be generated and the process will be continued in a parallel way.
+在顺序流上可以定义条件。当离开BPMN 2.0活动时，默认行为是计算其出口顺序流上的条件。当条件计算为__true__时，选择该出口顺序流。如果该方法选择了多条顺序流，则会生成多个__执行__，流程会以并行方式继续。
 
-*Note:* the above holds for BPMN 2.0 activities (and events), but not for gateways. Gateways will handle sequence flow with conditions in specific ways, depending on the gateway type.
-
+**请注意：**上面的介绍队BPMN 2.0活动（与事件）有效，但不适用于网关（gateway）。不同类型的网关，会用不同的方式处理带有条件的顺序流。
 
 [[conditionalSequenceFlowGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-A conditional sequence flow is visualized as a regular sequence flow, with a small diamond at the beginning. The condition expression is shown next to the sequence flow.
+条件顺序流，用起点带有小菱形的一般顺序流表示。条件表达式挨着顺序流显示。
 
 image::images/bpmn.conditional.sequence.flow.png[align="center"]
 
@@ -1710,10 +1690,9 @@ image::images/bpmn.conditional.sequence.flow.png[align="center"]
 [[conditionalSequenceFlowXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
-
-A conditional sequence flow is represented in XML as a regular sequence flow, containing a *conditionExpression* sub-element. Note that for the moment only _tFormalExpressions_ are supported, Omitting the _xsi:type=""_ definition will simply default to this only supported type of expressions.
+条件顺序流的XML表示格式，为含有**conditionExpression（条件表达式）**子元素的普通顺序流。请注意目前只支持__tFormalExpressions__。省略__xsi:type=""__定义会默认为唯一支持的表达式类型。
 
 [source,xml,linenums]
 ----
@@ -1724,9 +1703,9 @@ A conditional sequence flow is represented in XML as a regular sequence flow, co
 </sequenceFlow>
 ----
 
-Currently conditionalExpressions can *only be used with UEL*, detailed info about these can be found in section <<apiExpressions,Expressions>>. The expression used should resolve to a boolean value, otherwise an exception is thrown while evaluating the condition.
+目前conditionalExpressions**只能使用UEL**，详细信息可以在<<apiExpressions,表达式>>章节找到。使用的表达式需要能解析为boolean值，否则当计算条件时会抛出异常。
 
-* The example below references data of a process variable, in the typical JavaBean style through getters.
+* 下面的例子，通过典型的JavaBean的方式，使用getter引用流程变量的数据。
 
 [source,xml,linenums]
 ----
@@ -1735,7 +1714,7 @@ Currently conditionalExpressions can *only be used with UEL*, detailed info abou
 </conditionExpression>
 ----
 
-* This example invokes a method that resolves to a boolean value.
+* 这个例子调用了一个解析为boolean值的方法。
 
 [source,xml,linenums]
 ----
@@ -1745,7 +1724,7 @@ Currently conditionalExpressions can *only be used with UEL*, detailed info abou
 ----
 
 
-The Activiti distribution contains the following example process using value and method expressions (see __org.activiti.examples.bpmn.expression)__:
+Activiti发行版中包含了下列示例流程，使用值与方法表达式（参见__org.activiti.examples.bpmn.expression__）。
 
 image::images/bpmn.uel-expression.on.seq.flow.png[align="center"]
 
@@ -1753,7 +1732,7 @@ image::images/bpmn.uel-expression.on.seq.flow.png[align="center"]
 [[bpmnDefaultSequenceFlow]]
 
 
-==== Default sequence flow
+==== 默认顺序流 Default sequence flow
 
 [[bpmnDefaultSequenceFlowDescription]]
 
@@ -1761,28 +1740,25 @@ image::images/bpmn.uel-expression.on.seq.flow.png[align="center"]
 ===== Description
 
 
-All BPMN 2.0 tasks and gateways can have a *default sequence flow*. This sequence flow is only selected as the outgoing sequence flow for that activity if and only if none of the other sequence flow could be selected. Conditions on a default sequence flow are always ignored.
+所有的BPMN 2.0任务与网关，都可以使用**默认顺序流**。这种顺序流只有当没有其他顺序流可以选择时，才会被选择为活动的出口顺序流。默认顺序流上的条件会被忽略。
 
 
 [[bpmnDefaultSequenceFlowGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-
-A default sequence flow is visualized as a regular sequence flow, with a 'slash' marker at the beginning.
+默认顺序流，用起点带有“斜线”标记的一般顺序流表示。
 
 image::images/bpmn.default.sequence.flow.png[align="center"]
-
 
 
 [[bpmnDefaultSequenceFlowXmlRepresentation]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
-
-A default sequence flow for a certain activity is defined by the *default attribute* on that activity. The following XML snippet shows for example an exclusive gateway that has as default sequence flow _flow 2_. Only when _conditionA_ and _conditionB_ both evaluate to false, will it be chosen as outgoing sequence flow for the gateway.
+活动的默认顺序流，由该活动的**default属性**定义。下面的XML片段展示了一个排他网关（exclusive gateway），带有默认顺序流__flow 2__。只有当__conditionA__与__conditionB__都计算为false时，默认顺序流才会被选择为网关的出口顺序流。
 
 [source,xml,linenums]
 ----
@@ -1797,18 +1773,20 @@ A default sequence flow for a certain activity is defined by the *default attrib
 ----
 
 
-Which corresponds with the following graphical representation:
+对应下面的图示：
+
+（原图缺失）
 
 
 [[bpmnGateways]]
 
 
-=== Gateways
+=== 网关 Gateways
 
 
-A gateway is used to control the flow of execution (or as the BPMN 2.0 describes, the _tokens_ of execution). A gateway is capable of _consuming_ or _generating_ tokens.
+网关用于控制执行的流向（或者按BPMN 2.0描述的，执行的__token 标志__）。网关可以__消耗__与__生成__标志。
 
-A gateway is graphically visualized as a diamond shape, with an icon inside. The icon shows the type of gateway.
+网关用其中带有图标的菱形表示。该图标显示了网关的类型。
 
 image::images/bpmn.gateway.png[align="center"]
 
@@ -1816,25 +1794,24 @@ image::images/bpmn.gateway.png[align="center"]
 [[bpmnExclusiveGateway]]
 
 
-==== Exclusive Gateway
+==== 排他网关 Exclusive Gateway
 
 [[exclusiveGatewayDescription]]
 
 
-===== Description
+===== 描述 Description
 
-An exclusive gateway (also called the _XOR gateway_ or more technical the __exclusive data-based gateway__), is used to model a *decision* in the process. When the execution arrives at this gateway, all outgoing sequence flow are evaluated in the order in which they are defined. The sequence flow which condition evaluates to true (or which doesn't have a condition set, conceptually having a _'true'_ defined on the sequence flow) is selected for continuing the process.
+排他网关（也叫__异或网关 XOR gateway__，或者更专业的，__基于数据的排他网关 exclusive data-based gateway__），用于为流程中的**决策**建模。当执行到达这个网关时，所有出口顺序流会按照它们定义的顺序进行计算。条件计算为true的顺序流（当没有设置条件时，认为顺序流定义为__true__）会被选择用于继续流程。
 
-*Note that the semantics of outgoing sequence flow is different to that of the general case in BPMN 2.0. While in general all sequence flow which condition evaluates to true are selected to continue in a parallel way, only one sequence flow is selected when using the exclusive gateway. In case multiple sequence flow have a condition that evaluates to true, the first one defined in the XML (and only that one!) is selected for continuing the process. If no sequence flow can be selected, an exception will be thrown.*
+**请注意这里出口顺序流的含义与BPMN 2.0中的一般情况不一样。一般情况下，所有条件计算为true的顺序流，都会被选择继续，并行执行。而使用排他网关时，只会选择一条顺序流。当多条顺序流的条件都计算为true时，在XML中定义的第一条（也只有这条）会被选择，用于继续流程。如果没有可选的顺序流，会抛出异常。**
 
 
 [[exclusiveGatewayGraphNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-
-An exclusive gateway is visualized as a typical gateway (i.e. a diamond shape) with an 'X' icon inside, referring to the _XOR_ semantics. Note that a gateway without an icon inside defaults to an exclusive gateway. The BPMN 2.0 specification does not allow mixing the diamond with and without an X in the same process definition.
+排他网关，用内部带有'X'图标的标准网关（菱形）表示，'X'图标代表__异或（XOR）__的含义。请注意内部没有图标的网关默认为排他网关。BPMN 2.0规范不允许在同一个流程中，混合使用含有及没有X的菱形标志。
 
 image::images/bpmn.exclusive.gateway.notation.png[align="center"]
 
@@ -1842,16 +1819,16 @@ image::images/bpmn.exclusive.gateway.notation.png[align="center"]
 [[exclusiveGatewayXML]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-The XML representation of an exclusive gateway is straight-forward: one line defining the gateway and condition expressions defined on the outgoing sequence flow. See the section on <<bpmnConditionalSequenceFlow,conditional sequence flow>> to see which options are available for such expressions.
+排他网关的XML表示格式很直接：一行定义网关，而条件表达式定义在出口顺序流上。查看<<bpmnConditionalSequenceFlow,条件顺序流>>章节了解这种表达式的可用选项。
 
-Take for example the following model:
+以下面的模型为例：
 
 image::images/bpmn.exclusive.gateway.png[align="center"]
 
-Which is represented in XML as follows:
+用XML表示如下：
 
 [source,xml,linenums]
 ----
@@ -1874,43 +1851,43 @@ Which is represented in XML as follows:
 [[bpmnParallelGateway]]
 
 
-==== Parallel Gateway
+==== 并行网关 Parallel Gateway
 
 [[bpmnParallelGatewayDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-Gateways can also be used to model concurrency in a process. The most straightforward gateway to introduce concurrency in a process model, is the *Parallel Gateway*, which allows to _fork_ into multiple paths of execution or _join_ multiple incoming paths of execution.
+网关也可以用于建模流程中的并发。在流程模型中引入并发的最简单的网关，就是**并行网关**。它可以将执行__分支（fork）__为多条路径，也可以__合并（join）__执行的多条入口路径。
 
-The functionality of the parallel gateway is based on the incoming and outgoing sequence flow:
+并行网关的功能，基于入口与出口顺序流：
 
-* *fork:* all outgoing sequence flow are followed in parallel, creating one concurrent execution for each sequence flow.
-* *join:* all concurrent executions arriving at the parallel gateway wait in the gateway until an execution has arrived for each of the incoming sequence flow. Then the process continues past the joining gateway.
+* **分支：**所有的出口顺序流都并行执行，为每一条顺序流创建一个并行执行。
+* **合并：**所有到达并行网关的并行执行，都在网关处等待，直到每一条入口顺序流都有一个执行到达。然后流程经过该合并网关继续。
 
 
-Note that a parallel gateway can have *both fork and join behavior*, if there are multiple incoming and outgoing sequence flow for the same parallel gateway. In that case, the gateway will first join all incoming sequence flow, before splitting into multiple concurrent paths of executions.
+请注意，如果并行网关同时具有多条入口与出口顺序流，可以**同时具有分支与合并的行为**。在这种情况下，网关首先合并所有入口顺序流，然后分裂为多条并行执行路径。
 
-*An important difference with other gateway types is that the parallel gateway does not evaluate conditions. If conditions are defined on the sequence flow connected with the parallel gateway, they are simply neglected.*
+**与其他网关类型的重要区别，是并行网关不计算条件。如果连接到并行网关的顺序流上定义了条件，条件会被简单忽略。**
 
 
 [[bpmnParallelGatewayGraphicalNotation]]
 
 
-===== Graphical Notation
+===== 图示 Graphical Notation
 
-A parallel gateway is visualized as a gateway (diamond shape) with the 'plus' symbol inside, referring to the 'AND' semantics.
+并行网关，用内部带有'加号'图标的网关（菱形）表示，代表__与（AND）__的含义。
 
 image::images/bpmn.parallel.gateway.png[align="center"]
 
 [[bpmnParallelGatewayXML]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-Defining a parallel gateway needs one line of XML:
+定义并行网关需要一行XML：
 
 [source,xml,linenums]
 ----
@@ -1918,9 +1895,9 @@ Defining a parallel gateway needs one line of XML:
 ----
 
 
-The actual behavior (fork, join or both), is defined by the sequence flow connected to the parallel gateway.
+实际行为（分支，合并或两者皆有），由连接到该并行网关的顺序流定义。
 
-For example, the model above comes down to the following XML:
+例如，上面的模型表现为下面的XML：
 
 [source,xml,linenums]
 ----
@@ -1947,7 +1924,7 @@ For example, the model above comes down to the following XML:
 ----
 
 
-In the above example, after the process is started, two tasks will be created:
+在上面的例子中，当流程启动后，会创建两个任务：
 
 [source,java,linenums]
 ----
@@ -1967,63 +1944,57 @@ assertEquals("Ship Order", task2.getName());
 ----
 
 
-When these two tasks are completed, the second parallel gateway will join the two executions and since there is only one outgoing sequence flow, no concurrent paths of execution will be created, and only the _Archive Order_ task will be active.
+当这两个任务完成后，第二个并行网关会合并这两个执行，并且由于只有一条出口顺序流，不会再创建并行执行路径，只会激活__Archive Order(存档订单)__任务。
 
-Note that a parallel gateway does not need to be 'balanced' (i.e. a matching number of incoming/outgoing sequence flow for corresponding parallel gateways). A parallel gateway will simply wait for all incoming sequence flow and create a concurrent path of execution for each outgoing sequence flow, not influenced by other constructs in the process model. So, the following process is legal in BPMN 2.0:
+请注意并行网关不需要“平衡”（也就是说，对应的并行网关，其入口/出口顺序流的数量不需要匹配）。并行网关会简单地等待所有入口顺序流，并为每一条出口顺序流创建并行执行，不受流程模型中的其他结构影响。因此，下面的流程在BPMN 2.0中是合法的：
 
 image::images/bpmn.unbalanced.parallel.gateway.png[align="center"]
 
 [[bpmnInclusiveGateway]]
 
 
-==== Inclusive Gateway
+==== 包容网关 Inclusive Gateway
 
 [[bpmnInclusiveGatewayDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-The *Inclusive Gateway* can be seen as a combination of an exclusive and a parallel gateway. Like an exclusive gateway you can define conditions on outgoing sequence flows and the inclusive gateway will evaluate them. But the main difference is that the inclusive gateway can take more than one sequence flow, like the parallel gateway.
+**包容网关**可被视作一个排他网关与一个并行网关的组合。与排他网关一样，可以在出口顺序流上定义条件，包容网关会计算它们。然而主要的区别是，包容网关与并行网关一样，可以选择多于一条（出口）顺序流。
 
-The functionality of the inclusive gateway is based on the incoming and outgoing sequence flow:
+包容网关的功能，基于入口与出口顺序流：
 
-* *fork:* all outgoing sequence flow conditions are evaluated and for the sequence flow conditions that evaluate to true the flows are followed in parallel, creating one concurrent execution for each sequence flow.
-* *join:* all concurrent executions arriving at the inclusive gateway wait in the gateway until an execution has arrived for each of the incoming sequence flows that have a process token. This is an important difference with the parallel gateway. So in other words, the inclusive gateway will only wait for the incoming sequence flows that will be executed. After the join, the process continues past the joining inclusive gateway.
+* **分支：**所有出口顺序流的条件都会被计算，对于条件计算为true的顺序流，流程会并行地沿其继续，为每一条顺序流创建一个并行执行。
+* **合并：**所有到达包容网关的并行执行，都会在网关处等待，直到每一条具有流程标志的入口顺序流，都有一个执行到达。这是与并行网关的重要区别。换句话说，包容网关只会等待将会被执行的入口顺序流。在合并后，流程穿过合并并行网关继续。
 
-
-Note that an inclusive gateway can have *both fork and join behavior*, if there are multiple incoming and outgoing sequence flow for the same inclusive gateway. In that case, the gateway will first join all incoming sequence flows that have a process token, before splitting into multiple concurrent paths of executions for the outgoing sequence flows that have a condition that evaluates to true.
+请注意，如果包容网关同时具有多条入口与出口顺序流，可以**同时具有分支与合并的行为**。在这种情况下，网关首先合并所有具有流程标志的入口顺序流，然后为条件计算为true的出口顺序流，分裂为多条并行执行路径。
 
 
 [[bpmnInclusiveGatewayGraphicalNotation]]
 
 
-===== Graphical Notation
+===== 图示 Graphical Notation
 
-
-An inclusive gateway is visualized as a gateway (diamond shape) with the 'circle' symbol inside.
+包容网关，用内部带有'圆圈'图标的网关（菱形）表示。
 
 image::images/bpmn.inclusive.gateway.png[align="center"]
-
-
 
 [[bpmnInclusiveGatewayXML]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
-
-Defining an inclusive gateway needs one line of XML:
+定义包容网关需要一行XML：
 
 [source,xml,linenums]
 ----
 <inclusiveGateway id="myInclusiveGateway" />
 ----
 
+实际行为（分支，合并或两者皆有），由连接到该包容网关的顺序流定义。
 
-The actual behavior (fork, join or both), is defined by the sequence flows connected to the inclusive gateway.
-
-For example, the model above comes down to the following XML:
+例如，上面的模型表现为下面的XML：
 
 [source,xml,linenums]
 ----
@@ -2054,7 +2025,7 @@ For example, the model above comes down to the following XML:
 ----
 
 
-In the above example, after the process is started, two tasks will be created if the process variables paymentReceived == false and shipOrder == true. In case only one of these process variables equals to true only one task will be created. If no condition evaluates to true and exception is thrown. This can be prevented by specifying a default outgoing sequence flow. In the following example one task will be created, the ship order task:
+在上面的例子中，当流程启动后，如果流程变量paymentReceived == false且shipOrder == true，将会创建两个任务。如果只有一个流程变量等于true，则只会创建一个任务。如果没有条件计算为true，会抛出异常，并可通过指定默出口顺序流避免。在下面的例子中，只有ship order（传递订单）一个任务会被创建：
 
 [source,java,linenums]
 ----
@@ -2075,60 +2046,57 @@ assertEquals("Ship Order", task.getName());
 ----
 
 
-When this task is completed, the second inclusive gateway will join the two executions and since there is only one outgoing sequence flow, no concurrent paths of execution will be created, and only the _Archive Order_ task will be active.
+当这个任务完成后，第二个包容网关会合并这两个执行，并且由于只有一条出口顺序流，不会再创建并行执行路径，只会激活__Archive Order(存档订单)__任务。
 
-Note that an inclusive gateway does not need to be 'balanced' (i.e. a matching number of incoming/outgoing sequence flow for corresponding inclusive gateways). An inclusive gateway will simply wait for all incoming sequence flow and create a concurrent path of execution for each outgoing sequence flow, not influenced by other constructs in the process model.
+
+请注意包容网关不需要“平衡”（也就是说，对应的包容网关，其入口/出口顺序流的数量不需要匹配）。包容网关会简单地等待所有入口顺序流，并为每一条出口顺序流创建并行执行，不受流程模型中的其他结构影响。因此，下面的流程在BPMN 2.0中是合法的：
 
 
 [[bpmnEventbasedGateway]]
 
 
-==== Event-based Gateway
+==== 基于事件的网关 Event-based Gateway
 
 [[eventBasedGatewayDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-The Event-based Gateway allows to take a decision based on events. Each outgoing sequence flow of the gateway needs to be connected to an intermediate catching event. When process execution reaches an Event-based Gateway, the gateway acts like a wait state: execution is suspended. In addition, for each outgoing sequence flow, an event subscription is created.
+基于事件的网关，允许基于事件做选择。网管的每一条出口顺序流，都需要连接至一个捕获中间事件。当流程执行到达基于事件的网关时，网关类似等待状态地动作：执行被暂停。并且，为每一条出口顺序流，创建一个事件订阅。
 
-Note the sequence flows running out of an Event-based Gateway are different from ordinary sequence flows. These sequence flows are never actually "executed". On the contrary, they allow the process engine to determine which events an execution arriving at an Event-based Gateway needs to subscribe to. The following restrictions apply:
+请注意基于事件的网关，其出口顺序流与一般的顺序流不同。这些顺序流从不实际**被执行**。相反，它们允许流程引擎决定，当执行到达一个基于事件的网关时，需要订阅什么事件。基于下列约束：
 
-* An Event-based Gateway must have two or more outgoing sequence flows.
-* An Event-based Gateway must only be connected to elements of type +intermediateCatchEvent+ only. (Receive Tasks after an Event-based Gateway are not supported by Activiti.)
-* An +intermediateCatchEvent+ connected to an Event-based Gateway must have a single incoming sequence flow.
+* 一个基于事件的网关，必须有两条或更多的出口顺序流。
+* 基于事件的网关，只能连接至++intermediateCatchEvent（捕获中间事件）++类型的元素（Activiti不支持基于事件的网关后，连接接收任务 Receive Task）。
+* 连接至基于事件的网关的++intermediateCatchEvent++，必须只有一个入口顺序流。
 
 
 
 [[eventBasedGatewayGraphNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-
-An Event-based Gateway is visualized as a diamond shape like other BPMN gateways with a special icon inside.
+基于事件的网关，用内部带有特殊图标的网关（菱形）表示。
 
 image::images/bpmn.event.based.gateway.notation.png[align="center"]
-
-
 
 [[eventBasedGatewayXML]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-The XML element used to define an Event-based Gateway is +eventBasedGateway+.
+用于定义基于事件的网关的XML元素为++eventBasedGateway++。
 
 
 [[eventBasedGatewayExample]]
 
 
-===== Example(s)
+===== 示例 Example(s)
 
-
-The following process is an example of a process with an Event-based Gateway. When the execution arrives at the Event-based Gateway, process execution is suspended. In addition, the process instance subscribes to the alert signal event and created a timer which fires after 10 minutes. This effectively causes the process engine to wait for ten minutes for a signal event. If the signal occurs within 10 minutes, the timer is cancelled and execution continues after the signal. If the signal is not fired, execution continues after the timer and the signal subscription is cancelled.
+下面的流程，是带有基于事件的网关的流程的例子。当执行到达基于事件的网关时，流程执行被暂停。并且，流程实例订阅alert信号事件，并创建一个10分钟后触发的定时器。这使得流程引擎等待十分钟，并等待信号事件。如果信号在10分钟内发生，定时器会被取消，执行沿着信号继续。如果信号未被触发，执行会在定时器到时候继续，并取消信号订阅。
 
 image::images/bpmn.event.based.gateway.example.png[align="center"]
 
@@ -2184,47 +2152,44 @@ image::images/bpmn.event.based.gateway.example.png[align="center"]
 [[bpmnTask]]
 
 
-=== Tasks
+=== 任务 Tasks
 
 [[bpmnUserTask]]
 
 
-==== User Task
+==== 用户任务 User Task
 
 [[bpmnUserTaskDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-A 'user task' is used to model work that needs to be done by a human actor. When the process execution arrives at such a user task, a new task is created in the task list of the user(s) or group(s) assigned to that task.
+“用户任务”用于建模需要人工执行的任务。当流程执行到达用户任务时，会为指派至该任务的用户或组的任务列表创建一个新任务。
 
 
 [[bpmnUserTaskGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-
-A user task is visualized as a typical task (rounded rectangle), with a small user icon in the left upper corner.
+用户任务，用左上角有一个小用户图标的标准任务（圆角矩形）表示。
 
 image::images/bpmn.user.task.png[align="center"]
-
-
 
 [[bpmnUserTaskXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
-A user task is defined in XML as follows. The _id_ attribute is required, the _name_ attribute is optional.
+用户任务在XML中如下定义。__id__是必须属性，__name__是可选属性。
 
 [source,xml,linenums]
 ----
 <userTask id="theTask" name="Important task" />
 ----
 
-A user task can have also a description. In fact any BPMN 2.0 element can have a description. A description is defined by adding the *documentation* element.
+一个用户任务也可以有一个描述（description）。事实上任何BPMN 2.0元素都可以有一个描述。描述使用添加的**documentation**元素定义。
 
 [source,xml,linenums]
 ----
@@ -2235,9 +2200,7 @@ A user task can have also a description. In fact any BPMN 2.0 element can have a
   </documentation>
 ----
 
-
-
-The description text can be retrieved from the task in the standard Java way:
+描述文本可以从任务中，使用标准Java方式获取：
 
 [source,java,linenums]
 ----
@@ -2248,28 +2211,27 @@ task.getDescription()
 [[bpmnUserTaskDueDate]]
 
 
-===== Due Date
+===== 到期日期 Due Date
 
+每个任务都有一个字段，标志该任务的到期日期。可以使用查询API，查询在给定日期前或后到期的任务。
 
-Each task has a field, indicating the due date of that task. The Query API can be used to query for tasks that are due on, before or after a certain date.
-
-There is an activity extension which allows you to specify an expression in your task-definition to set the initial due date of a task when it is created. The expression *should always resolve to a +java.util.Date+, +java.util.String (ISO8601 formatted)+, ISO8601 time-duration (e.g. PT50M) or +null+*. For example, you could use a date that was entered in a previous form in the process or calculated in a previous Service Task. In case a time-duration is used, the due-date is calculated based on the current time, incremented by the given period. For example, when "PT30M" is used as dueDate, the task is due in thirty minutes from now.
+有一个Activiti的扩展，可以在任务定义中指定表达式，以在任务创建时，设定初始到期日期。该表达式**必须解析为++java.util.Date++，++java.util.String (ISO8601格式)++，ISO8601时间长度（例如PT50M），或者++null++**。例如，可以使用在流程里前一个表单中输入的日期，或者由前一个服务任务计算出的日期。如果使用的是时间长度，则到期日期基于当前时间加上给定长度计算。例如当dueDate使用“PT30M”时，任务在从现在起三十分钟后到期。
 
 [source,xml,linenums]
 ----
 <userTask id="theTask" name="Important task" activiti:dueDate="${dateVariable}"/>
 ----
 
-The due date of a task can also be altered using the +TaskService+ or in ++TaskListener++s using the passed +DelegateTask+.
+任务的到期日期，也可以使用++TaskService++，或者在++TaskListener++中使用传递的++DelegateTask++修改。
 
 
 [[bpmnUserTaskAssignment]]
 
 
-===== User assignment
+===== 用户指派 User assignment
 
 
-A user task can be directly assigned to a user. This is done by defining a *humanPerformer* sub element. Such a _humanPerformer_ definition needs a *resourceAssignmentExpression* that actually defines the user. Currently, only *formalExpressions* are supported.
+一个用户任务可以直接指派给一个用户。可以通过定义**humanPerformer**子元素实现。这个__humanPerformer__定义需要**resourceAssignmentExpression**来实际定义用户。目前，只支持**formalExpressions**。
 
 [source,xml,linenums]
 ----
@@ -2286,16 +2248,16 @@ A user task can be directly assigned to a user. This is done by defining a *huma
   </userTask>
 ----
 
-*Only one* user can be assigned as human performer to the task. In Activiti terminology, this user is called the *assignee*. Tasks that have an assignee are not visible in the task lists of other people and  can be found in the so-called *personal task list* of the assignee instead.
+**只有一个**用户可被指定为任务的__humanPerformer__。在Activiti术语中，这个用户被称作**办理人（assignee）**。拥有办理人的任务，在其他人的任务列表中不可见，而可以在该办理人的**个人任务列表**中看到。
 
-Tasks directly assigned to users can be retrieved through the TaskService as follows:
+特定用户办理的任务，可以通过TaskService如下获取：
 
 [source,java,linenums]
 ----
 List<Task> tasks = taskService.createTaskQuery().taskAssignee("kermit").list();
 ----
 
-Tasks can also be put in the so-called *candidate task list* of people. In that case, the *potentialOwner* construct must be used. The usage is similar to the _humanPerformer_ construct. Do note that it is required to define for each element in the formal expression to specify if it is a user or a group (the engine cannot guess this).
+任务也可以放在用户的**候选任务列表**中。在这个情况下，需要使用**potentialOwner**结构。用法与__humanPerformer__结构类似。请注意需要为表达式中的每一个元素指定其为用户还是组（引擎无法自行判断）。
 
 [source,xml,linenums]
 ----
@@ -2312,17 +2274,16 @@ Tasks can also be put in the so-called *candidate task list* of people. In that 
   </userTask>
 ----
 
-Tasks defines with the _potential owner_ construct, can be retrieved as follows (or a similar _TaskQuery_ usage as for the tasks with an assignee):
+定义了__potential owner（潜在用户）__结构的任务，可用如下方法获取（或使用__TaskQuery__类似于指派用户任务查询）：
 
 [source,java,linenums]
 ----
  List<Task> tasks = taskService.createTaskQuery().taskCandidateUser("kermit");
 ----
 
+将获取所有kermit作为**候选用户**的任务，也就是说，表达式含有__user(kermit)__的任务。也将获取所有**指派给kermit为其成员的组**的任务（例如__group(management)__，如果kermit是这个组的成员，并且使用Activiti身份组件）。组会在运行时解析，并可通过<<apiEngine,IdentityService（身份服务）>>管理。
 
-This will retrieve all tasks where kermit is a *candidate user*, i.e. the formal expression contains _user(kermit)_. This will also retrieve all tasks that are *assigned to a group where kermit is a member of* (e.g. _group(management)_, if kermit is a member of that group and the Activiti identity component is used). The groups of a user are resolved at runtime and these can be managed through the <<apiEngine,IdentityService>>.
-
-If no specifics are given whether the given text string is a user or group, the engine defaults to group. So the following would be the same as when _group(accountancy) was declared_.
+如果并未指定给行字符串是用户还是组，引擎默认其为组。因此下列代码与__声明了group(accountancy)__一样。
 
 [source,xml,linenums]
 ----
@@ -2333,52 +2294,52 @@ If no specifics are given whether the given text string is a user or group, the 
 [[bpmnUserTaskUserAssignmentExtension]]
 
 
-===== Activiti extensions for task assignment
+===== 用于任务指派的Activiti扩展 Activiti extensions for task assignment
 
-It is clear that user and group assignments are quite cumbersome for use cases where the assignment is not complex. To avoid these complexities, <<bpmnCustomExtensions,custom extensions>> on the user task are possible.
+很明显，当指派关系不复杂时，这种用户与组的指派方式十分笨重。为避免这种复杂性，可以在用户任务上使用<<bpmnCustomExtensions,自定义扩展>>。
 
-* *assignee attribute*: this custom extension allows to directly assign a user task to a given user.
+* **assignee（办理人）属性**：这个自定义扩展用于直接将一个用户任务指派至一个给定用户。
 
 [source,xml,linenums]
 ----
 <userTask id="theTask" name="my task" activiti:assignee="kermit" />
 ----
 
-This is exactly the same as using a *humanPerformer* construct as defined <<bpmnUserTaskAssignment,above>>.
+与使用<<bpmnUserTaskAssignment,上面>>定义的**humanPerformer**结构完全相同。
 
-* *candidateUsers attribute*: this custom extension allows to make a user a candidate for a task.
+* **candidateUsers（候选用户）属性**：这个自定义扩展用于为一个任务指定候选用户。
 
 [source,xml,linenums]
 ----
 <userTask id="theTask" name="my task" activiti:candidateUsers="kermit, gonzo" />
 ----
 
-This is exactly the same as using a *potentialOwner* construct as defined <<bpmnUserTaskAssignment,above>>. Note that it is not required to use the _user(kermit)_ declaration as is the case with the _potential owner_ construct, since the attribute can only be used for users.
+与使用<<bpmnUserTaskAssignment,上面>>定义的**potentialOwner**结构完全相同。请注意不需要像在__potential owner__中一样，使用__user(kermit)__的声明，因为这个属性只能用于用户。
 
-* *candidateGroups attribute*: this custom extension allows to make a group a candidate for a task.
+* **candidateGroups（候选组）attribute**：这个自定义扩展用于为一个任务指定候选组。
 
 [source,xml,linenums]
 ----
 <userTask id="theTask" name="my task" activiti:candidateGroups="management, accountancy" />
 ----
 
-This is exactly the same as using a *potentialOwner* construct as defined <<bpmnUserTaskAssignment,above>>. Note that it is not required to use the _group(management)_ declaration as is the case with the _potential owner_ construct, since the attribute can only be used for groups.
+与使用<<bpmnUserTaskAssignment,上面>>定义的**potentialOwner**结构完全相同。请注意不需要像在__potential owner__中一样，使用__group(management)__的声明，因为这个属性只能用于组。
 
-* _candidateUsers_ and _candidateGroups_ can both be defined on the same user task.
+* __candidateUsers__与__candidateGroups__可以定义在同一个用户任务上。
 
-Note: Although Activiti provides an identity management component, which is exposed through the <<apiEngine,IdentityService>>, no check is done whether a provided user is known by the identity component. This allows Activiti to integrate with existing identity management solutions when it is embedded into an application.
+请注意：尽管Activiti提供了身份管理组件，通过<<apiEngine,IdentityService>>暴露，但并不会检查给定的用户是否在身份组件中存在。这样Activiti在嵌入应用时，可以与已有的身份管理解决方案集成。
 
 
 [[bpmnUserTaskUserCustomIdentityLinkAssignmentExtension]]
 
 
-===== Custom identity link types (Experimental)
+===== 自定义身份联系类型（试验特性） Custom identity link types (Experimental)
 
-<<experimental,[EXPERIMENTAL]>>
+<<experimental,[EXPERIMENTAL]>>-
 
-The BPMN standard supports a single assigned user or *humanPerformer* or a set of users that form a potential pool of *potentialOwners* as defined in <<bpmnUserTaskAssignment,User assignment>>. In addition, Activiti defines <<bpmnUserTaskUserAssignmentExtension,extension attribute elements>> for the User Task that can represent the task *assignee* or *candidate owner*.
+在<<bpmnUserTaskAssignment,用户指派>>中定义过，BPMN标准支持单个指派用户或**hunamPerformer**，或者一组用户构成**potentialOwners**潜在用户池。另外，Activiti为用户任务定义了<<bpmnUserTaskUserAssignmentExtension,扩展属性元素>>，，代表任务的**办理人**或者**候选用户**。
 
-The supported Activiti identity link types are:
+Activiti支持的身份联系类型有：
 
 [source,java,linenums]
 ----
@@ -2392,9 +2353,9 @@ public class IdentityLinkType {
 }
 ----
 
-The BPMN standard and Activiti example authorization identities are *user* and *group*. As mentioned in the previous section, the Activiti identity management implementation is not intended for production use, but should be extended depending upon the supported authorization scheme.
+BPMN标准与Activiti示例身份认证是**用户**与**组**。在前一章节提到过，Activiti身份管理实现并不适用于生产环境，而需要在支持的认证概要下扩展。
 
-If additional link types are required, custom resources can be defined as extension elements with the following syntax:
+如果需要添加额外的联系类型，可按照下列语法，使用自定义资源作为扩展元素：
 
 [source,xml,linenums]
 ----
@@ -2409,7 +2370,7 @@ If additional link types are required, custom resources can be defined as extens
 </userTask>
 ----
 
-The custom link expressions are added to the _TaskDefinition_ class:
+自定义联系表达式添加至__TaskDefinition__类：
 
 [source,java,linenums]
 ----
@@ -2440,9 +2401,9 @@ public void addCustomGroupIdentityLinkExpression(String identityLinkType,
 }
 ----
 
-which are populated at runtime by the _UserTaskActivityBehavior handleAssignments_ method.
+并将会在运行时，由__UserTaskActivityBehavior handleAssignments__方法填写。
 
-Finally, the _IdentityLinkType_ class must be extended to support the custom identity link types:
+最后，需要扩展__IdentityLinkType__类，以支持自定义身份联系类型：
 
 [source,java,linenums]
 ----
@@ -2461,7 +2422,7 @@ public class IdentityLinkType
 [[bpmnUserTaskUserCustomAssignmentTaskListeners]]
 
 
-===== Custom Assignment via task listeners
+===== 通过任务监听器自定义指派 Custom Assignment via task listeners
 
 
 In case the previous approaches are not sufficient, it is possible to delegate to custom assignment logic using a <<taskListeners,task listener>> on the create event:
