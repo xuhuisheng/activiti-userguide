@@ -10,7 +10,7 @@
 === 自定义扩展 Custom extensions
 
 
-BPMN 2.0标准对流程的所有的参与者都是个好东西。最终用户不需要因为依赖专利解决方案，而被供应商“绑架”。类似Activiti的开源框架，也可以提供与大型供应商的解决方案相同（经常是更好;-）的实现。有了BPMN 2.0标准，从大型供应商解决方案向Activiti的转变，就变得简单平滑。
+BPMN 2.0标准对流程的所有的参与者都是个好东西。最终用户不需要因为依赖专利解决方案，而被供应商“绑架”。Activiti之类的开源框架，也可以提供与大型供应商的解决方案相同（经常是更好;-）的实现。有了BPMN 2.0标准，从大型供应商解决方案向Activiti的转变，就变得简单平滑。
 
 然而标准的缺点，是它通常是不同公司（不同观点）大量讨论与妥协的结果。作为阅读BPMN 2.0 XML流程定义的开发者，有时会觉得某些结构或做事方法太笨重了。Activiti将开发者的感受放在最高优先，因此引入了一些**'Activiti BPMN extensions（扩展）'**。这些“扩展”并不在BPMN 2.0规格中，有些是新结构，有些是对特定结构的简化。
 
@@ -19,17 +19,17 @@ BPMN 2.0标准对流程的所有的参与者都是个好东西。最终用户不
 * 自定义扩展的前提是，**做事情的标准方式****总**可以进行更简化的改造。因此当你决定使用自定义扩展时，不用担心无路可退（仍然可以用标准方式）。
 * 使用自定义扩展时，总是通过为新的XML元素、属性等提供**activiti:**命名空间前缀，明确标识出来。
 
-因此是否使用自定义扩展，完全取决于你自己。有些其他因素会影响选择（图形化编辑器的使用，公司策略，等等）。我们提供扩展，只是因为相信，标准中的某些地方可以用更简单或效率更高的方式处理。请不要吝啬给我们反馈对扩展的评价（正面的和/或负面的），也可以给我们提供关于自定义扩展的新想法。说不定某一天，你的想法会成为规格的一部分！
+因此是否使用自定义扩展，完全取决于你自己。有些其他因素会影响选择（图形化编辑器的使用，公司策略，等等）。我们提供扩展，只是因为相信，标准中的某些地方可以用更简单或效率更高的方式处理。请不要吝啬给我们反馈对扩展的评价（正面的和/或负面的），也可以给我们提供关于自定义扩展的新想法。说不定某一天，你的想法会成为规范的一部分！
 
 
 [[bpmnEvents]]
 
 === 事件 Events
 
-事件通常用于为流程生命周期中发生的事情建模。事件总是图形化为圆圈。在BPMN 2.0中，有两种主要的事件分类：__catching（捕获）__与__throwing（抛出）__事件。
+事件通常用于为流程生命周期中发生的事情建模。事件总是图形化为圆圈。在BPMN 2.0中，有两种主要的事件分类：__捕获（catching）__与__抛出（throwing）__事件。
 
-* **捕获:** 当流程执行到达这个事件时，会等待直到触发器动作。触发器的类型，由其中的图标，或者说XML中的类型声明，而定义。捕获事件与抛出事件显示上的区别，是其内部的图标没有填充（也就是说，是白色的）。
-* **抛出:** 当流程执行到达这个事件时，会触发一个触发器。触发器的类型，由其中的图标，或者说XML中的类型声明，而定义。抛出事件与捕获事件显示上的区别，是其内部的图标填充为黑色。
+* **捕获:** 当流程执行到达这个事件时，会等待直到触发器动作。触发器的类型，由其中的图标，或者说XML中的类型声明而定义。捕获事件与抛出事件显示上的区别，是其内部的图标没有填充（也就是说，是白色的）。
+* **抛出:** 当流程执行到达这个事件时，会触发一个触发器。触发器的类型，由其中的图标，或者说XML中的类型声明而定义。抛出事件与捕获事件显示上的区别，是其内部的图标填充为黑色。
 
 [[eventDefinitions]]
 
@@ -52,7 +52,7 @@ BPMN 2.0标准对流程的所有的参与者都是个好东西。最终用户不
     ...
 </timerEventDefinition>
 ----
-其中businessCalendarName指向流程引擎配置中的业务日历。如果省略业务日历定义，就是用默认业务日历。
+其中businessCalendarName指向流程引擎配置中的业务日历。如果省略业务日历定义，就使用默认业务日历。
 
 定时器定义必须且只能使用下列的一种元素：
 
@@ -68,7 +68,7 @@ BPMN 2.0标准对流程的所有的参与者都是个好东西。最终用户不
 ----
 
 
-* **timeDuration**。要定义在触发前，定时器需要等待多长时间，可以用__timeDuration__作为__timerEventDefinition__的子元素来指定。使用link:$$http://en.wikipedia.org/wiki/ISO_8601#Durations$$[ISO 8601]格式（BPMN 2.0规格要求）。例如（等待10天）：
+* **timeDuration**。要定义在触发前，定时器需要等待多长时间，可以用__timeDuration__作为__timerEventDefinition__的子元素来指定。使用link:$$http://en.wikipedia.org/wiki/ISO_8601#Durations$$[ISO 8601]格式（BPMN 2.0规范要求）。例如（等待10天）：
 
 [source,xml,linenums]
 ----
@@ -153,7 +153,7 @@ BPMN 2.0标准对流程的所有的参与者都是个好东西。最终用户不
 信号事件，是引用具名信号的事件。信号是全局范围（广播）的事件，并会被传递给所有激活的处理器（等待中的流程实例/捕获信号事件 catching signal events）。
 
 
-信号事件定义使用++signalEventDefinition++元素声明。++signalRef++属性引用一个++signal++元素，该++signal++元素需要声明为++definitions++根元素的子元素。下面摘录一个流程，使用中间事件（intermediate event）抛出与捕获信号事件。
+信号事件定义使用++signalEventDefinition++元素声明。其++signalRef++属性引用一个++signal++元素，该++signal++元素需要声明为++definitions++根元素的子元素。下面摘录一个流程，使用中间事件（intermediate event）抛出与捕获信号事件。
 
 [source,xml,linenums]
 ----
@@ -185,7 +185,7 @@ BPMN 2.0标准对流程的所有的参与者都是个好东西。最终用户不
 
 ===== 抛出信号事件 Throwing a Signal Event
 
-信号可以由流程实例使用BPMN结构抛出，也可以通过编程方式使用java API抛出。下面++org.activiti.engine.RuntimeService++中的方法可以用于编程方式抛出信号：
+信号可以由流程实例使用BPMN结构抛出，也可以通过编程方式使用Java API抛出。下面++org.activiti.engine.RuntimeService++中的方法可以用于编程方式抛出信号：
 
 [source,java,linenums]
 ----
@@ -211,7 +211,7 @@ RuntimeService.signalEventReceived(String signalName, String executionId);
 ===== 查询信号事件订阅 Querying for Signal Event subscriptions
 
 
-可以查询所有订阅了某一信号事件的所有执行：
+可以查询订阅了某一信号事件的所有执行：
 
 [source,java,linenums]
 ----
@@ -230,7 +230,7 @@ RuntimeService.signalEventReceived(String signalName, String executionId);
 
 默认情况下，信号事件在__流程引擎全局广播__。这意味着你可以在一个流程实例中抛出一个信号事件，而不同流程定义的不同流程实例都会响应这个事件。
 
-然而，有事也会希望只在__同一个流程实例__中响应信号事件。例如在流程实例中使用异步机制，而两个或多个活动彼此互斥的时候。
+然而，有时也会希望只在__同一个流程实例__中响应信号事件。例如在流程实例中使用异步机制，而两个或多个活动彼此互斥的时候。
 
 要限制信号事件的__范围（scope）__，在信号事件定义中添加（非BPMN 2.0标准！）__scope属性__：
 
@@ -272,7 +272,7 @@ Activiti不支持上面流程中描述的模式。理想情况是，在执行"do
 
 消息事件，是指引用具名消息的事件。消息具有名字与载荷。与信号不同，消息事件只有一个接收者。
 
-消息事件定义使用++messageEventDefinition++元素声明。++messageRef++属性引用一个++message++元素，该++message++元素需要声明为++definitions++根元素的子元素。下面摘录一个流程，声明了两个消息事件，并由开始事件与消息捕获中间事件（intermediate catching message event）引用。
+消息事件定义使用++messageEventDefinition++元素声明。其++messageRef++属性引用一个++message++元素，该++message++元素需要声明为++definitions++根元素的子元素。下面摘录一个流程，声明了两个消息事件，并由开始事件与消息捕获中间事件（intermediate catching message event）引用。
 
 [source,xml,linenums]
 ----
@@ -309,7 +309,7 @@ Activiti不支持上面流程中描述的模式。理想情况是，在执行"do
 ===== 抛出消息事件 Throwing a Message Event
 
 
-作为可嵌入的流程引擎，Activiti不关心实际接收消息。因为这可能与环境相关，并需要进行平台定义的操作，例如连接至JMS（Java Messaging Service Java消息服务）队列（Queue）/主题（Topic），或者处理Webservice或者REST请求。因此接收消息需要作为应用的一部分，或者是流程引擎所嵌入的基础框架中的一部分，由你实现。
+作为可嵌入的流程引擎，Activiti不关心实际接收消息。因为这可能与环境相关，并需要进行平台定义的操作，例如连接至JMS（Java Messaging Service，Java消息服务）队列（Queue）/主题（Topic），或者处理Webservice或者REST请求。因此接收消息需要作为应用的一部分，或者是流程引擎所嵌入的基础框架中的一部分，由你自行实现。
 
 在应用中接收到消息后，需要决定如何处理它。如果这个消息需要启动新的流程实例，可以选择下面由runtime服务提供的方法中的一种：
 
@@ -382,11 +382,11 @@ image::images/bpmn.start.message.event.example.1.png[align="center"]
 
 启动事件指明了流程的起点。启动事件的类型（流程在消息到达时启动，在指定的时间间隔后启动，等等），定义了流程__如何__启动，并显示为启动事件中的小图标。在XML中，类型由子元素声明来定义。
 
-启动事件“随时捕获”：概念上，事件（随时）等候，知道特定的触发器被触发。
+启动事件“随时捕获”：概念上，事件（随时）等候，直到特定的触发器被触发。
 
 在启动事件中，可以使用下列Activiti专用参数：
 
-* *initiator*: 指明认证用户（authenticated user）id的变量名。在流程启动时，该id会使用这个变量名被保存。例如：
+* *initiator*: 指明保存认证用户（authenticated user）id用的变量名。在流程启动时，该id会使用这个变量名被保存。例如：
 
 [source,xml,linenums]
 ----
@@ -479,7 +479,7 @@ image::images/bpmn.none.start.event.png[align="center"]
 
 ===== 描述 Description
 
-定时器启动事件，用于在指定时间创建流程实例。在流程只需要启动一次，与流程需要在特定的时间间隔重复启动时，都可以使用。
+定时器启动事件，用于在指定时间创建流程实例。在流程只需要启动一次，或者流程需要在特定的时间间隔重复启动时，都可以使用。
 
 __请注意：__子流程不能有定时器启动事件。
 
@@ -543,11 +543,11 @@ image::images/bpmn.clock.start.event.png[align="center"]
 
 <<bpmnMessageEventDefinition,消息>>启动事件，使用具名消息启动流程实例。它让我们可以使用消息名，有效地在一组可选的启动事件中__选择__正确的启动事件。
 
-当**部署**具有一个或多个消息启动事件的流程定义时，请考虑下列因素：
+当**部署**具有一个或多个消息启动事件的流程定义时，会考虑下列因素：
 
 * 消息启动事件的名字，在给定流程定义中，必须是唯一的。一个流程定义不得包含多个同名的消息启动事件。如果流程定义中有两个或多个消息启动事件引用同一个消息，也即两个或多个消息启动事件引用了具有相同消息名字的消息，则Activiti在部署这个流程定义时，会抛出异常。
-* 消息启动事件的名字，在所有已部署的流程定义中，必须是唯一的。如果流程定义中，一个或多个消息启动事件，引用了已经部署的另一流程定义中的消息启动事件，已经使用的消息名，则Activiti在部署这个流程定义时，会抛出异常。
-* 流程版本：在部署流程定义的新版本时，会取消上一版本的消息订阅。即使新版本中并没有这个消息事件，仍然这样（取消上版本的消息订阅）。
+* 消息启动事件的名字，在所有已部署的流程定义中，必须是唯一的。如果流程定义中，一个或多个消息启动事件，引用了已经部署的另一流程定义中消息启动事件的消息名，则Activiti在部署这个流程定义时，会抛出异常。
+* 流程版本：在部署流程定义的新版本时，会取消上一版本的消息订阅。即使新版本中并没有这个消息事件，仍然如此（取消上版本的消息订阅）。
 
 当**启动**流程实例时，可以使用下列++RuntimeService++中的方法，触发消息启动事件：
 
@@ -626,7 +626,7 @@ image::images/bpmn.start.message.event.png[align="center"]
 
 ===== 描述 Description
 
-<<bpmnSignalEventDefinition,信号>>启动事件，使用具名信号启动流程实例。这个信号可以由流程实例中的信号抛出中间事件，或者API（__runtimeService.signalEventReceivedXXX__方法）触发。这些情况下，所有拥有相同名字信号启动事件的流程定义都会被启动。
+<<bpmnSignalEventDefinition,信号>>启动事件，使用具名信号启动流程实例。这个信号可以由流程实例中的信号抛出中间事件（intermediary signal throw event），或者API（__runtimeService.signalEventReceivedXXX__方法）触发。这些情况下，所有拥有相同名字信号启动事件的流程定义都会被启动。
 
 请注意这些情况下，都可以选择异步还是同步启动流程实例。
 
@@ -789,7 +789,7 @@ image::images/bpmn.error.end.event.png[align="center"]
 
 ===== XML表示 XML representation
 
-错误结束事件，表示为结束事件，加上___errorEventDefinition___子元素：
+错误结束事件，表示为结束事件，加上__errorEventDefinition__子元素：
 
 [source,xml,linenums]
 ----
@@ -939,7 +939,7 @@ image::images/bpmn.cancel.end.event.png[align="center"]
 ===== 描述 Description
 
 
-定时器边界事件的行为像是秒表与闹钟。当执行到达了边界事件所依附的活动时，启动定时器。当定时器触发时（例如在特定事件间隔后），活动会被中断，沿着边界事件继续执行。
+定时器边界事件的行为像是跑表与闹钟。当执行到达边界事件所依附的活动时，启动定时器。当定时器触发时（例如在特定事件间隔后），活动会被中断，沿着边界事件继续执行。
 
 
 [[bpmnTimerBoundaryEventGraphicalNotation]]
@@ -1014,7 +1014,7 @@ image::images/bpmn.known.issue.boundary.event.png[align="center"]
 在活动边界上的错误__捕获__中间（事件），或简称**错误边界事件**，捕获其依附的活动范围内抛出的错误。
 
 
-在<<bpmnSubProcess,嵌入式子流程>>或者<<bpmnCallActivity,调用活动>>上定义错误边界事件最有意义，因为子流程会为其中的所有活动创建范围。错误由<<bpmnErrorEndEvent,错误结束事件>>抛出。这样的错误会逐层向其上级父范围传播，直到找到一个错误边界事件的范围，定义了匹配的错误事件定义。
+在<<bpmnSubProcess,嵌入式子流程>>或者<<bpmnCallActivity,调用活动>>上定义错误边界事件最有意义，因为子流程会为其中的所有活动创建范围。错误由<<bpmnErrorEndEvent,错误结束事件>>抛出。这样的错误会逐层向其上级父范围传播，直到找到一个错误边界事件的范围，该范围定义了匹配的错误事件定义。
 
 当错误事件被捕获时，边界事件定义所在的活动会被销毁，同时销毁其中所有的当前执行（例如，并行活动，嵌套子流程，等等）。流程执行沿着边界事件的出口顺序流继续。
 
@@ -1245,7 +1245,7 @@ image::images/bpmn.boundary.cancel.event.png[align="center"]
 
 补偿边界事件必须通过直接关联的方式，引用单个的补偿处理器。
 
-补偿边界事件与其它边界事件的活动策略不同。其它边界事件，例如信号边界事件，当其依附的活动启动时激活；当离开该活动时，会被解除，并取消相应的事件订阅。而补偿边界事件不是这样。补偿边界事件在其依附的活动**成功完成**时激活。同时，创建补偿事件的相应订阅。当补偿事件被触发，或者相应的流程实例结束时，才会移除订阅。因此如下判断：
+补偿边界事件与其它边界事件的活动策略不同。其它边界事件，例如信号边界事件，当其依附的活动启动时激活；当离开该活动时，会被解除，并取消相应的事件订阅。而补偿边界事件不是这样。补偿边界事件在其依附的活动**成功完成**时激活，同时创建补偿事件的相应订阅。当补偿事件被触发，或者相应的流程实例结束时，才会移除订阅。请考虑下列因素：
 
 * 当补偿被触发时，补偿边界事件关联的补偿处理器会被调用，次数与其依附的活动成功完成的次数相同。
 * 如果补偿边界事件依附在具有多实例特性的活动上，则会为每一个实例创建补偿事件订阅。
@@ -1285,7 +1285,7 @@ image::images/bpmn.boundary.compensation.event.png[align="center"]
 <serviceTask id="undoBookHotel" isForCompensation="true" activiti:class="..." />
 ----
 
-补偿边界事件是在活动完成后才激活，因此不支持++cancelActivity++属性。
+补偿边界事件在活动完成后才激活，因此不支持++cancelActivity++属性。
 
 
 [[bpmnIntermediateCatchingEvent]]
@@ -1318,7 +1318,7 @@ image::images/bpmn.boundary.compensation.event.png[align="center"]
 
 ===== 描述 Description
 
-定时器捕获中间事件的行为像是秒表。当执行到达捕获事件活动（catching event activity）时，启动定时器；当定时器触发时（例如在一段时间间隔后），沿定时器中间事件的出口顺序流继续执行。
+定时器捕获中间事件的行为像是跑表。当执行到达捕获事件活动（catching event activity）时，启动定时器；当定时器触发时（例如在一段时间间隔后），沿定时器中间事件的出口顺序流继续执行。
 
 
 [[bpmnTimerIntermediateEventGraphicalNotation]]
@@ -1491,7 +1491,7 @@ image::images/bpmn.intermediate.none.event.png[align="center"]
 [[bpmnIntermediateThrowSignalEvent]]
 
 
-==== 信号捕获中间事件 Signal Intermediate Throwing Event
+==== 信号抛出中间事件 Signal Intermediate Throwing Event
 
 [[bpmnIntermediateThrowSignalEventDescription]]
 
@@ -1501,10 +1501,10 @@ image::images/bpmn.intermediate.none.event.png[align="center"]
 
 <<bpmnSignalEventDefinition,信号>>__抛出__中间事件，抛出已定义信号的信号事件。
 
-在Activiti中，信号会广播至所有的活动中的处理器（也就是说，所有的捕获信号事件）。信号可以同步或异步地发布。
+在Activiti中，信号会广播至所有的激活的处理器（也就是说，所有的捕获信号事件）。信号可以同步或异步地发布。
 
 * 在默认配置中，信号**同步地**传递。这意味着抛出（信号的）流程实例会等待，直到信号传递至所有的捕获（信号的）流程实例。所有的捕获流程实例也会在与抛出流程实例相同的事务中，也就是说如果收到通知的流程实例中，有一个实例产生了技术错误（抛出异常），则所有相关的实例都会失败。
-* 信号也可以**异步地**传递。这是由到达抛出信号事件时，活动的是哪一个（发送）处理器来决定的。对于每个活动的处理器，JobExecutor会为其存储并传递一个异步通知消息 asynchronous notification message（作业 Job）。
+* 信号也可以**异步地**传递。这是由到达抛出信号事件时，激活的是哪一个（发送）处理器来决定的。对于每个激活的处理器，JobExecutor会为其存储并传递一个异步通知消息，asynchronous notification message（作业 Job）。
 
 
 [[bpmnIntermediateThrowSignalEventGraphicalNotation]]
@@ -1569,9 +1569,9 @@ image::images/bpmn.intermediate.signal.throw.event.png[align="center"]
 
 **触发补偿：**补偿既可以为设计的活动触发，也可以为补偿事件所在的范围触发。补偿由活动所关联的补偿处理器执行。
 
-* 当一个活动抛出补偿时，关联的补偿处理器执行的次数，与活动成功完成的次数相同。
+* 抛出补偿时，活动关联的补偿处理器执行的次数，与活动成功完成的次数相同。
 * 如果为当前范围抛出了补偿，则当前范围中所有的活动都会被补偿，包括并行分支上的活动。
-* 补偿分层触发：如果将要被补偿的活动是一个子流程，则该子流程中所有的活动都会触发补偿。如果该子流程有嵌套的活动，则会递归地抛出补偿。然而，补偿不会传播至流程的**上层**：如果子流程中触发了补偿，该补偿不会传播至子流程范围外的活动。BPMN规范支出，补偿为“与子流程在相同级别”的活动触发。
+* 补偿分层触发：如果将要被补偿的活动是一个子流程，则该子流程中所有的活动都会触发补偿。如果该子流程有嵌套的活动，则会递归地抛出补偿。然而，补偿不会传播至流程的**上层**：如果子流程中触发了补偿，该补偿不会传播至子流程范围外的活动。BPMN规范指出，补偿为“与子流程在相同级别”的活动触发。
 * 在Activiti中，补偿按照执行的相反顺序运行。这意味着最后完成的活动会第一个补偿，等等。
 * 补偿抛出中间事件，可用于补偿已经成功完成的事务子流程。
 
@@ -1581,7 +1581,7 @@ image::images/bpmn.throw.compensation.example1.png[align="center"]
 
 在这个流程中，有两个并行的执行。一个执行嵌入子流程，另一个执行“charge credit card（信用卡付款）”活动。假定两个执行都已开始，且第一个并行执行正等待用户完成“review bookings（检查预定）”任务。第二个执行进行了“charge credit card（信用卡付款）”活动的操作，抛出了一个错误，导致“cancel reservations（取消预订）”事件触发补偿。这时并行子流程还未完成，意味着补偿不会传播至该子流程，因此不会执行“cancel hotel reservation（取消酒店预订）”补偿处理器。而如果“cancel reservations（取消预订）”运行前，这个用户任务（因此该嵌入式子流程也）已经完成，则补偿会传播至该嵌入式子流程。
 
-**流程变量：**当补偿嵌入式子流程时，用于执行补偿处理器的执行，可以以变量在子流程完成时所处的状态，访问子流程的局部流程变量。要实现这一点，会为范围执行（为执行子流程所创建的执行）所关联的流程变量，进行快照。意味着：
+**流程变量：**当补偿嵌入式子流程时，用于执行补偿处理器的执行，可以以变量在子流程完成时所处的状态，访问子流程的局部流程变量。围了实现这一点，会为范围执行（为执行子流程所创建的执行）所关联的流程变量，进行快照。意味着：
 
 * 子流程范围内创建的并行执行所添加的变量，补偿执行器无法访问。
 * 上层的执行关联的流程变量（例如流程实例的执行关联的流程变量），不在该快照中：补偿处理器（本就）可以以其在抛出补偿时所处的状态，访问这些流程变量。
@@ -1590,7 +1590,7 @@ image::images/bpmn.throw.compensation.example1.png[align="center"]
 **目前的限制：**
 
 * 目前不支持++waitForCompletion="false"++。当补偿抛出中间事件触发补偿时，只有在补偿成功完成时，才会离开该事件。
-* 补偿现在由并行执行来运行。该并行执行按照补偿活动完成的逆序启动。Activiti的后续版本可能会添加选项，使补偿可以按（活动的）顺序运行。
+* 补偿现在由并行执行来运行。该并行执行按照补偿活动完成的逆序启动。Activiti的后续版本可能会添加选项，使补偿可以按（活动完成的）顺序运行。
 * 补偿不会传播至调用活动（call activity）生成的子流程。
 
 
@@ -1640,7 +1640,7 @@ image::images/bpmn.intermediate.compensation.throw.event.png[align="center"]
 
 ==== 描述 Description
 
-顺序流是流程中两个元素间的连接器。当流程执行中，一个元素被访问后，会沿着所有的出口顺序流继续。这意味着BPMN 2.0的默认性质是并行的：两个出口顺序流，会创建两个分开的，并行的执行路径。
+顺序流是流程中两个元素间的连接器。当流程执行中，一个元素被访问后，会沿着所有的出口顺序流继续。这意味着BPMN 2.0的默认性质是并行的：两个出口顺序流，会创建两个独立的，并行的执行路径。
 
 
 [[sequenceFlowGraphicalNotation]]
@@ -1671,11 +1671,11 @@ image::images/bpmn.sequence.flow.png[align="center"]
 
 [[condSeqFlowDescription]]
 
-===== Description
+===== 描述 Description
 
 在顺序流上可以定义条件。当离开BPMN 2.0活动时，默认行为是计算其出口顺序流上的条件。当条件计算为__true__时，选择该出口顺序流。如果该方法选择了多条顺序流，则会生成多个__执行__，流程会以并行方式继续。
 
-**请注意：**上面的介绍队BPMN 2.0活动（与事件）有效，但不适用于网关（gateway）。不同类型的网关，会用不同的方式处理带有条件的顺序流。
+**请注意：**上面的介绍对BPMN 2.0活动（与事件）有效，但不适用于网关（gateway）。不同类型的网关，会用不同的方式处理带有条件的顺序流。
 
 [[conditionalSequenceFlowGraphicalNotation]]
 
@@ -1724,7 +1724,7 @@ image::images/bpmn.conditional.sequence.flow.png[align="center"]
 ----
 
 
-Activiti发行版中包含了下列示例流程，使用值与方法表达式（参见__org.activiti.examples.bpmn.expression__）。
+Activiti发行版中包含了下列示例流程，展示值表达式与方法表达式的使用（参见__org.activiti.examples.bpmn.expression__）。
 
 image::images/bpmn.uel-expression.on.seq.flow.png[align="center"]
 
@@ -1737,7 +1737,7 @@ image::images/bpmn.uel-expression.on.seq.flow.png[align="center"]
 [[bpmnDefaultSequenceFlowDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
 所有的BPMN 2.0任务与网关，都可以使用**默认顺序流**。这种顺序流只有当没有其他顺序流可以选择时，才会被选择为活动的出口顺序流。默认顺序流上的条件会被忽略。
@@ -1803,7 +1803,7 @@ image::images/bpmn.gateway.png[align="center"]
 
 排他网关（也叫__异或网关 XOR gateway__，或者更专业的，__基于数据的排他网关 exclusive data-based gateway__），用于为流程中的**决策**建模。当执行到达这个网关时，所有出口顺序流会按照它们定义的顺序进行计算。条件计算为true的顺序流（当没有设置条件时，认为顺序流定义为__true__）会被选择用于继续流程。
 
-**请注意这里出口顺序流的含义与BPMN 2.0中的一般情况不一样。一般情况下，所有条件计算为true的顺序流，都会被选择继续，并行执行。而使用排他网关时，只会选择一条顺序流。当多条顺序流的条件都计算为true时，在XML中定义的第一条（也只有这条）会被选择，用于继续流程。如果没有可选的顺序流，会抛出异常。**
+**请注意这里出口顺序流的含义与BPMN 2.0中的一般情况不一样。一般情况下，所有条件计算为true的顺序流，都会被选择继续，并行执行。而使用排他网关时，只会选择一条顺序流。当多条顺序流的条件都计算为true时，其中在XML中定义的第一条（也只有这条）会被选择，用于继续流程。如果没有可选的顺序流，会抛出异常。**
 
 
 [[exclusiveGatewayGraphNotation]]
@@ -1811,7 +1811,7 @@ image::images/bpmn.gateway.png[align="center"]
 
 ===== 图示 Graphical notation
 
-排他网关，用内部带有'X'图标的标准网关（菱形）表示，'X'图标代表__异或（XOR）__的含义。请注意内部没有图标的网关默认为排他网关。BPMN 2.0规范不允许在同一个流程中，混合使用含有及没有X的菱形标志。
+排他网关，用内部带有'X'图标的标准网关（菱形）表示，'X'图标代表__异或（XOR）__的含义。请注意内部没有图标的网关默认为排他网关。BPMN 2.0规范不允许在同一个流程中，混合使用带有及没有X的菱形标志。
 
 image::images/bpmn.exclusive.gateway.notation.png[align="center"]
 
@@ -1822,7 +1822,7 @@ image::images/bpmn.exclusive.gateway.notation.png[align="center"]
 ===== XML表示 XML representation
 
 
-排他网关的XML表示格式很直接：一行定义网关，而条件表达式定义在出口顺序流上。查看<<bpmnConditionalSequenceFlow,条件顺序流>>章节了解这种表达式的可用选项。
+排他网关的XML表示格式很直接：一行定义网关的XML，而条件表达式定义在出口顺序流上。查看<<bpmnConditionalSequenceFlow,条件顺序流>>章节了解这种表达式的可用选项。
 
 以下面的模型为例：
 
@@ -1859,9 +1859,9 @@ image::images/bpmn.exclusive.gateway.png[align="center"]
 ===== 描述 Description
 
 
-网关也可以用于建模流程中的并发。在流程模型中引入并发的最简单的网关，就是**并行网关**。它可以将执行__分支（fork）__为多条路径，也可以__合并（join）__执行的多条入口路径。
+网关也可以用于对流程中并行的建模。在流程模型中引入并行的最简单的网关，就是**并行网关**。它可以将执行__分支（fork）__为多条路径，也可以__合并（join）__执行的多条入口路径。
 
-并行网关的功能，基于入口与出口顺序流：
+并行网关的功能，基于其入口与出口顺序流：
 
 * **分支：**所有的出口顺序流都并行执行，为每一条顺序流创建一个并行执行。
 * **合并：**所有到达并行网关的并行执行，都在网关处等待，直到每一条入口顺序流都有一个执行到达。然后流程经过该合并网关继续。
@@ -1869,7 +1869,7 @@ image::images/bpmn.exclusive.gateway.png[align="center"]
 
 请注意，如果并行网关同时具有多条入口与出口顺序流，可以**同时具有分支与合并的行为**。在这种情况下，网关首先合并所有入口顺序流，然后分裂为多条并行执行路径。
 
-**与其他网关类型的重要区别，是并行网关不计算条件。如果连接到并行网关的顺序流上定义了条件，条件会被简单忽略。**
+**与其他网关类型的重要区别，是并行网关不计算条件。如果连接到并行网关的顺序流上定义了条件，条件会被简单地忽略。**
 
 
 [[bpmnParallelGatewayGraphicalNotation]]
@@ -1961,9 +1961,9 @@ image::images/bpmn.unbalanced.parallel.gateway.png[align="center"]
 ===== 描述 Description
 
 
-**包容网关**可被视作一个排他网关与一个并行网关的组合。与排他网关一样，可以在出口顺序流上定义条件，包容网关会计算它们。然而主要的区别是，包容网关与并行网关一样，可以选择多于一条（出口）顺序流。
+**包容网关**可被视作排他网关与并行网关的组合。与排他网关一样，可以在出口顺序流上定义条件，包容网关会计算它们。然而主要的区别是，包容网关与并行网关一样，可以选择多于一条（出口）顺序流。
 
-包容网关的功能，基于入口与出口顺序流：
+包容网关的功能，基于其入口与出口顺序流：
 
 * **分支：**所有出口顺序流的条件都会被计算，对于条件计算为true的顺序流，流程会并行地沿其继续，为每一条顺序流创建一个并行执行。
 * **合并：**所有到达包容网关的并行执行，都会在网关处等待，直到每一条具有流程标志的入口顺序流，都有一个执行到达。这是与并行网关的重要区别。换句话说，包容网关只会等待将会被执行的入口顺序流。在合并后，流程穿过合并并行网关继续。
@@ -2049,7 +2049,7 @@ assertEquals("Ship Order", task.getName());
 当这个任务完成后，第二个包容网关会合并这两个执行，并且由于只有一条出口顺序流，不会再创建并行执行路径，只会激活__Archive Order(存档订单)__任务。
 
 
-请注意包容网关不需要“平衡”（也就是说，对应的包容网关，其入口/出口顺序流的数量不需要匹配）。包容网关会简单地等待所有入口顺序流，并为每一条出口顺序流创建并行执行，不受流程模型中的其他结构影响。因此，下面的流程在BPMN 2.0中是合法的：
+请注意包容网关不需要“平衡”（也就是说，对应的包容网关，其入口/出口顺序流的数量不需要匹配）。包容网关会简单地等待所有入口顺序流，并为每一条出口顺序流创建并行执行，不受流程模型中的其他结构影响。
 
 
 [[bpmnEventbasedGateway]]
@@ -2063,12 +2063,12 @@ assertEquals("Ship Order", task.getName());
 ===== 描述 Description
 
 
-基于事件的网关，允许基于事件做选择。网管的每一条出口顺序流，都需要连接至一个捕获中间事件。当流程执行到达基于事件的网关时，网关类似等待状态地动作：执行被暂停。并且，为每一条出口顺序流，创建一个事件订阅。
+基于事件的网关，允许基于事件做选择。网关的每一条出口顺序流，都需要连接至一个捕获中间事件。当流程执行到达基于事件的网关时，网关类似等待状态地动作：执行被暂停。并且，为每一条出口顺序流，创建一个事件订阅。
 
 请注意基于事件的网关，其出口顺序流与一般的顺序流不同。这些顺序流从不实际**被执行**。相反，它们允许流程引擎决定，当执行到达一个基于事件的网关时，需要订阅什么事件。基于下列约束：
 
 * 一个基于事件的网关，必须有两条或更多的出口顺序流。
-* 基于事件的网关，只能连接至++intermediateCatchEvent（捕获中间事件）++类型的元素（Activiti不支持基于事件的网关后，连接接收任务 Receive Task）。
+* 基于事件的网关，只能连接至++intermediateCatchEvent（捕获中间事件）++类型的元素（Activiti不支持基于事件的网关后，连接接收任务，Receive Task）。
 * 连接至基于事件的网关的++intermediateCatchEvent++，必须只有一个入口顺序流。
 
 
@@ -2096,7 +2096,7 @@ image::images/bpmn.event.based.gateway.notation.png[align="center"]
 
 ===== 示例 Example(s)
 
-下面的流程，是带有基于事件的网关的流程的例子。当执行到达基于事件的网关时，流程执行被暂停。并且，流程实例订阅alert信号事件，并创建一个10分钟后触发的定时器。这使得流程引擎等待十分钟，并等待信号事件。如果信号在10分钟内发生，定时器会被取消，执行沿着信号继续。如果信号未被触发，执行会在定时器到时候继续，并取消信号订阅。
+下面的流程，是带有基于事件的网关的流程的例子。当执行到达基于事件的网关时，流程执行被暂停。并且，流程实例订阅alert信号事件，并创建一个10分钟后触发的定时器。这使得流程引擎等待10分钟，并等待信号事件。如果信号在10分钟内触发，则定时器会被取消，执行沿着信号继续。如果信号未被触发，执行会在定时器到时后继续，并取消信号订阅。
 
 image::images/bpmn.event.based.gateway.example.png[align="center"]
 
@@ -2189,7 +2189,7 @@ image::images/bpmn.user.task.png[align="center"]
 <userTask id="theTask" name="Important task" />
 ----
 
-一个用户任务也可以有一个描述（description）。事实上任何BPMN 2.0元素都可以有一个描述。描述使用添加的**documentation**元素定义。
+一个用户任务也可以有一个描述（description）。事实上任何BPMN 2.0元素都可以有一个描述。描述使用附加的**documentation**元素定义。
 
 [source,xml,linenums]
 ----
@@ -2215,7 +2215,7 @@ task.getDescription()
 
 每个任务都有一个字段，标志该任务的到期日期。可以使用查询API，查询在给定日期前或后到期的任务。
 
-有一个Activiti的扩展，可以在任务定义中指定表达式，以在任务创建时，设定初始到期日期。该表达式**必须解析为++java.util.Date++，++java.util.String (ISO8601格式)++，ISO8601时间长度（例如PT50M），或者++null++**。例如，可以使用在流程里前一个表单中输入的日期，或者由前一个服务任务计算出的日期。如果使用的是时间长度，则到期日期基于当前时间加上给定长度计算。例如当dueDate使用“PT30M”时，任务在从现在起三十分钟后到期。
+有一个Activiti的扩展，可以在任务定义中指定表达式，以在任务创建时，设定初始到期日期。该表达式**必须解析为++java.util.Date++，++java.util.String (ISO8601格式)++，ISO8601时间长度（例如PT50M），或者++null++**。例如，可以使用在流程里前一个表单中输入的日期，或者由前一个服务任务计算出的日期。如果使用的是时间长度，则到期日期基于当前时间加上给定长度计算。例如当dueDate使用“PT30M”时，任务在从现在起30分钟后到期。
 
 [source,xml,linenums]
 ----
@@ -2257,7 +2257,7 @@ task.getDescription()
 List<Task> tasks = taskService.createTaskQuery().taskAssignee("kermit").list();
 ----
 
-任务也可以放在用户的**候选任务列表**中。在这个情况下，需要使用**potentialOwner**结构。用法与__humanPerformer__结构类似。请注意需要为表达式中的每一个元素指定其为用户还是组（引擎无法自行判断）。
+任务也可以放在用户的**候选任务列表**中。在这个情况下，需要使用**potentialOwner（潜在用户）**结构。用法与__humanPerformer__结构类似。请注意需要为表达式中的每一个元素指定其为用户还是组（引擎无法自行判断）。
 
 [source,xml,linenums]
 ----
@@ -2274,16 +2274,16 @@ List<Task> tasks = taskService.createTaskQuery().taskAssignee("kermit").list();
   </userTask>
 ----
 
-定义了__potential owner（潜在用户）__结构的任务，可用如下方法获取（或使用__TaskQuery__类似于指派用户任务查询）：
+定义了__potential owner__结构的任务，可用如下方法获取（或类似于指派用户任务，使用__TaskQuery__查询）：
 
 [source,java,linenums]
 ----
  List<Task> tasks = taskService.createTaskQuery().taskCandidateUser("kermit");
 ----
 
-将获取所有kermit作为**候选用户**的任务，也就是说，表达式含有__user(kermit)__的任务。也将获取所有**指派给kermit为其成员的组**的任务（例如__group(management)__，如果kermit是这个组的成员，并且使用Activiti身份组件）。组会在运行时解析，并可通过<<apiEngine,IdentityService（身份服务）>>管理。
+将获取所有kermit作为**候选用户**的任务，也就是说，表达式含有__user(kermit)__的任务，也将获取所有**指派给kermit为其成员的组**的任务（例如__group(management)__，如果kermit是这个组的成员，并且使用Activiti身份组件）。组会在运行时解析，并可通过<<apiEngine,IdentityService（身份服务）>>管理。
 
-如果并未指定给行字符串是用户还是组，引擎默认其为组。因此下列代码与__声明了group(accountancy)__一样。
+如果并未指定给定字符串是用户还是组，引擎默认其为组。因此下列代码与__声明了group(accountancy)__一样。
 
 [source,xml,linenums]
 ----
@@ -2335,16 +2335,16 @@ List<Task> tasks = taskService.createTaskQuery().taskAssignee("kermit").list();
 
 ===== 自定义身份联系类型（试验特性） Custom identity link types (Experimental)
 
-<<experimental,[EXPERIMENTAL]>>-
+<<experimental,[EXPERIMENTAL]>>
 
-在<<bpmnUserTaskAssignment,用户指派>>中定义过，BPMN标准支持单个指派用户或**hunamPerformer**，或者一组用户构成**potentialOwners**潜在用户池。另外，Activiti为用户任务定义了<<bpmnUserTaskUserAssignmentExtension,扩展属性元素>>，，代表任务的**办理人**或者**候选用户**。
+在<<bpmnUserTaskAssignment,用户指派>>中定义过，BPMN标准支持单个指派用户即**hunamPerformer**，或者一组用户构成**potentialOwners**潜在用户池。另外，Activiti为用户任务定义了<<bpmnUserTaskUserAssignmentExtension,扩展属性元素>>，代表任务的**办理人**或者**候选用户**。
 
 Activiti支持的身份联系类型有：
 
 [source,java,linenums]
 ----
 public class IdentityLinkType {
-  /* Activiti native roles */
+  /* Activiti原生角色 Activiti native roles */
   public static final String ASSIGNEE = "assignee";
   public static final String CANDIDATE = "candidate";
   public static final String OWNER = "owner";
@@ -2353,7 +2353,7 @@ public class IdentityLinkType {
 }
 ----
 
-BPMN标准与Activiti示例身份认证是**用户**与**组**。在前一章节提到过，Activiti身份管理实现并不适用于生产环境，而需要在支持的认证概要下扩展。
+BPMN标准与Activiti示例身份认证是**用户**与**组**。在前一章节提到过，Activiti的身份管理实现并不适用于生产环境，而需要在支持的认证概要下扩展。
 
 如果需要添加额外的联系类型，可按照下列语法，使用自定义资源作为扩展元素：
 
