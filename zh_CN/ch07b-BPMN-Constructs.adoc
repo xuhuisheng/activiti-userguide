@@ -2997,7 +2997,7 @@ __INSTANCE_COUNT__总是__1__，因为是单例模式。在这个代理中，没
 
 在代理的代码里，使用了**org.activiti.engine.delegate.DelegateHelper**。它提供了一些有用的工具方法，用于执行相同的逻辑，并且在单例中是线程安全的。与注入__Expression__不同，它通过__getFieldExpression__读取。这意味着在服务任务的XML里，字段定义与单例bean完全相同。查看上面的XML代码，可以看到定义是相同的，只是实现逻辑不同。
 
-（技术备注：__getFieldExpression__直接读取BpmnModel，并在方法执行时创建表达式，因此是线程安全的）。
+（技术提示：__getFieldExpression__直接读取BpmnModel，并在方法执行时创建表达式，因此是线程安全的）。
 
 
 * 在Activiti 5.x版本中，（由于架构缺陷）不能在__ExecutionListener__或__TaskListener__中使用DelegateHelper。要保证监听器的线程安全，仍需使用表达式，或确保每次解析代理表达式时，都创建新实例。
@@ -3067,8 +3067,7 @@ public class TestExecutionListener implements ExecutionListener {
 
 ====== 抛出BPMN错误 Throwing BPMN Errors
 
-
-It is possible to throw BPMN Errors from user code inside Service Tasks or Script Tasks. In order to do this, a special ActivitiException called _BpmnError_ can be thrown in JavaDelegates, scripts, expressions and delegate expressions. The engine will catch this exception and forward it to an appropriate error handler, e.g., a Boundary Error Event or an Error Event Sub-Process.
+可以在服务任务或脚本任务的用户代码中抛出BPMN错误。要这么做，可以在Java代理、脚本、表达式与代理表达式中，抛出特殊的ActivitiException，叫做__BpmnError__。引擎会捕获这个异常，并将其转发至合适的错误处理器，例如异常边界事件，或者错误事件子程序。
 
 [source,java,linenums]
 ----
@@ -3085,15 +3084,16 @@ public class ThrowBpmnErrorDelegate implements JavaDelegate {
 }
 ----
 
-The constructor argument is an error code, which will be used to determine the error handler that is responsible for the error. See <<bpmnBoundaryErrorEvent,Boundary Error Event>> for information on how to catch a BPMN Error.
+构造函数的参数是错误代码，将被用于决定处理这个错误的错误处理器。参见<<bpmnBoundaryErrorEvent,错误边界事件>>了解如何捕获BPMN错误。
 
-This mechanism should be used *only for business faults* that shall be handled by a Boundary Error Event or Error Event Sub-Process modeled in the process definition. Technical errors should be represented by other exception types and are usually not handled inside a process.
+这个机制**只应该用于业务错误**，需要通过流程中定义的错误边界事件或错误事件子流程处理。技术错误应该通过其他异常类型表现，并且通常不在流程内部处理。
 
 [[exceptionMapping]]
 
-====== Exception mapping
+====== 异常映射 Exception mapping
 
-It is also possible to directly map a java exception to business exception by using +mapException+ extension. Single mapping is the simplest form:
+也可以使用++mapException++扩展，直接将Java异常映射至业务异常（错误）。单一映射是最简单的格式：
+
 [source,xml,linenums]
 ----
 <serviceTask id="servicetask1" name="Service Task" activiti:class="...">
@@ -3104,10 +3104,12 @@ It is also possible to directly map a java exception to business exception by us
 </serviceTask>
 
 ----
-In above code, if an instance of +org.activiti.SomeException+ is thrown in service task, it would be caught and converted to a BPMN exception with the given errorCode. From this point on, it will be handled exactly like a normal BPMN exception.
-Any other exception will be treated as if there is no mapping in place. It will be propagated to the API caller.
 
-One can map all the child exception of a certain exception in a single line by using +includeChildExceptions+ attribute.
+在上面的代码中，如果服务任务抛出了++org.activiti.SomeException++的实例，则会被捕获，并被转换为带有给定errorCode的BPMN异常（错误）。从这里开始，可以与普通BPMN异常（错误）完全一样地处理。
+
+其他异常会依照没有映射被处理，将传播至API调用者。
+
+也可以在一行中，使用++includeChildExceptions++属性，映射特定异常的所有子异常。
 
 [source,xml,linenums]
 ----
@@ -3119,11 +3121,10 @@ One can map all the child exception of a certain exception in a single line by u
 </serviceTask>
 
 ----
-The above code will cause activiti to convert any direct or indirect descendent of +SomeException+ to a BPMN error with the given error code.
-+includeChildExceptions+ will be considered "false" when not given.
 
+上面的代码中，Activiti会将任何直接或间接的++SomeException++的子类，转换为带有给定错误代码的BPMN错误。当未指定++includeChildExceptions++时，视为“false”。
 
-The most generic mapping is a default map. Default map is a map with no class. It will match any java exception:
+最普通的是默认映射。默认映射是一个没有类的映射，可以匹配任何Java异常：
 
 [source,xml,linenums]
 ----
@@ -3134,19 +3135,18 @@ The most generic mapping is a default map. Default map is a map with no class. I
 </serviceTask>
 ----
 
-The mappings are checked in order, from top to bottom and the first found match will be followed, except for the default map. Default map is selected only after all maps are unsuccessfully checked.
-Only the first map with no class will be considered as default map. +includeChildExceptions+ is ignored for default Map.
+映射会按照顺序检查，从上至下，使用第一个匹配的映射，除了默认映射。默认映射将只在所有映射都不能成功匹配时使用。只有第一个没有类的映射会当做默认映射处理。默认映射忽略++includeChildExceptions++。
 
 
 [[serviceTaskExceptionSequenceFlow]]
 
 
-====== Exception Sequence Flow
+====== 异常顺序流 Exception Sequence Flow
 
 
-<<internal, [INTERNAL: non-public implementation classes]>>
+<<internal, [内部：非公有实现类]>>
 
-Another option is to route process execution through another path in case some exception occurs. The following example shows how this is done.
+也可以选择在发生异常时，将流程执行路由至另一条路径。下面的例子展示了如何做。
 
 [source,xml,linenums]
 ----
@@ -3159,7 +3159,7 @@ Another option is to route process execution through another path in case some e
 <sequenceFlow id="exception" sourceRef="javaService" targetRef="fixException" />
 ----
 
-Here, the service task has two outgoing sequence flow, called +exception+ and +no-exception+. This sequence flow id will be used to direct process flow in case of an exception:
+在这里，这个服务任务具有两条出口顺序流，分别称为++exception++与++no-exception++。这些顺序流id会在发生异常时，用于控制流程流向：
 
 [source,java,linenums]
 ----
@@ -3185,10 +3185,9 @@ public class ThrowsExceptionBehavior implements ActivityBehavior {
 [[serviceTaskCallActivitiService]]
 
 
-===== Using an Activiti service from within a JavaDelegate
+===== 在JavaDelegate中使用Activiti服务 Using an Activiti service from within a JavaDelegate
 
-
-For some use cases, it might be needed to use the Activiti services from within a Java service task (e.g. starting a process instance through the RuntimeService, if the callActivity doesn't suit your needs). The _org.activiti.engine.delegate.DelegateExecution_ allows to easily use these services through the _org.activiti.engine.EngineServices_ interface:
+有的时候，需要在Java服务任务中使用Activiti服务（例如当调用活动不符合需求时，通过RuntimeService启动流程实例）。__org.activiti.engine.delegate.DelegateExecution__可以方便地通过__org.activiti.engine.EngineServices__接口使用这些服务：
 
 [source,java,linenums]
 ----
@@ -3202,9 +3201,9 @@ public class StartProcessInstanceTestDelegate implements JavaDelegate {
 }
 ----
 
-All of the Activiti service API's are available through this interface.
+通过这个接口可以访问所有Activiti服务API。
 
-All data changes that occur as an effect of using these API calls, will be part of the current transaction. This also works in environments with dependency injection like Spring and CDI with or without a JTA enabled datasource. For example, the following snippet of code will do the same as the snippet above, but now the RuntimeService is injected rather than it is being fetched through the _org.activiti.engine.EngineServices_ interface.
+使用这些API调用造成的所有数据变更，都处在当前事务中。在具有依赖注入的环境，如Spring或CDI中，使用或不使用激活JTA的数据源，也都可以使用。例如，下面的代码片段与上面的代码具有相同功能，但RuntimeService是通过注入而不是通过__org.activiti.engine.EngineServices__接口获得的。
 
 [source,java,linenums]
 ----
@@ -3221,28 +3220,28 @@ public class StartProcessInstanceTestDelegateWithInjection {
 }
 ----
 
-*Important technical note:* since the service call is being done as part of the current transaction any data that was produced or altered _before_ the service task is executed, is not yet flushed to the database. All API calls work on the database data, which means that these uncommitted changes are not be 'visible' within the api call of the service task.
+**重要技术提示：**在当前事务中进行的服务调用，产生或修改的数据是在服务任务执行__前__完成的，因此更改还未刷入数据库。所有API调用都通过处理数据库数据而生效，这意味着这些未提交的修改在服务任务的API调用中“不可见”。
 
 
 [[bpmnWebserviceTask]]
 
 
-==== Web Service Task
+==== Web服务任务 Web Service Task
 
 <<experimental,[EXPERIMENTAL]>>[[bpmnWebserviceTaskDescription]]
 
 
-===== Description
+===== 描述 Description
 
-A Web Service task is used to synchronously invoke an external Web service.
+Web服务任务用于同步调用外部的Web服务。
 
 
 [[bpmnWebserviceTaskGraphicalNotation]]
 
 
-===== Graphical Notation
+===== 图示 Graphical Notation
 
-A Web Service task is visualized the same as a Java service task.
+Web服务任务，与Java服务任务显示地一样。
 
 image::images/bpmn.web.service.task.png[align="center"]
 
@@ -3250,9 +3249,9 @@ image::images/bpmn.web.service.task.png[align="center"]
 [[bpmnWebserviceTaskXML]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
-To use a Web service we need to import its operations and complex types. This can be done automatically by using the import tag pointing to the WSDL of the Web service:
+要使用Web服务，需要导入其操作，以及复杂的类型。通过使用指向Web服务的WSDL的导入标签（import tag），可以自动完成这些：
 
 [source,xml,linenums]
 ----
@@ -3261,7 +3260,7 @@ To use a Web service we need to import its operations and complex types. This ca
 	namespace="http://webservice.activiti.org/" />
 ----
 
-The previous declaration tells Activiti to import the definitions but it doesn't create the item definitions and messages for you. Let's suppose we want to invoke a specific method called 'prettyPrint', therefore we will need to create the corresponding message and item definitions for the request and response messages:
+上面的声明告知Activiti导入定义，但并不创建条目定义（item definition）与消息。假设我们需要调用一个名为'prettyPrint'的方法，我们需要为请求与回复消息，创建相应的消息与条目定义：
 
 [source,xml,linenums]
 ----
@@ -3272,7 +3271,7 @@ The previous declaration tells Activiti to import the definitions but it doesn't
 <itemDefinition id="prettyPrintCountResponseItem" structureRef="counter:prettyPrintCountResponse" />
 ----
 
-Before declaring the service task, we have to define the BPMN interfaces and operations that actually reference the Web service ones. Basically, we define and 'interface' and the required 'operation's'. For each operation we reuse the previous defined message for in and out. For example, the following declaration defines the 'counter' interface and the 'prettyPrintCountOperation' operation:
+在声明服务任务前，需要定义实际引用Web服务的BPMN接口与操作。基本上，是定义“接口”与所需的“操作”。我们对每一个操作都重复使用之前定义的传入与传出消息。例如，下面的声明定义了“counter”接口，与“prettyPrintCountOperation”操作：
 
 [source,xml,linenums]
 ----
@@ -3285,7 +3284,7 @@ Before declaring the service task, we have to define the BPMN interfaces and ope
 </interface>
 ----
 
-Then we can declare a Web Service Task by using the ##WebService implementation and a reference to the Web service operation.
+现在可以通过使用##WebService实现，声明Web服务任务，并引用Web服务操作。
 
 [source,xml,linenums]
 ----
@@ -3298,10 +3297,9 @@ Then we can declare a Web Service Task by using the ##WebService implementation 
 [[bpmnWebserviceTaskIOSpecification]]
 
 
-===== Web Service Task IO Specification
+===== Web服务任务IO规格 Web Service Task IO Specification
 
-
-Unless we are using the simplistic approach for data input and output associations (See below), each Web Service Task needs to declare an IO Specification which states which are the inputs and outputs of the task. The approach is pretty straightforward and BPMN 2.0 complaint, for our prettyPrint example we define the input and output sets according to the previously declared item definitions:
+除非使用简化方法处理输入与输出数据关联（见下），否则需要为每个Web服务任务声明IO规格，指出任务的输入与输出是什么。这个方法很简单，也兼容BPMN 2.0。在prettyPrint例子中，根据之前声明的条目定义，定义输入与输出：
 
 [source,xml,linenums]
 ----
@@ -3320,15 +3318,15 @@ Unless we are using the simplistic approach for data input and output associatio
 [[bpmnWebserviceTaskDataInputAssociation]]
 
 
-===== Web Service Task data input associations
+===== Web服务任务数据输入关联 Web Service Task data input associations
 
-There are 2 ways of specifying data input associations:
+有两种指定数据输入关联的方式：
 
 
-* Using expressions
-* Using the simplistic approach
+* 使用表达式
+* 使用简化方法
 
-To specify the data input association using expressions we need to define the source and target items and specify the corresponding assignments between the fields of each item. In the following example we assign prefix and suffix fields of the items:
+要使用表达式指定数据输入关联，需要定义条目的源与目标，并指定每个条目字段的关联。下面的例子中我们指定了条目的prefix与suffix字段：
 
 [source,xml,linenums]
 ----
@@ -3346,7 +3344,7 @@ To specify the data input association using expressions we need to define the so
 </dataInputAssociation>
 ----
 
-On the other hand we can use the simplistic approach which is much more simple. The 'sourceRef' element is an Activiti variable name and the 'targetRef' element is a property of the item definition. In the following example we assign to the 'prefix' field the value of the variable 'PrefixVariable' and to the 'suffix' field the value of the variable 'SuffixVariable'.
+另一方面，也可以使用简化方法。'sourceRef'元素是一个Activiti变量名，而'targetRef'是条目定义的参数。在下面的例子里，将'PrefixVariable'变量的值关联至'prefix'字段，并将'SuffixVariable'变量的值关联至'suffix'字段。
 
 [source,xml,linenums]
 ----
@@ -3363,15 +3361,15 @@ On the other hand we can use the simplistic approach which is much more simple. 
 [[bpmnWebserviceTaskDataOutputAssociation]]
 
 
-===== Web Service Task data output associations
+===== Web服务任务数据输出关联 Web Service Task data output associations
 
-There are 2 ways of specifying data out associations:
-
-* Using expressions
-* Using the simplistic approach
+有两种指定数据输出关联的方式：
 
 
-To specify the data out association using expressions we need to define the target variable and the source expression. The approach is pretty straightforward and similar data input associations:
+* 使用表达式
+* 使用简化方法
+
+要使用表达式指定数据输出关联，需要定义目标变量与源表达式。这种方法很直接，与数据输入关联类似：
 
 [source,xml,linenums]
 ----
@@ -3381,7 +3379,7 @@ To specify the data out association using expressions we need to define the targ
 </dataOutputAssociation>
 ----
 
-On the other hand we can use the simplistic approach which is much more simple. The 'sourceRef' element is a property of the item definition and the 'targetRef' element is an Activiti variable name. The approach is pretty straightforward and similar data input associations:
+另一方面，也可以使用简化方法。'sourceRef'是条目定义的参数，而'targetRef'元素是一个Activiti变量名。这种方法很直接，与数据输入关联类似：
 
 [source,xml,linenums]
 ----
@@ -3394,24 +3392,24 @@ On the other hand we can use the simplistic approach which is much more simple. 
 [[bpmnBusinessRuleTask]]
 
 
-==== Business Rule Task
+==== 业务规则任务 Business Rule Task
 
 <<experimental,[EXPERIMENTAL]>>[[bpmnBusinessRuleTaskDescription]]
 
 
-===== Description
+===== 描述 Description
 
-A Business Rule task is used to synchronously execute one or more rules. Activiti uses Drools Expert, the Drools rule engine to execute business rules. Currently, the .drl files containing the business rules have to be deployed together with the process definition that defines a business rule task to execute those rules. This means that all .drl files that are used in a process have to be packaged in the process BAR file like for example the task forms. For more information about creating business rules for Drools Expert please refer to the Drools documentation at link:$$http://www.jboss.org/drools/documentation$$[JBoss Drools]
+业务规则任务用于同步执行一条或多条规则。Activiti使用名为Drools Expert的Drools规则引擎执行业务规则。目前，业务规则中包含的.drl文件，必须与定义了业务规则服务，并执行规则的流程定义一起部署。这意味着流程中使用的所有.drl文件都需要打包在流程BAR文件中，与任务表单类似。要了解为Drools Expert创建业务规则的更多信息，请访问位于link:$$http://www.jboss.org/drools/documentation$$[JBoss Drools]的Drools文档。
 
-If you want to plug in your implementation of the rule task, e.g. because you want to use Drools differently or you want to use a completely different rule engine, then you can use the class or expression attribute on the BusinessRuleTask and it will behave exactly like a link:$$#bpmnJavaServiceTask$$[ServiceTask]
+如果想要插入自己的规则任务实现，例如，希望通过不同方法使用Drools，或者想使用完全不同的规则引擎，则可以使用BusinessRuleTask的class或expression属性。这样它会与link:$$#bpmnJavaServiceTask$$[服务任务]的行为完全相同。
 
 
 [[bpmnBusinessRuleTaskGraphicalNotation]]
 
 
-===== Graphical Notation
+===== 图示 Graphical Notation
 
-A Business Rule task is visualized the with a table icon.
+业务规则任务，显示为带有表格图表的圆角矩形。
 
 image::images/bpmn.business.rule.task.png[align="center"]
 
@@ -3419,7 +3417,7 @@ image::images/bpmn.business.rule.task.png[align="center"]
 [[bpmnBusinessRuleTaskXML]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 To execute one or more business rules that are deployed in the same BAR file as the process definition, we need to define the input and result variables. For the input variable definition a list of process variables can be defined separated by a comma. The output variable definition can only contain one variable name that will be used to store the output objects of the executed business rules in a process variable. Note that the result variable will contain a List of objects. If no result variable name is specified by default org.activiti.engine.rules.OUTPUT is used.
 
