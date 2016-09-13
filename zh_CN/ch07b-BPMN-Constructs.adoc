@@ -2424,8 +2424,7 @@ public class IdentityLinkType
 
 ===== 通过任务监听器自定义指派 Custom Assignment via task listeners
 
-
-In case the previous approaches are not sufficient, it is possible to delegate to custom assignment logic using a <<taskListeners,task listener>> on the create event:
+如果上面的方式仍不能满足要求，可以在创建事件（create event）上使用<<taskListeners,任务监听器>>，代理自定义指派逻辑：
 
 [source,xml,linenums]
 ----
@@ -2436,7 +2435,7 @@ In case the previous approaches are not sufficient, it is possible to delegate t
 </userTask>
 ----
 
-The +DelegateTask+ that is passed to the +TaskListener+ implementation, allows to set the assignee and candidate-users/groups:
+传递至++TaskListener++实现的++DelegateTask++，可用于设置办理人与候选用户/组：
 
 [source,java,linenums]
 ----
@@ -2455,21 +2454,21 @@ public class MyAssignmentHandler implements TaskListener {
 }
 ----
 
-When using Spring it is possible to use the custom assignment attributes as described in the section above, and delegate to a Spring bean using a <<taskListeners,task listener>> with an <<springExpressions,expression>> that listens to task _create_ events. In the following example, the assignee will be set by calling the +findManagerOfEmployee+ on the +ldapService+ Spring bean. The _emp_ parameter that is passed, is a process variable>.
+当使用Spring时，可以按上面章节的介绍使用自定义指派属性，并代理至使用<<taskListeners,任务监听器>>、带有<<springExpressions,表达式>>的Spring bean，监听任务__创建__事件。在下面的例子中，通过调用++ldapService++ Spring bean的++findManagerOfEmployee++方法，设置办理人。传递的__emp__参数是一个流程变量。
 
 [source,xml,linenums]
 ----
 <userTask id="task" name="My Task" activiti:assignee="${ldapService.findManagerForEmployee(emp)}"/>
 ----
 
-This also works similar for candidate users and groups:
+也可以用于候选用户与组：
 
 [source,xml,linenums]
 ----
 <userTask id="task" name="My Task" activiti:candidateUsers="${ldapService.findAllSales()}"/>
 ----
 
-Note that this will only work if the return type of the invoked methods is +String+ or +Collection<String>+ (for candidate users and groups):
+请注意调用方法的返回类型必须是++String++或++Collection<String>++（候选用户与组）：
 
 [source,java,linenums]
 ----
@@ -2491,23 +2490,23 @@ public class FakeLdapService {
 [[bpmnScriptTask]]
 
 
-==== Script Task
+==== 脚本任务 Script Task
 
 [[bpmnScriptTaskDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-A script task is an automatic activity. When a process execution arrives at the script task, the corresponding script is executed.
+脚本任务是自动化的活动。当流程执行到达脚本任务时，会执行相应的脚本。
 
 
 [[bpmnScriptTaskGraphicalNotation]]
 
 
-===== Graphical Notation
+===== 图示 Graphical Notation
 
-A script task is visualized as a typical BPMN 2.0 task (rounded rectangle), with a small 'script' icon in the top-left corner of the rectangle.
+脚本任务，用左上角有一个小“脚本”图标的标准BPMN 2.0任务（圆角矩形）表示。
 
 image::images/bpmn.scripttask.png[align="center"]
 
@@ -2517,8 +2516,7 @@ image::images/bpmn.scripttask.png[align="center"]
 
 ===== XML representation
 
-
-A script task is defined by specifying the *script* and the *scriptFormat*.
+脚本任务动过指定**script**与**scriptFormat**定义。
 
 [source,xml,linenums]
 ----
@@ -2532,10 +2530,9 @@ A script task is defined by specifying the *script* and the *scriptFormat*.
 </scriptTask>
 ----
 
+**scriptFormat**属性的值，必须是兼容link:$$http://jcp.org/en/jsr/detail?id=223$$[JSR-223]（Java平台脚本）的名字。默认情况下，JavaScript包含在每一个JDK中，因此不需要添加任何jar。如果想使用其它（兼容JSR-223的）脚本引擎，需要在classpath中添加相应的jar，并使用适当的名字。例如，Activiti单元测试经常使用Groovy，因为其语法与Java十分相似。
 
-The value of the *scriptFormat* attribute must be a name that is compatible with the link:$$http://jcp.org/en/jsr/detail?id=223$$[JSR-223] (scripting for the Java platform). By default JavaScript is included in every JDK and as such doesn't need any additional jars. If you want to use another (JSR-223 compatible) scripting engine, it is sufficient to add the corresponding jar to the classpath and use the appropriate name. For example, the Activiti unit tests often use Groovy because the syntax is pretty similar to that of Java.
-
-Do note that the Groovy scripting engine is bundled with the groovy-all jar. Before version 2.0, the scripting engine was part of the regular Groovy jar. As such, one must now add following dependency:
+请注意Groovy脚本引擎与groovy-all jar捆绑在一起。在2.0版本以前，脚本引擎是Groovy jar的一部分。因此，现在必须添加如下依赖：
 
 [source,xml,linenums]
 ----
@@ -2550,10 +2547,9 @@ Do note that the Groovy scripting engine is bundled with the groovy-all jar. Bef
 [[bpmnScriptTaskVariables]]
 
 
-===== Variables in scripts
+===== 脚本中的变量 Variables in scripts
 
-
-All process variables that are accessible through the execution that arrives in the script task, can be used within the script. In the example, the script variable _'inputArray'_ is in fact a process variable (an array of integers).
+到达脚本引擎的执行可以访问的所有流程变量，都可以在脚本中使用。在这个例子里，脚本变量__'inputArray'__实际上就是一个流程变量（integer数组）。
 
 [source,xml,linenums]
 ----
@@ -2565,16 +2561,16 @@ All process variables that are accessible through the execution that arrives in 
 </script>
 ----
 
-It's also possible to set process variables in a script, simply by calling _execution.setVariable("variableName", variableValue)_. By default, no variables are stored automatically (*Note: before Activiti 5.12 this was the case!*). It is possible to automatically store any variable defined in the script (e.g. __sum__ in the example above) by setting the property ++autoStoreVariables++ on the ++scriptTask++ to ++true++. However, *the best practice is not to do this and use an explicit execution.setVariable() call*, as on some recent versions of the JDK auto storing of variables does not work for some scripting languages. See link:$$http://www.jorambarrez.be/blog/2013/03/25/bug-on-jdk-1-7-0_17-when-using-scripttask-in-activiti/$$[this link] for more details.
+也可以简单地调用__execution.setVariable("variableName", variableValue)__，在脚本中设置流程变量。默认情况下，变量不会自动储存（**请注意，在Activiti 5.12以前是这样的！**）。可以将++scriptTask++的++autoStoreVariables++参数设置为++true++，以自动保存任何在脚本中定义的变量（例如上例中的__sum__）。然而，**最佳实践不是这么做，而是直接调用execution.setVariable()**，因为在JDK近期的一些版本中，某些脚本语言不能自动保存变量。查看link:$$http://www.jorambarrez.be/blog/2013/03/25/bug-on-jdk-1-7-0_17-when-using-scripttask-in-activiti/$$[这个链接]了解更多信息。
 
 [source,xml,linenums]
 ----
 <scriptTask id="script" scriptFormat="JavaScript" activiti:autoStoreVariables="false">
 ----
 
-The default of this parameter is +false+, meaning that if the parameter is omitted from the script task definition, all the declared variables will only exist during the duration of the script.
+这个参数的默认值为++false++，意味着这个参数将在脚本任务定义中忽略，所有声明的变量将只在脚本执行期间有效。
 
-Example on how to set a variable in a script:
+在脚本中设置变量的例子：
 
 [source,xml,linenums]
 ----
@@ -2584,16 +2580,14 @@ Example on how to set a variable in a script:
 </script>
 ----
 
-Note: the following names are reserved and *cannot be used* as variable names: *out, out:print, lang:import, context, elcontext*.
-
+请注意：下列名字被保留，**不能用于**变量名：**out，out:print，lang:import，context，elcontext**。
 
 [[bpmnScriptTaskResultValue]]
 
 
-===== Script results
+===== 脚本结果 Script results
 
-
-The return value of a script task can be assigned to an already existing or to a new process variable by specifying the process variable name as a literal value for the _'activiti:resultVariable'_ attribute of a script task definition. Any existing value for a specific process variable will be overwritten by the result value of the script execution. When not specifying a result variable name, the script result value gets ignored.
+脚本任务的返回值，可以通过为脚本任务定义的__'activiti:resultVariable'__属性设置流程变量名，指定为已经存在的，或者新的流程变量。指定的已有值的流程变量，会被脚本执行的结果值覆盖。当不指定结果变量名时，脚本结果值将被忽略。
 
 [source,xml,linenums]
 ----
@@ -2602,55 +2596,49 @@ The return value of a script task can be assigned to an already existing or to a
 </scriptTask>
 ----
 
-In the above example, the result of the script execution (the value of the resolved expression __'#{echo}'__) is set to the process variable named __'myVar'__ after the script completes.
+在上面的例子中，脚本执行的结果（解析变量__'#{echo}'__的值），将在脚本完成后，设置为名为__'myVar'__的流程变量。
 
-===== Security
+===== 安全性 Security
 
-It is also possible when using _javascript_ as scripting language to use '_secure scripting_'. See the <<advancedSecureScripting, secure scripting section>>.
+当使用__javascript__作为脚本语言时，可以使用__“安全脚本（secure scripting）”__。参见<<advancedSecureScripting, 安全脚本章节>>。
 
 
 [[bpmnJavaServiceTask]]
 
 
-==== Java Service Task
+==== Java服务任务 Java Service Task
 
 [[bpmnJavaServiceTaskDescription]]
 
 
-===== Description
+===== 描述 Description
 
-
-A Java service task is used to invoke an external Java class.
-
+Java服务任务用于执行外部的Java类。
 
 [[bpmnJavaServiceTaskGraphicalNotation]]
 
 
-===== Graphical Notation
+===== 图示 Graphical Notation
 
-
-A service task is visualized as a rounded rectangle with a small gear icon in the top-left corner.
+服务任务，用左上角有一个小齿轮图标的圆角矩形表示。
 
 image::images/bpmn.java.service.task.png[align="center"]
-
-
 
 [[bpmnJavaServiceTaskXML]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 
-There are 4 ways of declaring how to invoke Java logic:
+有四种方法声明如何调用Java逻辑：
 
 
-* Specifying a class that implements JavaDelegate or ActivityBehavior
-* Evaluating an expression that resolves to a delegation object
-* Invoking a method expression
-* Evaluating a value expression
+* 指定实现了JavaDelegate或ActivityBehavior的类
+* 对解析为代理对象的表达式求值
+* 调用方法表达式
+* 对值表达式求值
 
-
-To specify a class that is called during process execution, the fully qualified classname needs to be provided by the *'activiti:class'* attribute.
+要指定流程执行时调用的类，需要使用**'activiti:class'**属性提供全限定类名（fully qualified classname）。
 
 [source,xml,linenums]
 ----
@@ -2660,18 +2648,18 @@ To specify a class that is called during process execution, the fully qualified 
 ----
 
 
-See <<bpmnJavaServiceTaskImplementation,the implementation section>> for more details on how to use such a class.
+查看<<bpmnJavaServiceTaskImplementation,实现章节>>，了解关于如何使用这种类的更多信息。
 
-It is also possible to use an expression that resolves to an object. This object must follow the same rules as objects that are created when the +activiti:class+ attribute is used (see <<bpmnJavaServiceTaskImplementation,further>>).
+也可以使用解析为对象的表达式。该对象必须遵循的规则，与使用++activiti:class++创建的对象规则相同（查看<<bpmnJavaServiceTaskImplementation,更多>>）。
 
 [source,xml,linenums]
 ----
 <serviceTask id="serviceTask" activiti:delegateExpression="${delegateExpressionBean}" />
 ----
 
-Here, the +delegateExpressionBean+ is a bean that implements the +JavaDelegate+ interface, defined in for example the Spring container.
+这里，++delegateExpressionBean++是一个实现了++JavaDelegate++接口的bean，在Spring容器中定义。
 
-To specify a UEL method expression that should be evaluated, use attribute *activiti:expression*.
+要指定需要计算的UEL方法表达式，使用**activiti:expression**属性。
 
 [source,xml,linenums]
 ----
@@ -2680,9 +2668,9 @@ To specify a UEL method expression that should be evaluated, use attribute *acti
              activiti:expression="#{printer.printMessage()}" />
 ----
 
-Method ++printMessage++ (without parameters) will be called on the named object called ++printer++.
+将在名为++printer++的对象上调用++printMessage++方法（不带参数）。
 
-It's also possible to pass parameters with an method used in the expression.
+也可以为表达式中使用的方法传递变量。
 
 [source,xml,linenums]
 ----
@@ -2691,9 +2679,9 @@ It's also possible to pass parameters with an method used in the expression.
              activiti:expression="#{printer.printMessage(execution, myVar)}" />
 ----
 
-Method +printMessage+ will be called on the object named +printer+. The first parameter passed is the +DelegateExecution+, which is available in the expression context by default available as +execution+. The second parameter passed, is the value of the variable with name +myVar+ in the current execution.
+将在名为++printer++的对象上调用++printMessage++方法。传递的第一个参数为++DelegateExecution++，名为++execution++，在表达式上下文中默认可用。传递的第二个参数，是当前执行中，名为++myVar++变量的值。
 
-To specify a UEL value expression that should be evaluated, use attribute *activiti:expression*.
+可以使用**activiti:expression**属性指定需要计算的UEL值表达式。
 
 [source,xml,linenums]
 ----
@@ -2702,17 +2690,17 @@ To specify a UEL value expression that should be evaluated, use attribute *activ
              activiti:expression="#{split.ready}" />
 ----
 
-The getter method of property ++ready++, ++getReady++ (without parameters), will be called on the named bean called ++split++. The named objects are resolved in the execution's process variables and (if applicable) in the Spring context.
+会调用名为++split++的bean的++ready++参数的getter方法，++getReady++（不带参数）。该对象会被解析为执行的流程变量或（如果可用的话）Spring上下文中的bean。
 
 
 [[bpmnJavaServiceTaskImplementation]]
 
 
-===== Implementation
+===== 实现 Implementation
 
-To implement a class that can be called during process execution, this class needs to implement the _org.activiti.engine.delegate.JavaDelegate_ interface and provide the required logic in the _execute_ method. When process execution arrives at this particular step, it will execute this logic defined in that method and leave the activity in the default BPMN 2.0 way.
+要实现可以在流程执行中调用的类，需要实现__org.activiti.engine.delegate.JavaDelegate__接口，并在__execute__方法中提供所需逻辑。当流程执行到达该活动时，会执行方法中定义的逻辑，并按照BPMN 2.0的默认方法离开活动。
 
-Let's create for example a Java class that can be used to change a process variable String to uppercase. This class needs to implement the _org.activiti.engine.delegate.JavaDelegate_ interface, which requires us to implement the _execute(DelegateExecution)_ method. It's this operation that will be called by the engine and which needs to contain the business logic. Process instance information such as process variables  and other can be accessed and manipulated through the link:$$http://activiti.org/javadocs/org/activiti/engine/delegate/DelegateExecution.html$$[DelegateExecution] interface (click on the link for a detailed Javadoc of its operations).
+让我们创建一个Java类的示例，可用于将流程变量String改为大写。这个类需要实现__org.activiti.engine.delegate.JavaDelegate__接口，因此需要实现__execute(DelegateExecution)__方法。这个方法就是引擎将调用的方法，需要实现业务逻辑。可以通过link:$$http://activiti.org/javadocs/org/activiti/engine/delegate/DelegateExecution.html$$[DelegateExecution]接口（点击链接获取该接口操作的详细Javadoc）访问流程实例信息，如流程变量等。
 
 [source,java,linenums]
 ----
@@ -2727,30 +2715,30 @@ public class ToUppercase implements JavaDelegate {
 }
 ----
 
-Note: there will be *only one instance of that Java class created for the serviceTask it is defined on*. All process-instances share the same class instance that will be used to call _execute(DelegateExecution)_. This means that the class must not use any member variables and must be thread-safe, since it can be executed simultaneously from different threads. This also influences the way <<serviceTaskFieldInjection,Field injection>> is handled.
+请注意：**只会为serviceTask上定义的Java类创建一个实例**。所有流程实例共享同一个类实例，用于调用__execute(DelegateExecution)__。这意味着该类不能有任何成员变量，并需要是线程安全的，因为它可能会在不同线程中同时执行。这也影响了<<serviceTaskFieldInjection,字段注入>>的使用方法。（译者注：原文可能较老，不正确。5.21中，activiti:class指定的类，会在流程实例启动时，为每个活动，分别进行实例化。不过，当该活动在流程中重复执行，或者为多实例时，使用的都会是同一个类实例。）
 
-The classes that are referenced in the process definition (i.e. by using ++activiti:class++) are *NOT instantiated during deployment*. Only when a process execution arrives for the first time at the point in the process where the class is used, an instance of that class will be created. If the class cannot be found, an +ActivitiException+ will be thrown. The reasoning for this is that the environment (and more specifically the __classpath__) when you are deploying is often different from the actual runtime environment. For example when using _ant_ or the business archive upload in Activiti Explorer to deploy processes, the classpath does not contain the referenced classes.
+在流程定义中（如通过++activiti:class++）引用的类，**不会在部署时实例化**。只有当流程执行第一次到达该类使用的地方时，才会创建该类的实例。如果找不到这个类，会抛出++ActivitiException++。这是因为部署时的环境（更准确的说__classpath__），与实际运行的环境经常不一样。例如当使用__ant__或者Activiti Explorer中业务存档上传的方式部署的流程，其classpath中并没有流程引用的类。
 
-<<internal,[INTERNAL: non-public implementation classes]>> It is also possible to provide a class that implements the _org.activiti.engine.impl.pvm.delegate.ActivityBehavior_ interface. Implementations have then access to the more powerful _ActivityExecution_ that for example also allows to influence the control flow of the process. Note however that this is not a very good practice, and should be avoided as much as possible. So, it is advised to use the _ActivityBehavior_ interface only for advanced use cases and if you know exactly what you're doing.
+<<internal,[内部：非公有实现类]>>也可以使用实现了__org.activiti.engine.impl.pvm.delegate.ActivityBehavior__接口的类。该实现可以访问更强大的__ActivityExecution__，可以例如影响流程的控制流程。请注意这并不是很好的实践，需要避免这么使用。因此，建议只有在高级使用场景下，并且你确知在做什么的时候，才使用__ActivityBehavior__接口。
 
 
 [[serviceTaskFieldInjection]]
 
 
-===== Field Injection
+===== 字段注入 Field Injection
 
-It's possible to inject values into the fields of the delegated classes. The following types of injection are supported:
+可以为代理类的字段注入值。支持下列注入方式：
 
-* Fixed string values
-* Expressions
+* 字符串常量
+* 表达式
 
-If available, the value is injected through a public setter method on your delegated class, following the Java Bean naming conventions (e.g. field +firstName+ has setter ++setFirstName(...)++). If no setter is available for that field, the value of private member will be set on the delegate. SecurityManagers in some environments don't allow modifying private fields, so it's safer to expose a public setter-method for the fields you want to have injected.
+如果可以的话，会按照Java Bean命名约定（例如，++firstName++成员使用setter ++setFirstName(...)++），通过代理类的公有setter方法，注入变量。如果该字段没有可用的setter，会直接设置该代理类的私有成员的值。有的环境中，SecurityManagers不允许修改私有字段，因此为想要注入的字段，暴露一个公有setter方法，是更安全的做法。
 
-*Regardless of the type of value declared in the process-definition, the type of the setter/private field on the injection target should always be +org.activiti.engine.delegate.Expression+. When the expression is resolved it can be cast to the appropriate type.*
+**不论在流程定义中声明的是什么类型的值，注入对象的setter/私有字段的类型，总是+org.activiti.engine.delegate.Expression+。当表达式解析后，可以被转型为合适的类型。**
 
-Field injection is supported when using the _'actviiti:class'_ attribute. Field injection is also possible when using the _activiti:delegateExpression_ attribute, however special rules with regards to thread-safety apply (see next section).
+当使用__'actviiti:class'__属性时，支持字段注入。也可以在使用__activiti:delegateExpression__属性时，进行字段注入，然而因为线程安全的考虑，需要有特殊的规则（参见下一章节）。
 
-The following code snippet shows how to inject a constant value into a field declared on the class. Note that we need to *declare a 'extensionElements' XML element before the actual field injection declarations*, which is a requirement of the BPMN 2.0 XML Schema.
+下面的代码片段展示了如何为类中声明的字段注入常量值。请注意按照BPMN 2.0 XML概要的要求，**在实际字段注入声明前，需要先声明'extensionElements'XML元素**。
 
 [source,xml,linenums]
 ----
@@ -2763,7 +2751,7 @@ The following code snippet shows how to inject a constant value into a field dec
 </serviceTask>
 ----
 
-The class +ToUpperCaseFieldInjected+ has a field +text+ which is of type +org.activiti.engine.delegate.Expression+. When calling +text.getValue(execution)+, the configured string value +Hello World+ will be returned:
+++ToUpperCaseFieldInjected++类有一个字段++text++，为++org.activiti.engine.delegate.Expression++类型。当调用++text.getValue(execution)++时，会返回配置的字符串++Hello World++：
 
 [source,java,linenums]
 ----
@@ -2778,7 +2766,7 @@ public class ToUpperCaseFieldInjected implements JavaDelegate {
 }
 ----
 
-Alternatively, for longs texts (e.g. an inline e-mail) the _'activiti:string'_ sub element can be used:
+另外，对于较长文本（例如e-mail），可以使用__'activiti:string'__子元素：
 
 [source,xml,linenums]
 ----
@@ -2795,9 +2783,9 @@ Alternatively, for longs texts (e.g. an inline e-mail) the _'activiti:string'_ s
 </serviceTask>
 ----
 
-To inject values that are dynamically resolved at runtime, expressions can be used. Those expressions can use process variables, or Spring defined beans (if Spring is used). As noted in <<bpmnJavaServiceTaskImplementation,Service Task Implementation>>, an instance of the Java class is shared among all process-instances in a service task when using the _activiti:class_ attribute. To have dynamic injection of values in fields, you can inject value and method expressions in a +org.activiti.engine.delegate.Expression+ which can be evaluated/invoked using the +DelegateExecution+ passed in the +execute+ method.
+要在运行时动态解析注入的值，可以使用表达式。这种表达式可以使用流程变量，或者Spring定义的bean（如果使用Spring）。像<<bpmnJavaServiceTaskImplementation,服务任务实现>>中提到的，当服务任务中使用__activiti:class__属性时，该Java类的实例在所有流程实例中共享。要动态地为字段注入值，可以在+org.activiti.engine.delegate.Expression+中注入值或方法表达式，它们会通过++execute++方法传递的++DelegateExecution++计算/调用。
 
-The example class below uses the injected expressions and resolves them using the current +DelegateExecution+. A _generBean_ method call is used while passing the _gender_ variable. Full code and test can be found in +org.activiti.examples.bpmn.servicetask.JavaServiceTaskTest.testExpressionFieldInjection+
+下面的示例类，使用了注入的表达式，并使用当前的++DelegateExecution++解析它们。调用__generBean__方法时传递的是__gender__变量。完整的代码与测试可以在++org.activiti.examples.bpmn.servicetask.JavaServiceTaskTest.testExpressionFieldInjection++中找到
 
 [source,xml,linenums]
 ----
@@ -2832,8 +2820,7 @@ public class ReverseStringsFieldInjected implements JavaDelegate {
 }
 ----
 
-
-Alternatively, you can also set the expressions as an attribute instead of a child-element, to make the XML less verbose.
+另外，为避免XML太过冗长，可以将表达式设置为属性，而不是子元素。
 
 [source,xml,linenums]
 ----
@@ -2843,19 +2830,19 @@ Alternatively, you can also set the expressions as an attribute instead of a chi
 
 [[serviceTaskFieldInjectionThreadSafety]]
 
-===== Field injection and thread safety
+===== 字段注入与线程安全 Field injection and thread safety
 
-In general, using service tasks with Java delegates and field injections are thread-safe. However, there are a few situations where thread-safety is not guaranteed, depending on the setup or environment Activiti is running in.
+总的来说，在服务任务中使用Java代理与字段注入是线程安全的。然而，有些情况下不能保证线程安全，取决于设置，或Activiti运行所在的环境。
 
-When using the _activiti:class_ attribute, using field injection is always thread safe. For each service task that references a certain class, a new instance will be instantiated and fields will be injected once when the instance is created. Reusing the same class in multiple times in different tasks or process definitions is no problem.
+当使用__activiti:class__属性时，使用字段注入总是线程安全的（译者注：仍不完全安全，如对于多实例服务任务，使用的是同一个类实例）。对于引用了某个类的每一个服务任务，都会实例化新的实例，并且在创建实例时注入一次字段。在不同的任务或流程定义中多次使用同一个类没有问题。
 
-When using the _activiti:expression_ attribute, using field injection is not possible. Parameters are passed via method calls and these are always thread-safe.
+当使用__activiti:expression__属性时，不能使用字段注入。只能通过方法调用传递变量，并且这总是线程安全的。
 
-When using the _activiti:delegateExpression_ attribute, the thread-safety of the delegate instance will depend on how the expression is resolved. If the delegate expression is reused in various tasks and/or process definitions and the expression always returns the same instance, using field injection *is not thread-safe*. Let's look at a few examples to clarify.
+当使用__activiti:delegateExpression__属性时，代理实例的线程安全性，取决于表达式解析的方式。如果该代理表达式在多个任务与/或流程定义中重复使用，并且表达式总是返回相同的示例，则字段注入**不是线程安全的**。让我们看几个例子。
 
-Suppose the expression is _${factory.createDelegate(someVariable)}_, where factory is a Java bean known to the engine (for example a Spring bean when using the Spring integration) that creates a new instance each time the expression is resolved. When using field injection in this case, there is no problem with regards to thread-safety: each time the expression is resolved, the fields are injected on this new instance.
+假设表达式为__${factory.createDelegate(someVariable)}__，其中factory为引擎可用的Java bean（例如使用Spring集成时的Spring bean），并在每次表达式解析时，创建新的实例。这种情况下，使用字段注入时，没有线程安全性问题：每次表达式解析时，新实例的字段都会注入。
 
-However, suppose the expression is _${someJavaDelegateBean}_ that resolves to an implementation of the JavaDelegate class and we're running in an environment that creates singleton instances of each bean (like Spring, but many others too). When using this expression in different tasks and/or process definitions, the expression will always be resolved to the same instance. In this case, using field injection is not thread-safe. For example:
+然而，如果表达式为__${someJavaDelegateBean}__，解析为JavaDelegate的实现，并且在创建单例的环境（如Spring）中运行。当在不同的任务和/或流程定义中使用这个表达式时，表达式总会解析为相同的实例。这种情况下，使用字段注入不是线程安全的。例如：
 
 [source,xml,linenums]
 ----
@@ -2874,25 +2861,25 @@ However, suppose the expression is _${someJavaDelegateBean}_ that resolves to an
 </serviceTask>
 ----
 
-This example snippet has two service tasks that use the same delegate expression, but injects different values for the _Expression_ field. *If the expression resolves to the same instance, there can be race conditions in concurrent scenarios* when it comes to injecting the field _someField_ when the processes are executed.
+这段示例代码有两个服务任务，使用同一个代理表达式，但是__expression__字段填写不同的值。**如果该表达式解析为相同的实例，就会在并发场景下，注入__someField__字段时出现竞争条件**。
 
-The easiest solution to solve this, is to either
+最简单的解决方案，为
 
-* rewrite the Java delegate to use an expression and passing the needed data to the delegate via a method arguments.
-* return a new instance of the delegate class each time the delegate expression is resolved. For example when using Spring, this means that the scope of the bean must be set to *prototype* (for example by adding the @Scope(SCOPE_PROTOTYPE) annotation to the delegate class)
+* 重写Java代理，以使用表达式，并将所需数据通过方法参数传递给代理。
+* 或者，在每次代理表达式解析时，返回代理类的新实例。这意味着这个bean的scope（范围）必须是**prototype（原型）**（例如在代理类上加上@Scope(SCOPE_PROTOTYPE)注解）。
 
-As of Activiti version 5.21, the process engine configuration can be configured in a way to disable the use of field injection on delegate epxressions, by setting the value of the _delegateExpressionFieldInjectionMode_ property (which takes one of the values in the _org.activiti.engine.imp.cfg.DelegateExpressionFieldInjectionMode_ enum).
+在Activiti 5.21版本中，可以通过配置流程引擎配置，禁用在代理表达式上使用字段注入。需要设置__delegateExpressionFieldInjectionMode__参数（取__org.activiti.engine.imp.cfg.DelegateExpressionFieldInjectionMode__枚举中的值）。
 
-Following settings are possible:
+可使用下列选项：
 
-* *DISABLED* : fully disables field injection when using delegate expressions. No field injection will be attempted. This is the safest mode, when it comes to thread-safety.
-* *COMPATIBILITY*: in this mode, the behavior will be exactly as it was before version 5.21: field injection is possible when using delegate expressions and an exception will be thrown when the fields are not defined on the delegate class. This is of course the least safe mode with regards to thread-safety, but it can be needed for backwards compatibility or can be used safely when the delegate expression is used only on one task in a set of process definitions (and thus no concurrent race conditions can happen).
-* *MIXED*: Allows injection when using delegateExpressions but will not throw an exception when the fields are not defined on the delegate. This allows for mixed behaviors where some delegates have injection (for example because they are not singletons) and some don't.
+* **DISABLED（禁用）**：当使用代理表达式时，完全禁用字段注入。不会再尝试进行字段注入。这是最安全的方式，保证线程安全。
+* **COMPATIBILITY（兼容）**：在这个模式下，行为与5.21版本之前完全一样：可以在代理表达式中使用字段注入，如果代理类中没有定义该字段，会抛出异常。这是最不线程安全的模式，但可以保证历史版本兼容性，也可以在代理表达式只在一个任务中使用的时候（因此不会产生并发竞争条件），安全使用。
+* **MIXED（混合）**：可以在使用代理表达式时注入，但当代理中没有定义字段时，不会抛出异常。这样可以在部分代理中使用注入（例如不是单例时），而在部分代理中不使用注入。
 
-* *The default mode for Activiti version 5.x is COMPATIBILITY.*
-* *The default mode for Activiti version 6.x is MIXED.*
+* **Activiti 5.x版本的默认模式为COMPATIBILITY（兼容）**。
+* **Activiti 6.x版本的默认模式为MIXED（混合）**。
 
-For example, suppose that we're using _MIXED_ mode and we're using the Spring integration. Suppose that we have following beans in the Spring configuration:
+例如，假设使用__MIXED__模式，并使用Spring集成，在Spring配置中定义了如下bean：
 
 [source,xml,linenums]
 ----
@@ -2904,9 +2891,9 @@ For example, suppose that we're using _MIXED_ mode and we're using the Spring in
   scope="prototype" />
 ----
 
-The first bean is a regular Spring bean and thus a singleton. The second one has _prototype_ as scope, and the Spring container will return a new instance every time the bean is requested.
+第一个bean是一般的Spring bean，因此是单例的。第二个的scope为__prototype__，因此每次请求这个bean时，Spring容器都会返回一个新实例。
 
-Given following process definition:
+在以下流程定义中：
 
 [source,xml,linenums]
 ----
@@ -2943,9 +2930,9 @@ Given following process definition:
 </serviceTask>
 ----
 
-We've got four service tasks, where the first and the second use the _${prototypeDelegateExpressionBean}_ delegate expression and the third and fourth use the _${singletonDelegateExpressionBean}_ delegate expression.
+有四个服务任务，第一、二个使用__${prototypeDelegateExpressionBean}__代理表达式，第三、四个使用__${singletonDelegateExpressionBean}__代理表达式。
 
-Let's look at the prototype bean first:
+先看原型bean：
 
 [source,java,linenums]
 ----
@@ -2974,9 +2961,9 @@ public class PrototypeDelegateExpressionBean implements JavaDelegate {
 }
 ----
 
-When we check the _INSTANCE_COUNT_ after running a process instance of the process definition above, we'll get _two_ back, as a new instance is created every time _${prototypeDelegateExpressionBean}_ is resolved. Fields can be injected without any problem here and we can see the three _Expression_ member fields here.
+在运行上面流程定义的一个流程实例后，检查__INSTANCE_COUNT__，会得到__2__。这是因为每次__${prototypeDelegateExpressionBean}__解析时，都会创建新实例。可以看到三个__Expression__成员字段的注入没有任何问题。
 
-The singleton bean, however, looks slightly different:
+而在原型bean中，有一点区别：
 
 [source,java,linenums]
 ----
@@ -3006,15 +2993,15 @@ public class SingletonDelegateExpressionBean implements JavaDelegate {
 }
 ----
 
-The _INSTANCE_COUNT_ will always be _one_ here, as it is a singleton. In this delegate, there are no _Expression_ member fields. This is possible since we're running in _MIXED_ mode. In _COMPATIBILITY_ mode, this would throw an exception as it expects the member fields to be there. _DISABLED_ mode would also work for this bean, but it would disallow the use the prototype bean above that does use field injection.
+__INSTANCE_COUNT__总是__1__，因为是单例模式。在这个代理中，没有__Expression__成员字段。因为我们使用的是__MIXED__模式，可以这样用。而在__COMPATIBILITY__模式下，就会抛出异常，因为需要有成员字段。这个bean也可以使用__DISABLED__模式，但会禁用上面进行了字段注入的原型bean。
 
-In this delegate code, the *org.activiti.engine.delegate.DelegateHelper* class is used, that has some useful utility methods to execute the same logic, but in a thread-safe way when the delegate is a singleton. Instead of injecting the _Expression_, it is fetched via the _getFieldExpression_ method. This means that when it comes to the service task xml, the fields are defined exactly the same as for the singleton bean. If you look at the xml snippet above, you can see they are equal in definition and only the implementation logic differs.
+在代理的代码里，使用了**org.activiti.engine.delegate.DelegateHelper**。它提供了一些有用的工具方法，用于执行相同的逻辑，并且在单例中是线程安全的。与注入__Expression__不同，它通过__getFieldExpression__读取。这意味着在服务任务的XML里，字段定义与单例bean完全相同。查看上面的XML代码，可以看到定义是相同的，只是实现逻辑不同。
 
-(Technical note: the _getFieldExpression_ will introspect the BpmnModel and create the Expression on the fly when the method is executed, making it thread-safe)
+（技术备注：__getFieldExpression__直接读取BpmnModel，并在方法执行时创建表达式，因此是线程安全的）。
 
 
-* For Activiti versions 5.x, the DelegateHelper cannot be used for an _ExecutionListener_ or _TaskListener_ (due to an architectural flaw). To make thread-safe instances of those listeners, use either an expression or make sure a new instance is created every time the delegate expression is resolved.
-* For Activiti version 6.x the DelegateHelper does work in _ExecutionListener_ and _TaskListener_ implementations. For example in version 6.x, the following code can be written, using the *DelegateHelper*:
+* 在Activiti 5.x版本中，（由于架构缺陷）不能在__ExecutionListener__或__TaskListener__中使用DelegateHelper。要保证监听器的线程安全，仍需使用表达式，或确保每次解析代理表达式时，都创建新实例。
+* 在Activiti 6.x版本中，在__ExecutionListener__或__TaskListener__中可以使用DelegateHelper。例如在6.x版本中，下列代码可以使用**DelegateHelper**：
 
 [source,xml,linenums]
 ----
@@ -3027,7 +3014,7 @@ In this delegate code, the *org.activiti.engine.delegate.DelegateHelper* class i
 </extensionElements>
 ----
 
-Where _testExecutionListener_ resolves to an instance implementing the ExecutionListener interface:
+其中__testExecutionListener__解析为ExecutionListener接口的一个实现的实例：
 
 [source,java,linenums]
 ----
@@ -3053,10 +3040,9 @@ public class TestExecutionListener implements ExecutionListener {
 [[serviceTaskResultValue]]
 
 
-===== Service task results
+===== 服务任务的结果 Service task results
 
-
-The return value of a service execution (for service task using expression only) can be assigned to an already existing or to a new process variable by specifying the process variable name as a literal value for the _'activiti:resultVariable'_ attribute of a service task definition. Any existing value for a specific process variable will be overwritten by the result value of the service execution. When not specifying a result variable name, the service execution result value gets ignored.
+服务执行的返回值（仅对使用表达式的服务任务），可以通过为脚本任务定义的__'activiti:resultVariable'__属性设置流程变量名，指定为已经存在的，或者新的流程变量。指定的已有值的流程变量，会被服务执行的结果值覆盖。当不指定结果变量名时，服务执行的结果值将被忽略。
 
 [source,xml,linenums]
 ----
@@ -3065,22 +3051,21 @@ The return value of a service execution (for service task using expression only)
     activiti:resultVariable="myVar" />
 ----
 
-In the example above, the result of the service execution (the return value of the __'doSomething()'__ method invocation on an object that is made available under the name __'myService'__ either in the process variables or as a Spring bean) is set to the process variable named __'myVar'__ after the service execution completes.
+在上例中，服务执行的结果（使用流程变量或Spring bean，使用__'myService'__名字获取的对象，调用__'doSomething()'__方法的返回值），在服务执行完成后，会设置为名为__'myVar'__的流程变量。
 
 
 [[serviceTaskExceptionHandling]]
 
 
-===== Handling exceptions
+===== 处理异常 Handling exceptions
 
-
-When custom logic is executed, it is often required to catch certain business exceptions and handle them inside the surrounding process. Activiti provides different options to do that.
+当执行自定义逻辑时，通常需要捕获特定的业务异常，并在流程中处理。Activiti提供了不同的方法。
 
 
 [[serviceTaskBpmnErrors]]
 
 
-====== Throwing BPMN Errors
+====== 抛出BPMN错误 Throwing BPMN Errors
 
 
 It is possible to throw BPMN Errors from user code inside Service Tasks or Script Tasks. In order to do this, a special ActivitiException called _BpmnError_ can be thrown in JavaDelegates, scripts, expressions and delegate expressions. The engine will catch this exception and forward it to an appropriate error handler, e.g., a Boundary Error Event or an Error Event Sub-Process.
