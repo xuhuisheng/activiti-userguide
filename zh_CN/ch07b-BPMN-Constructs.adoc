@@ -3598,7 +3598,7 @@ Mule任务通过<<serviceTaskFieldInjection,字段注入>>配置。这些参数�
 [options="header"]
 |===============
 |参数|必填?|描述
-|endpointUrl|是|希望调用的Mule端点（endpoint）。
+|endpointUrl|是|希望调用的Mule终端（endpoint）。
 |language|是|计算payloadExpression字段所用的语言。
 |payloadExpression|是|消息的载荷表达式
 |resultVariable|否|存储调用结果的变量名。
@@ -3701,13 +3701,13 @@ public class SimpleCamelCallRoute extends RouteBuilder {
 }
 ----
 
-路由只是记录消息体，不做更多事情。请注意from端点的格式。包含三个部分：
+路由只是记录消息体，不做更多事情。请注意from终端的格式，包含三个部分：
 
 
 [options="header"]
 |===============
-|端点Url组件|描述
-|activiti|引用Activiti端点
+|终端Url组件|描述
+|activiti|引用Activiti终端
 |SimpleCamelCallProcess|流程名
 |simpleCall|流程中Camel服务的名字
 
@@ -3853,14 +3853,14 @@ from("direct:start").to("activiti:process?var.return.exampleVar").to("mock:resul
 <receiveTask id="receiveAsyncPing" name="Wait State" />
 ----
 
-流程实例会等待，直到接收到信号，例如来自Camel。在Camel中，可以通过向合适的Activiti端点发送消息，来为流程实例发送信号。
+流程实例会等待，直到接收到信号，例如来自Camel。在Camel中，可以通过向合适的Activiti终端发送消息，来为流程实例发送信号。
 
 [source,java,linenums]
 ----
  from("activiti:asyncPingProcess:serviceAsyncPing").to("activiti:asyncPingProcess:receiveAsyncPing");
 ----
 
-（译者注：原文如此。可能为缺失了的 to 端点的定义：）
+（译者注：原文如此。可能为缺失了的 to 终端的定义：）
 
 * “activiti”字符串常量
 * 流程名
@@ -3908,15 +3908,15 @@ from("direct:startWithInitiatorHeader")
 
 ===== 描述 Description
 
-A _Manual Task_ defines a task that is external to the BPM engine. It is used to model work that is done by somebody, which the engine does not need to know of, nor is there a system or UI interface. For the engine, a manual task is handled as a *pass-through activity*, automatically continuing the process from the moment process execution arrives into it.
+__手动任务__定义了在BPMN引擎外部的任务。用于建模引擎不需要知道的某人做的工作，或者其他系统或用户界面。对于引擎来说，手动任务当做**直接穿过活动**处理，在流程执行到达时，自动继续流程。
 
 
 [[bpmnManualTaskGraphicalNotation]]
 
 
-===== Graphical Notation
+===== 图示 Graphical Notation
 
-A manual task is visualized as a rounded rectangle, with a little 'hand' icon in the upper left corner
+手动任务，表现为左上角带有“手型”图标的圆角矩形。
 
 image::images/bpmn.manual.task.png[align="center"]
 
@@ -3925,7 +3925,7 @@ image::images/bpmn.manual.task.png[align="center"]
 [[bpmnManualTaskXml]]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 [source,xml,linenums]
 ----
@@ -3936,32 +3936,32 @@ image::images/bpmn.manual.task.png[align="center"]
 [[bpmnReceiveTask]]
 
 
-==== Java Receive Task
+==== Java接收任务 Java Receive Task
 
 [[bpmnReceiveTaskDescription]]
 
 
-===== Description
+===== 描述 Description
 
 
-A Receive Task is a simple task that waits for the arrival of a certain message. Currently, we have only implemented Java semantics for this task. When process execution arrives at a Receive Task, the process state is committed to the persistence store. This means that the process will stay in this wait state, until a specific message is received by the engine, which triggers the continuation of the process past the Receive Task.
+接收任务，是等待特定消息到达的简单任务。目前，我们只为这个任务实现了Java语义。当流程执行到达接收任务时，流程状态将提交至持久化存储。这意味着流程将保持等待状态，直到引擎接收到特定的消息，并将触发流程通过接收任务。
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-A Receive Task is visualized as a task (rounded rectangle) with a message icon in the top left corner. The message is white (a black message icon would have send semantics)
+接收任务，表现为右上角带有消息图标的任务（圆角矩形）。消息图标是白色的（黑色消息图标代表发送的含义）。
 
 image::images/bpmn.receive.task.png[align="center"]
 
 
-===== XML representation
+===== XML表示 XML representation
 
 [source,xml,linenums]
 ----
 <receiveTask id="waitState" name="wait" />
 ----
 
-To continue a process instance that is currently waiting at such a Receive Task, the _runtimeService.signal(executionId)_ must be called using the id of the execution that arrived in the Receive Task. The following code snippet shows how this works in practice:
+要使流程实例从当前的等待状态，如接收任务，中继续，需要使用到达接收任务的执行的id，调用__runtimeService.signal(executionId)__。下面的代码片段展示了如何操作：
 
 [source,java,linenums]
 ----
@@ -3979,41 +3979,41 @@ runtimeService.signal(execution.getId());
 [[bpmnShellTask]]
 
 
-==== Shell Task
+==== Shell任务 Shell Task
 
 [[bpmnShellTaskDescription]]
 
 
-===== Description
+===== 描述 Description
 
-The shell task allows to run shell scripts and commands. Note that the Shell task is *not* an 'official' task of BPMN 2.0 spec (and it does not have a dedicated icon as a consequence).
+Shell任务可以运行Shell脚本与命令。请注意Shell任务**不是**BPMN 2.0规范的“官方”任务（因此也没有专用图标）。
 
 
 [[bpmnShellTaskUsage]]
 
 
-===== Defining a shell task
+===== 定义Shell任务 Defining a shell task
 
-The shell task is implemented as a dedicated <<bpmnJavaServiceTask,Service Task>> and is defined by setting _'shell'_ for the _type_ of the service task.
+Shell任务实现为特殊的<<bpmnJavaServiceTask,服务任务>>，通过将服务任务的__type__定义为__'shell'__设置。
 
 [source,xml,linenums]
 ----
 <serviceTask id="shellEcho" activiti:type="shell">
 ----
 
-The Shell task is configured by <<serviceTaskFieldInjection,field injection>>. All the values for these properties can contain EL expression, which are resolved at runtime during process execution. Following properties could be set:
+Shell任务通过<<serviceTaskFieldInjection,字段注入>>配置。这些参数的值可以使用EL表达式，将在流程执行运行时解析。可以设置下列参数：
 
 [options="header"]
 |===============
-|Property|Required?|Type|Description|Default
-|command|yes|String|Shell command to execute.|
-|arg0-5|no|String|Parameter 0 to Parameter 5|
-|wait|no|true/false|wait if necessary, until the shell process has terminated.|true
-|redirectError|no|true/false|Merge standard error with the standard output.|false
-|cleanEnv|no|true/false|Shell process does not inherit current environment.|false
-|outputVariable|no|String|Name of variable to contain the output|Output is not recorded.
-|errorCodeVariable|no|String|Name of variable to contain result error code|Error level is not registered.
-|directory|no|String|Default directory of shell process|Current directory
+|参数|必填?|类型|描述|默认值
+|command|是|String|要执行的Shell命令。|
+|arg0-5|否|String|参数0至参数5|
+|wait|否|true/false|如果可能，是否等待Shell进程终止。|true
+|redirectError|否|true/false|将标准错误（standard error）并入标准输出（standard output）。|false
+|cleanEnv|否|true/false|Shell进程不继承当前环境。|false
+|outputVariable|否|String|保存输出的变量名|不会记录输出。
+|errorCodeVariable|否|String|保存结果错误代码的变量名|不会注册错误级别。
+|directory|否|String|Shell进程的默认目录|当前目录
 
 |===============
 
@@ -4022,9 +4022,9 @@ The Shell task is configured by <<serviceTaskFieldInjection,field injection>>. A
 [[bpmnShellTaskExampleUsage]]
 
 
-===== Example usage
+===== 使用示例 Example usage
 
-The following XML snippet shows an example of using the shell Task. It runs shell script "cmd /c echo EchoTest", waits for it to be terminated and puts the result in resultVar
+下面的XML代码片段展示了使用Shell任务的例子。会运行"cmd /c echo EchoTest" Shell脚本，等待其结束，并将结果放入resultVar。
 
 [source,xml,linenums]
 ----
@@ -4045,20 +4045,20 @@ The following XML snippet shows an example of using the shell Task. It runs shel
 [[executionListeners]]
 
 
-==== Execution listener
+==== 执行监听器 Execution listener
 
-*Compatibility note*: After releasing 5.3, we discovered that execution listeners and task listeners and expressions were still in non-public API. Those classes were in subpackages of +org.activiti.engine.impl...+,  which has +impl+ in it). +org.activiti.engine.impl.pvm.delegate.ExecutionListener+, +org.activiti.engine.impl.pvm.delegate.TaskListener+ and +org.activiti.engine.impl.pvm.el.Expression+ have been deprecated. From now on, you should use +org.activiti.engine.delegate.ExecutionListener+, +org.activiti.engine.delegate.TaskListener+ and +org.activiti.engine.delegate.Expression+. In the new publicly available API, access to +ExecutionListenerExecution.getEventSource()+ has been removed.  Apart from the deprecation compiler warning, the existing code should run fine.  But consider switching to the new public API interfaces (without .impl. in the package name).
+**兼容性提示：**在5.3版本后，我们发现执行监听器、任务监听器（task listeners）与表达式仍然在非公开API中。这些类在++org.activiti.engine.impl...++子包中。++org.activiti.engine.impl.pvm.delegate.ExecutionListener++，++org.activiti.engine.impl.pvm.delegate.TaskListener++与++org.activiti.engine.impl.pvm.el.Expression++已被废弃。从现在起，应该使用++org.activiti.engine.delegate.ExecutionListener++，++org.activiti.engine.delegate.TaskListener++与++org.activiti.engine.delegate.Expression++。在新的公开可用的API中，对++ExecutionListenerExecution.getEventSource()++的访问已被移除。除了编译器的废弃警告，现有代码可以正常运行。但是请考虑切换至新的公开API接口（包命中不带有.impl.）。
 
-Execution listeners allow you to execute external Java code or evaluate an expression when certain events occur during process execution. The events that can be captured are:
+执行监听器可以当流程执行中，发生特定的事件时，执行外部Java代码，或计算表达式。可以被捕获的事件有：
 
-* Start and ending of a process instance.
-* Taking a transition.
-* Start and ending of an activity.
-* Start and ending of a gateway.
-* Start and ending of intermediate events.
-* Ending a start event or starting an end event.
+* 流程实例的start（启动）和end（结束）。
+* take（进行）转移（transition）。
+* 活动的start和end。
+* 网关的start和end。
+* 中间事件的start和end。
+* 启动事件的end，和结束事件的start。
 
-The following process definition contains 3 execution listeners:
+下面的流程定义包含了三个执行监听器：
 
 [source,xml,linenums]
 ----
@@ -4093,8 +4093,7 @@ The following process definition contains 3 execution listeners:
 </process>
 ----
 
-
-The first execution listener is notified when the process starts. The listener is an external Java-class (like ++ExampleExecutionListenerOne++) and should implement +org.activiti.engine.delegate.ExecutionListener+ interface. When the event occurs (in this case +end+ event) the method +notify(ExecutionListenerExecution execution)+ is called.
+第一个执行监听器将在流程启动时得到通知。这个监听器是一个外部Java类（类似++ExampleExecutionListenerOne++），并且需要实现++org.activiti.engine.delegate.ExecutionListener++接口。当该事件发生时（这里是++start++事件），会调用++notify(ExecutionListenerExecution execution)++方法。
 
 [source,java,linenums]
 ----
@@ -4107,28 +4106,27 @@ public class ExampleExecutionListenerOne implements ExecutionListener {
 }
 ----
 
-It is also possible to use a delegation class that implements the +org.activiti.engine.delegate.JavaDelegate+ interface. These delegation classes can then be reused in other constructs, such as a delegation for a serviceTask.
+也可以使用实现了++org.activiti.engine.delegate.JavaDelegate++接口的代理类。这些代理类也可以用于其他的结构，例如服务任务的代理。
 
-The second execution listener is called when the transition is taken. Note that the +listener+ element doesn't define an +event+, since only +take+ events are fired on transitions. *Values in the +event+ attribute are ignored when a listener is defined on a transition.*
+第二个执行监听器在进行转移时被调用。请注意++listener++元素并未定义++event++，因为在转移上只会触发++take++事件。**当监听器定义在转移上时，++event++属性的值将被忽略。**
 
-The last execution listener is called when activity +secondTask+ ends. Instead of using the +class+ on the listener declaration, a +expression+ is defined instead which is evaluated/invoked when the event is fired.
+最后一个执行监听器在++secondTask++活动结束时被调用。监听器声明中没有使用++class++，而是定义了++expression++，并将在事件触发时计算/调用。
 
 [source,xml,linenums]
 ----
 <activiti:executionListener expression="${myPojo.myMethod(execution.eventName)}" event="end" />
 ----
 
-As with other expressions, execution variables are resolved and can be used. Because the execution implementation object has a property that exposes the event name, it's possible to pass the event-name to your methods using +execution.eventName+.
+与其他表达式一样，可以使用与解析execution变量。因为execution实现对象有一个暴露事件名的参数，因此可以使用++execution.eventName++向你的方法传递事件名。
 
-Execution listeners also support using a +delegateExpression+, <<bpmnJavaServiceTaskXML,similar to a service task>>.
+执行监听器也支持使用++delegateExpression++，<<bpmnJavaServiceTaskXML,与服务任务类似>>。
 
 [source,xml,linenums]
 ----
 <activiti:executionListener event="start" delegateExpression="${myExecutionListenerBean}" />
 ----
 
-
-In Activiti 5.12 we also introduced a new type of execution listener, the org.activiti.engine.impl.bpmn.listener.ScriptExecutionListener. This script execution listener allows you to execute a piece of script logic for an execution listener event.
+在Activiti 5.12中，我们也引入了新的执行监听器类型，org.activiti.engine.impl.bpmn.listener.ScriptExecutionListener。这个脚本执行监听器，可以为一个执行监听器事件执行一段脚本逻辑。
 
 [source,xml,linenums]
 ----
@@ -4150,11 +4148,11 @@ In Activiti 5.12 we also introduced a new type of execution listener, the org.ac
 [[executionListenerFieldInjection]]
 
 
-===== Field injection on execution listeners
+===== 执行监听器上的字段注入 Field injection on execution listeners
 
-When using an execution listener that is configured with the +class+ attribute, field injection can be applied. This is exactly the same mechanism as used <<serviceTaskFieldInjection,Service task field injection>>, which contains an overview of the possibilities provided by field injection.
+当使用通过++class++属性配置的执行监听器时，可以使用字段注入。与<<serviceTaskFieldInjection,服务任务字段注入>>使用完全相同的机制，可以在那里看到字段注入提供的各种可能用法。
 
-The fragment below shows a simple example process with an execution listener with fields injected.
+下面的代码片段展示了简单的示例流程，有一个使用了字段注入的执行监听器。
 
 [source,xml,linenums]
 ----
@@ -4190,7 +4188,7 @@ public class ExampleFieldInjectedExecutionListener implements ExecutionListener 
 }
 ----
 
-The class +ExampleFieldInjectedExecutionListener+ concatenates the 2 injected fields (one fixed an the other dynamic) and stores this in the process variable '++var++'.
+++ExampleFieldInjectedExecutionListener++类连接两个字段（一个是固定值，另一个是动态值），并将其存储在'++var++'流程变量中。
 
 [source,java,linenums]
 ----
@@ -4210,16 +4208,16 @@ public void testExecutionListenerFieldInjection() {
 }
 ----
 
-Note that the same rules with regards to thread-safety apply as for service task. Please read the <<serviceTaskFieldInjectionThreadSafety, relevant section>> for more information.
+请注意，关于线程安全的规则与服务任务相同。请阅读<<serviceTaskFieldInjectionThreadSafety,相应章节>>了解更多信息。
 
 [[taskListeners]]
 
 
-==== Task listener
+==== 任务监听器 Task listener
 
-A _task listener_ is used to execute custom Java logic or an expression upon the occurrence of a certain task-related event.
+__任务监听器__用于在特定的任务相关事件发生时，执行自定义的Java逻辑或表达式。
 
-A task listener can only be added in the process definition as a child element of a <<bpmnUserTask,user task>>. Note that this also must happen as a child of the _BPMN 2.0 extensionElements_ and in the _activiti_ namespace, since a task listener is an Activiti-specific construct.
+任务监听器只能在流程定义中作为<<bpmnUserTask,用户任务>>的子元素。请注意，因为任务监听器是一个Activiti自定义结构，它也需要作为__BPMN 2.0 extensionElements__，放在__activiti__命名空间下。
 
 
 [source,xml,linenums]
@@ -4231,14 +4229,14 @@ A task listener can only be added in the process definition as a child element o
 </userTask>
 ----
 
-A _task listener_ supports following attributes:
+__任务监听器__支持下列属性：
 
-* *event* (required): the type of task event on which the task listener will be invoked. Possible events are
-** *create*: occurs when the task has been created an *all task properties are set*.
-** *assignment*: occurs when the task is assigned to somebody. Note: when process execution arrives in a userTask, first an _assignment_ event will be fired, *before* the _create_ event is fired. This might seem an unnatural order, but the reason is pragmatic: when receiving the _create_ event, we usually want to inspect all properties of the task including the assignee.
-** *complete*: occurs when the task is completed and just before the task is deleted from the runtime data.
-** *delete*: occurs just before the task is going to be deleted. Notice that it will also be executed when task is normally finished via completeTask.
-* *class*: the delegation class that must be called. This class must implement the +org.activiti.engine.delegate.TaskListener+ interface.
+* **event（事件）**（必填）：任务监听器将被调用的任务事件类型。可用的事件有：
+** **create（创建）**：当任务已经创建，并且**所有任务参数都已经设置**时触发。
+** **assignment（指派）**：当任务已经指派给某人时触发。请注意：当流程执行到达用户任务时，__create__事件触发**前**，首先触发__assignment__事件。这看起来不是自然顺序，但是有实际原因的：当收到__create__事件时，我们通常希望查看任务的所有参数，包括办理人。
+** **complete（完成）**：当任务已经完成，从运行时数据中删除前触发。
+** **delete（删除）**：在任务即将被删除前触发。请注意当任务通过completeTask正常完成时也会触发。
+* **class**：需要调用的代理类。这个类必须实现++org.activiti.engine.delegate.TaskListener++接口。
 
 [source,java,linenums]
 ----
@@ -4251,23 +4249,23 @@ public class MyTaskCreateListener implements TaskListener {
 }
 ----
 
-It is also possible to use <<serviceTaskFieldInjection,field injection>> to pass process variables or the execution to the delegation class. Note that an instance of the delegation class is created upon process deployment (as is the case with any class delegation in Activiti), which means that the instance is shared between all process instance executions.
+也可以使用<<serviceTaskFieldInjection,字段注入>>，为代理类传递流程变量或执行。请注意代理类的实例在流程部署时创建（与Activiti中其它的代理类一样），这意味着该实例会在所有流程实例执行中共享。
 
-* *expression*: (cannot be used together with the _class_ attribute): specifies an expression that will be executed when the event happens. It is possible to pass the +DelegateTask+ object and the name of the event (using ++task.eventName++) as parameter to the called object.
+* **expression**：（不能与__class__属性一起使用）：指定在事件发生时要执行的表达式。可以为被调用的对象传递++DelegateTask++对象与事件名（使用++task.eventName++）作为参数。
 
 [source,java,linenums]
 ----
 <activiti:taskListener event="create" expression="${myObject.callMethod(task, task.eventName)}" />
 ----
 
-* *delegateExpression* allows to specify an expression that resolves to an object implementing the +TaskListener+ interface, <<bpmnJavaServiceTaskXML,similar to a service task>>.
+* **delegateExpression**：可以指定一个能够解析为++TaskListener++接口实现类对象的表达式。<<bpmnJavaServiceTaskXML,与服务任务类似>>。
 
 [source,xml,linenums]
 ----
 <activiti:taskListener event="create" delegateExpression="${myTaskListenerBean}" />
 ----
 
-* In Activiti 5.12 we also introduced a new type of task listener, the org.activiti.engine.impl.bpmn.listener.ScriptTaskListener. This script task listener allows you to execute a piece of script logic for an task listener event.
+* 在Activiti 5.12中，我们也引入了新的执行监听器类型，org.activiti.engine.impl.bpmn.listener.ScriptTaskListener。这个脚本任务监听器，可以为一个任务监听器事件执行一段脚本逻辑。
 
 [source,xml,linenums]
 ----
@@ -4289,50 +4287,49 @@ It is also possible to use <<serviceTaskFieldInjection,field injection>> to pass
 [[bpmnMultiInstance]]
 
 
-==== Multi-instance (for each)
+==== 多实例 Multi-instance (for each)
 
 [[bpmnMultiInstanceDescription]]
 
 
-===== Description
+===== 描述 Description
 
+__多实例活动__是在业务流程中，为特定步骤定义重复的方式。在编程概念中，多实例匹配**for each**结构：可以为给定集合中的每一条目，**顺序或并行地**，执行特定步骤，甚至是整个子流程。
 
-A _multi-instance activity_ is a way of defining repetition for a certain step in a business process. In programming concepts, a multi-instance matches the *for each* construct: it allows to execute a certain step or even a complete subprocess for each item in a given collection, *sequentially or in parallel*.
+__多实例__是一个普通活动，加上定义（被称作“__多实例__特性”）的额外参数，会使得活动在运行时被多次执行。下列活动可以成为__多实例活动：__
 
-A _multi-instance_ is a regular activity that has extra properties defined (so-called _'multi-instance_ characteristics'') which will cause the activity to be executed multiple times at runtime. Following activities can become a _multi-instance activity:_
+* <<bpmnUserTask,用户任务>>
+* <<bpmnScriptTask,脚本任务>>
+* <<bpmnJavaServiceTask,Java服务任务>>
+* <<bpmnWebserviceTask,Web服务任务>>
+* <<bpmnBusinessRuleTask,业务规则任务>>
+* <<bpmnEmailTask,邮件任务>>
+* <<bpmnManualTask,人工任务>>
+* <<bpmnReceiveTask,接收任务>>
+* <<bpmnSubProcess,（嵌入）子流程>>
+* <<bpmnCallActivity,调用活动>>
 
-* <<bpmnUserTask,User Task>>
-* <<bpmnScriptTask,Script Task>>
-* <<bpmnJavaServiceTask,Java Service Task>>
-* <<bpmnWebserviceTask,Web Service Task>>
-* <<bpmnBusinessRuleTask,Business Rule Task>>
-* <<bpmnEmailTask,Email Task>>
-* <<bpmnManualTask,Manual Task>>
-* <<bpmnReceiveTask,Receive Task>>
-* <<bpmnSubProcess,(Embedded) Sub-Process>>
-* <<bpmnCallActivity,Call Activity>>
+<<bpmnGateways,网关>>与<<bpmnEvents,事件>>**不能**成为多实例。
 
-A <<bpmnGateways,Gateway>> or <<bpmnEvents,Event>> *cannot* become multi-instance.
+按照规范的要求，所有用于为每个实例创建执行的父执行，都有下列变量：
 
-As required by the spec, each parent execution of the created executions for each instance will have following variables:
+* **nrOfInstances**：实例总数
+* **nrOfActiveInstances**：当前活动的，也就是说未完成的，实例数量。对于顺序多实例，这个值总为1.
+* **nrOfCompletedInstances**：已经完成的实例数量
 
-* *nrOfInstances*: the total number of instances
-* *nrOfActiveInstances*: the number of currently active, i.e. not yet finished, instances. For a sequential multi-instance, this will always be 1.
-* *nrOfCompletedInstances*: the number of already completed instances.
+可以通过调用++execution.getVariable(x)++方法，获取这些值。
 
-These values can be retrieved by calling the +execution.getVariable(x)+ method.
+另外，每个创建的执行，都有执行本地变量（也就是说，对其他执行不可见，也不存储在流程实例级别）：
 
-Additionally, each of the created executions will have an execution-local variable (i.e. not visible for the other executions, and not stored on process instance level) :
-
-* *loopCounter*: indicates the _index in the for-each loop_ of that particular instance. loopCounter variable can be renamed by Activiti *elementIndexVariable* attribute.
+* **loopCounter**：代表给定实例在__foreach循环中的index__。可以通过Activiti的**elementIndexVariable**属性为loopCounter变量重命名。
 
 
 [[bpmnMultiInstanceGraphicalNotation]]
 
 
-===== Graphical notation
+===== 图示 Graphical notation
 
-If an activity is multi-instance, this is indicated by three short lines at the bottom of that activity. Three _vertical_ lines indicates that the instances will be executed in parallel, while three _horizontal_ lines indicate sequential execution.
+如果一个活动是多实例，将通过在该活动底部的三条短线表示。三条__竖__线代表实例会并行执行，而三条__横__线代表顺序执行。
 
 image::images/bpmn.multi.instance.png[align="center"]
 
@@ -4341,9 +4338,9 @@ image::images/bpmn.multi.instance.png[align="center"]
 [[bpmnMultiInstanceXml]]
 
 
-===== Xml representation
+===== XML表示 Xml representation
 
-To make an activity multi-instance, the activity xml element must have a +multiInstanceLoopCharacteristics+ child element.
+要将活动变成多实例，该活动的XML元素必须有++multiInstanceLoopCharacteristics++子元素
 
 [source,xml,linenums]
 ----
@@ -4352,9 +4349,9 @@ To make an activity multi-instance, the activity xml element must have a +multiI
 </multiInstanceLoopCharacteristics>
 ----
 
-The *isSequential* attribute indicates if the instances of that activity are executed sequentially or parallel.
+**isSequential**属性代表了活动的实例为顺序还是并行执行。
 
-The number of instances are *calculated once, when entering the activity*. There are a few ways of configuring this. On way is directly specifying a number, by using the *loopCardinality* child element.
+实例的数量**在进入活动时，计算一次**。有些方法可以配置数量。一个方法是通过**loopCardinality**子元素，直接指定数字。
 
 [source,xml,linenums]
 ----
@@ -4363,7 +4360,7 @@ The number of instances are *calculated once, when entering the activity*. There
 </multiInstanceLoopCharacteristics>
 ----
 
-Expressions that resolve to a positive number are also possible:
+也可以使用解析为正整数的表达式：
 
 [source,xml,linenums]
 ----
@@ -4372,7 +4369,7 @@ Expressions that resolve to a positive number are also possible:
 </multiInstanceLoopCharacteristics>
 ----
 
-Another way to define the number of instances, is to specify the name of a process variable which is a collection using the +loopDataInputRef+ child element. For each item in the collection, an instance will be created. Optionally, it is possible to set that specific item of the collection for the instance using the +inputDataItem+ child element. This is shown in the following XML example:
+另一个定义实例数量的方法，是使用++loopDataInputRef++子元素，指定一个集合流程变量的名字。对集合中的每一个条目，都会创建一个实例。可以使用++inputDataItem++子元素，将集合中的该条目设置给实例。在下面的XML示例中展示：
 
 [source,xml,linenums]
 ----
@@ -4384,9 +4381,9 @@ Another way to define the number of instances, is to specify the name of a proce
 </userTask>
 ----
 
-Suppose the variable +assigneeList+ contains the values +\[kermit, gonzo, fozzie\]+. In the snippet above, three user tasks will be created in parallel. Each of the executions will have a process variable named +assignee+ containing one value of the collection, which is used to assign the user task in this example.
+假设变量++assigneeList++包含++[kermit, gonzo, fozzie]++。在上面的代码中，会并行创建三个用户任务。每一个执行都有一个名为++assignee++的流程变量，含有集合中的一个值，并在这个例子中被用于指派用户任务。
 
-The downside of the +loopDataInputRef+ and +inputDataItem+ is that 1) the names are pretty hard to remember and 2) due to the BPMN 2.0 schema restrictions they can't contain expressions. Activiti solves this by offering the *collection* and *elementVariable* attributes on the ++multiInstanceCharacteristics++:
+++loopDataInputRef++与++inputDataItem++的缺点是 1)名字很难记 2)由于BPMN 2.0概要的限制，不能使用表达式。Activiti通过在++multiInstanceCharacteristics++上提供**collection**与**elementVariable**属性解决了这些问题：
 
 [source,xml,linenums]
 ----
@@ -4397,7 +4394,7 @@ The downside of the +loopDataInputRef+ and +inputDataItem+ is that 1) the names 
 </userTask>
 ----
 
-A multi-instance activity ends when all instances are finished. However, it is possible to specify an expression that is evaluated every time one instance ends. When this expression evaluates to true, all remaining instances are destroyed and the multi-instance activity ends, continuing the process. Such an expression must be defined in the *completionCondition* child element.
+多实例活动在所有实例都完成时结束。然而，也可以指定一个表达式，在每个实例结束时计算。当表达式计算为true时，销毁所有剩余的实例，并且结束多实例活动，继续流程。这个表达式必须通过**completionCondition**子元素定义。
 
 [source,xml,linenums]
 ----
@@ -4409,28 +4406,28 @@ A multi-instance activity ends when all instances are finished. However, it is p
 </userTask>
 ----
 
-In this example, there will be parallel instances created for each element of the +assigneeList+ collection. However, when 60% of the tasks are completed, the other tasks are deleted and the process continues.
+在这个例子里，会为++assigneeList++集合中的每个元素创建并行实例。然而，当60%的任务完成时，其他的任务将被删除，流程继续运行。
 
 
 [[bpmnMultiInstanceBoundaryEvent]]
 
 
-===== Boundary events and multi-instance
+===== 边界事件与多实例 Boundary events and multi-instance
 
-Since a multi-instance is a regular activity, it is possible to define a <<bpmnBoundaryEvent,boundary event>> on its boundary. In case of an interrupting boundary event, when the event is caught, *all instances* that are still active will be destroyed. Take for example following multi-instance subprocess:
+多实例是普通活动，因此可以在其边界定义<<bpmnBoundaryEvent,边界事件>>。对于中断边界事件，当捕获事件时，活动中的**所有实例**都会被销毁。以下面的多实例子流程为例：
 
 image::images/bpmn.multi.instance.boundary.event.png[align="center"]
 
-Here, all instances of the subprocess will be destroyed when the timer fires, regardless of how many instances there are or which inner activities are currently not yet completed.
+当定时器触发时，子流程的所有实例都会被销毁，无论有多少实例，或者哪个内部活动还未完成。
 
 
 [[bpmnCompensationHandlers]]
 
-===== Multi instance and execution listeners
+===== 多实例与执行监听器 Multi instance and execution listeners
 
-(Valid for Activiti 5.18 and up)
+（Activiti 5.18及以上版本可用）
 
-There is a caveat when using execution listeners in combination with multi instance. Take for example the following snippet of BPMN 2.0 xml, which is defined on the same level as the _multiInstanceLoopCharacteristics_ xml element is set:
+有一个关于执行监听器与多实例一起使用的警告。以下面的BPMN 2.0 XML代码片段为例，其定义在__multiInstanceLoopCharacteristics__ XML元素的相同级别：
 
 [source,xml,linenums]
 ----
@@ -4440,19 +4437,19 @@ There is a caveat when using execution listeners in combination with multi insta
 </extensionElements>
 ----
 
-For a normal BPMN activity, there would be an invocation of these listeners when the activity is started and ended.
+对于普通的BPMN活动，会在活动开始于结束时调用一次监听器。
 
-However, when the activity is multi instance, the behavior is different:
+然而，当该活动为多实例时，行为有区别：
 
-* When the multi instance activity is entered, before any of the _inner_ activities is executed, a start event is thrown. The _loopCounter_ variable is not yet set (is null).
-* For each of the actual activities visited, a start event is thrown. The _loopCounter_ variable is set.
+* 当进入多实例活动时，在任何__内部__活动执行前，抛出启动事件。这时__loopCounter__变量还未设置（为null）。
+* 每个实际执行的活动，抛出一个启动事件。这时__loopCounter__变量已经设置。
 
-The same reasoning applies for the end event:
+对结束事件类似：
 
-* When the actual activity is left, an end even is thrown. The _loopCounter_ variable is set.
-* When the multi instance activity has finished as a whole, an end event is thrown. The _loopCounter_ variable is not set.
+* 当离开实际活动时，抛出一个结束事件。这时__loopCounter__变量已经设置。
+* 当多实例活动整体完成时，抛出一个结束事件。这时__loopCounter__变量未设置。
 
-For example:
+例如：
 
 [source,xml,linenums]
 ----
@@ -4471,22 +4468,20 @@ For example:
 </subProcess>
 ----
 
-In this example, suppose the _assignees_ list has three items. The following happens at runtime:
+在这个例子中，假设__assignees__有三个条目。在运行时会发生如下事情：
 
-* A start event is thrown for the multi instance as a whole. The _start_ execution listener is invoked. The _loopCounter_ nor the _assignee_ variable will not be set (i.e. they will be null).
-* A start event is thrown for each activity instance. The _start_ execution listener is invoked three times. The _loopCounter_ nor the _assignee_ variable will be set (i.e. different from null).
-* So in total, the start execution listener is invoked four times.
+* 多实例整体抛出一个启动事件。调用一次__start__执行监听器，__loopCounter__与__assignee__变量均未设置（也就是说为null）。
+* 每一个活动实例抛出一个启动事件。调用三次__start__执行监听器，__loopCounter__与__assignee__变量均已设置（也就是说不为null）。
+* 因此启动执行监听器总共被调用四次。
 
-Note that the same applies when the _multiInstanceLoopCharacteristics_ are defined on something else than a subprocess too. For example in case the example above would be a simple userTask, the same reasoning still applies.
+请注意当__multiInstanceLoopCharacteristics__不是定义在子元素上，也是这样。例如上面的简单用户任务的例子，也合理适用。
 
-
-
-==== Compensation Handlers
+==== 补偿处理器 Compensation Handlers
 
 [[bpmnCompensationHandlerDescription]]
 
 
-===== Description
+===== 描述 Description
 
 <<experimental,[EXPERIMENTAL]>>
 
