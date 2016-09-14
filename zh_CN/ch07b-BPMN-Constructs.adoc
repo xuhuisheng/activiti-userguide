@@ -3419,9 +3419,9 @@ image::images/bpmn.business.rule.task.png[align="center"]
 
 ===== XML表示 XML representation
 
-To execute one or more business rules that are deployed in the same BAR file as the process definition, we need to define the input and result variables. For the input variable definition a list of process variables can be defined separated by a comma. The output variable definition can only contain one variable name that will be used to store the output objects of the executed business rules in a process variable. Note that the result variable will contain a List of objects. If no result variable name is specified by default org.activiti.engine.rules.OUTPUT is used.
+要执行一条或多条，与流程定义在同一个BAR文件中部署的，业务规则，需要定义输入与结果变量。输入变量可以用流程变量的列表定义，使用逗号分隔。输出变量只能有一个变量名，将执行业务规则数处对象存储至流程变量。请注意结果变量会包含对象的list。如果没有指定结果变量名，会使用默认的org.activiti.engine.rules.OUTPUT。
 
-The following business rule task executes all business rules deployed with the process definition:
+下面的业务规则任务，执行与流程定义一起部署的所有业务规则：
 
 [source,xml,linenums]
 ----
@@ -3440,7 +3440,7 @@ The following business rule task executes all business rules deployed with the p
 </process>
 ----
 
-The business rule task can also be configured to execute only a defined set of rules from the deployed .drl files. A list of rule names separated by a comma must be specified for this.
+也可以将业务规则任务配置为只执行部署的.drl文件中的一组规则。要做到这一点，需要指定规则名字的列表，用逗号分隔。
 
 [source,xml,linenums]
 ----
@@ -3448,9 +3448,9 @@ The business rule task can also be configured to execute only a defined set of r
       activiti:rules="rule1, rule2" />
 ----
 
-In this case only rule1 and rule2 are executed.
+这个例子中只会执行rule1与rule2。
 
-You can also define a list of rules that should be excluded from execution.
+也可以定义需要从执行中排除的规则列表。 execution.
 
 [source,xml,linenums]
 ----
@@ -3458,43 +3458,43 @@ You can also define a list of rules that should be excluded from execution.
       activiti:rules="rule1, rule2" exclude="true" />
 ----
 
-In this case all rules deployed in the same BAR file as the process definition will be executed, except for rule1 and rule2.
+这个例子中与流程定义一起部署在同一个BAR文件中的所有规则都会被执行，除了rule1与rule2.
 
-As mentioned earlier another option is to hook in the implementation of the BusinessRuleTask yourself:
+前面提到过，还可以自行处理BusinessRuleTask的实现：
 
 [source,xml,linenums]
 ----
 <businessRuleTask id="businessRuleTask" activiti:class="${MyRuleServiceDelegate}" />
 ----
 
-Now the BusinessRuleTask behaves exactly like a ServiceTask, but still keeps the BusinessRuleTask icon to visualize that we do business rule processing here.
+这样业务规则任务与服务任务的行为完全一样，但仍保持业务规则任务的图标，显示在这里处理业务规则。
 
 
 [[bpmnEmailTask]]
 
 
-==== Email Task
+==== 邮件任务 Email Task
 
-Activiti allows to enhance business processes with automatic mail service tasks that send e-mails to one or more recipients, including support for cc, bcc, HTML content, ... etc. Note that the mail task is *not* an 'official' task of the BPMN 2.0 spec (and it does not have a dedicated icon as a consequence). Hence, in Activiti the mail task is implemented as a dedicated service task.
+Activiti可以通过自动邮件服务任务，增强业务流程。可以向一个或多个收信人发送邮件，支持cc，bcc，HTML内容，等等。请注意邮件任务**不是**BPMN 2.0规范的“官方”任务（因此也没有专用图标）。因此，在Activiti中，邮件任务实现为一种特殊的服务任务。
 
 
 [[bpmnEmailTaskServerConfiguration]]
 
 
-===== Mail server configuration
+===== 邮件服务器配置 Mail server configuration
 
-The Activiti engine sends e-mails trough an external mail server with SMTP capabilities. To actually send e-mails, the engine needs to know how to reach the mail server. Following properties can be set in the _activiti.cfg.xml_ configuration file:
+Activiti引擎通过支持SMTP的外部邮件服务器发送邮件。要发送邮件，引擎需要了解如何连接邮件服务器。可以在__activiti.cfg.xml__配置文件中设置下面的参数：
 
 [options="header"]
 |===============
-|Property|Required?|Description
-|mailServerHost|no|The hostname of your mail server (e.g. mail.mycorp.com). Default is +localhost+
-|mailServerPort|yes, if not on the default port|The port for SMTP traffic on the mail server. The default is _25_
-|mailServerDefaultFrom|no|The default e-mail address of the sender of e-mails, when none is provided by the user. By default this is _activiti@activiti.org_
-|mailServerUsername|if applicable for your server|Some mail servers require credentials for sending e-mail. By default not set.
-|mailServerPassword|if applicable for your server|Some mail servers require credentials for sending e-mail. By default not set.
-|mailServerUseSSL|if applicable for your server|Some mail servers require ssl communication. By default set to false.
-|mailServerUseTLS|if applicable for your server|Some mail servers (for instance gmail) require TLS communication. By default set to false.
+|参数|必填?|描述
+|mailServerHost|否|邮件服务器的主机名（如mail.mycorp.com）。默认为++localhost++
+|mailServerPort|是，如果不使用默认端口|邮件服务器的SMTP端口。默认值为__25__
+|mailServerDefaultFrom|否|若用户没有提供地址，默认使用的邮件发件人地址。默认为__activiti@activiti.org__
+|mailServerUsername|若服务器需要|部分邮件服务器发信时需要进行认证。默认为空。
+|mailServerPassword|若服务器需要|部分邮件服务器发信时需要进行认证。默认为空。
+|mailServerUseSSL|若服务器需要|部分邮件服务器要求ssl通信。默认设置为false。
+|mailServerUseTLS|若服务器需要|部分邮件服务器要求TLS通信（例如gmail）。默认设置为false。
 
 |===============
 
@@ -3502,37 +3502,31 @@ The Activiti engine sends e-mails trough an external mail server with SMTP capab
 [[bpmnEmailTaskUsage]]
 
 
-===== Defining an Email Task
+===== 定义邮件任务 Defining an Email Task
 
-The Email task is implemented as a dedicated <<bpmnJavaServiceTask,Service Task>> and is defined by setting _'mail'_ for the _type_ of the service task.
+邮件任务实现为特殊的<<bpmnJavaServiceTask,服务任务>>，通过将服务任务的__type__定义为__'mail'__设置。
 
 [source,xml,linenums]
 ----
 <serviceTask id="sendMail" activiti:type="mail">
 ----
 
-The Email task is configured by <<serviceTaskFieldInjection,field injection>>. All the values for these properties can contain EL expression, which are resolved at runtime during process execution. Following properties can be set:
+邮件任务通过<<serviceTaskFieldInjection,字段注入>>配置。这些参数的值可以使用EL表达式，将在流程执行运行时解析。可以设置下列参数：
 
 [options="header"]
 |===============
-|Property|Required?|Description
-|to|yes|The recipients if the e-mail. Multiple recipients are defined in a comma-separated list
-|from|no|The sender e-mail address. If not provided, the <<bpmnEmailTaskServerConfiguration,default configured>> from address is used.
-|subject|no|The subject of the e-mail.
-|cc|no|The cc's of the e-mail. Multiple recipients are defined in a comma-separated list
-|bcc|no|The bcc's of the e-mail. Multiple recipients are defined in a comma-separated list
-|charset|no|Allows to change the charset of the email, which is necessary for many
-                 non-English languages.
-
-|html|no|A piece of HTML that is the content of the e-mail.
-|text|no|The content of the e-mail, in case one needs to send plain none-rich e-mails.
-                   Can be used in combination with _html_, for e-mail clients
-                   that don't support rich content. The client will then fall back to this text-only alternative.
-
-|htmlVar|no|The name of a process variable that holds the HTML that is the content of the e-mail. The key difference between this and html is that this content will have expressions replaced before being sent by the mail task.
-|textVar|no|The name of a process variable that holds the plain text content of the e-mail. The key difference between this and html is that this content will have expressions replaced before being sent by the mail task.
-|ignoreException|no|Whether an failure when handling the e-mail throws an ActivitiException. By default this is set to false.
-|exceptionVariableName|no|When email handling does not throw an exception since _ignoreException = true_ a variable with the given name is used to hold a failure message
+|参数|必填?|描述
+|to|是|邮件的收信人。可以使用逗号分隔的列表定义多个接收人
+|from|否|邮件的发信人地址。如果不设置，会使用<<bpmnEmailTaskServerConfiguration,默认配置>>的地址
+|cc|否|邮件的抄送人。可以使用逗号分隔的列表定义多个接收人
+|bcc|否|邮件的密送人。可以使用逗号分隔的列表定义多个接收人
+|charset|否|可以修改邮件的字符集，对许多非英语语言很必要。
+|html|否|邮件的HTML内容
+|text|否|邮件的内容，普通非富文本的邮件。对于不支持富文本内容的客户端，可以与__html__一起使用。客户端会退回为纯文本格式。
+|htmlVar|否|存储邮件HTML内容的流程变量名。与html参数的最大区别，是这个参数会在邮件任务发送前，使用其内容进行表达式替换。
+|textVar|否|存储邮件纯文本内容的流程变量名。与text参数的最大区别，是这个参数会在邮件任务发送前，使用其内容进行表达式替换。
+|ignoreException|否|处理邮件时的失败，是否抛出ActivitiException。默认设置为false。
+|exceptionVariableName|否|当处理邮件时的失败，由于__ignoreException = true__设置而不会抛出异常，则使用给定名字的变量保存失败信息
 
 |===============
 
@@ -3541,9 +3535,9 @@ The Email task is configured by <<serviceTaskFieldInjection,field injection>>. A
 [[bpmnEmailTaskExampleUsage]]
 
 
-===== Example usage
+===== 使用示例 Example usage
 
-The following XML snippet shows an example of using the Email Task.
+下面的XML代码片段展示了使用邮件任务的示例。
 
 [source,xml,linenums]
 ----
@@ -3574,7 +3568,7 @@ The following XML snippet shows an example of using the Email Task.
 
 ----
 
-with the following result:
+产生如下结果：
 
 image::images/email.task.result.png[align="center"]
 
@@ -3582,42 +3576,41 @@ image::images/email.task.result.png[align="center"]
 [[bpmnMuleTask]]
 
 
-==== Mule Task
+==== Mule任务 Mule Task
 
 
-The mule task allows to send messages to Mule enhancing the integration features of Activiti. Note that the mule task is *not* an 'official' task of the BPMN 2.0 spec (and it does not have a dedicated icon as a consequence). Hence, in Activiti the mule task is implemented as a dedicated service task.
+Mule任务可以向Mule发送消息，增强Activiti的集成特性。请注意Mule任务**不是**BPMN 2.0规范的“官方”任务（因此也没有专用图标）。因此，在Activiti中，Mule任务实现为一种特殊的服务任务。
 
 [[bpmnMuleTaskUsage]]
 
 
-===== Defining an Mule Task
+===== 定义Mule任务 Defining an Mule Task
 
-
-The Mule task is implemented as a dedicated <<bpmnJavaServiceTask,Service Task>> and is defined by setting _'mule'_ for the _type_ of the service task.
+Mule任务实现为特殊的<<bpmnJavaServiceTask,服务任务>>，通过将服务任务的__type__定义为__'mule'__设置。
 
 [source,xml,linenums]
 ----
 <serviceTask id="sendMule" activiti:type="mule">
 ----
 
-The Mule task is configured by <<serviceTaskFieldInjection,field injection>>. All the values for these properties can contain EL expression, which are resolved at runtime during process execution. Following properties can be set:
+Mule任务通过<<serviceTaskFieldInjection,字段注入>>配置。这些参数的值可以使用EL表达式，将在流程执行运行时解析。可以设置下列参数：
 
 [options="header"]
 |===============
-|Property|Required?|Description
-|endpointUrl|yes|The Mule endpoint you want to invoke.
-|language|yes|The language you want to use to evaluate the payloadExpression field.
-|payloadExpression|yes|An expression that will be the message's payload.
-|resultVariable|no|The name of the variable which will store the result of the invocation.
+|参数|必填?|描述
+|endpointUrl|是|希望调用的Mule端点（endpoint）。
+|language|是|计算payloadExpression字段所用的语言。
+|payloadExpression|是|消息的载荷表达式
+|resultVariable|否|存储调用结果的变量名。
 
 |===============
 
 [[bpmnMuleTaskExampleUsage]]
 
 
-===== Example usage
+===== 使用示例 Example usage
 
-The following XML snippet shows an example of using the Mule Task.
+下面的XML代码片段展示了使用Mule任务的示例。
 
 [source,xml,linenums]
 ----
@@ -3640,24 +3633,23 @@ The following XML snippet shows an example of using the Mule Task.
 [[bpmnCamelTask]]
 
 
-==== Camel Task
+==== Camel任务 Camel Task
 
-The Camel task allows to send messages to and receive messages from Camel and thereby enhances the integration features of Activiti. Note that the Camel task is *not* an 'official' task of the BPMN 2.0 spec (and it does not have a dedicated icon as a consequence). Hence, in Activiti the Camel task is implemented as a dedicated service task. Also note to include the Activiti Camel module in your project to use the Camel task functionality.
-
+Camel任务可以向Mule发送与接收消息，增强Activiti的集成特性。请注意Camel任务**不是**BPMN 2.0规范的“官方”任务（因此也没有专用图标）。因此，在Activiti中，Camel任务实现为一种特殊的服务任务。还请注意要使用Camel任务功能，需要在项目中包含Activiti Camel模块。
 
 [[bpmnCamelTaskUsage]]
 
 
-===== Defining a Camel Task
+===== 定义Camel任务 Defining a Camel Task
 
-The Camel task is implemented as a dedicated <<bpmnJavaServiceTask,Service Task>> and is defined by setting _'camel'_ for the _type_ of the service task.
+Camel任务实现为特殊的<<bpmnJavaServiceTask,服务任务>>，通过将服务任务的__type__定义为__'camel'__设置。
 
 [source,xml,linenums]
 ----
 <serviceTask id="sendCamel" activiti:type="camel">
 ----
 
-The process definition itself needs nothing else then the camel type definition on a service task. The integration logic is all delegated to the Camel container. By default the Activiti Engine looks for a camelContext bean in the Spring container. The camelContext bean defines the Camel routes that will be loaded by the Camel container. In the following example the routes are loaded from a specific Java package, but you can also define routes directly in the Spring configuration itself.
+流程定义本身只需要在服务任务上定义Camel类型。集成逻辑都通过Camel容器代理。默认情况下Activiti引擎在Spring容器中查找camelContext bean。camelContext bean定义了由Camel容器装载的Camel路由。在下面的例子中，路由通过给定的Java包装载，但也可以自己直接在Spring配置中定义路由。
 
 [source,xml,linenums]
 ----
@@ -3668,9 +3660,9 @@ The process definition itself needs nothing else then the camel type definition 
 </camelContext>
 ----
 
-For more documentation about Camel routes you can look on the link:$$http://camel.apache.org/$$[Camel website]. The basic concepts are demonstrated through a few small samples here in this document. In the first sample, we will do the simplest form of Camel call from an Activiti workflow. Let's call it SimpleCamelCall.
+可以在link:$$http://camel.apache.org/$$[Camel网站]找到关于Camel路由的更多文档。这篇文档中只通过几个小例子展示基本概念。在第一个例子中，在Activiti工作流中进行最简单的Camel调用。叫做SimpleCamelCall。
 
-If you want to define multiple Camel context beans and/or want to use a different bean name, this can be overridden on the Camel task definition like this:
+如果想要定义多个Camel上下文bean，并且/或想使用不同的bean名字，可以在Camel任务定义中像这样覆盖：
 
 [source,xml,linenums]
 ----
@@ -3685,10 +3677,9 @@ If you want to define multiple Camel context beans and/or want to use a differen
 [[bpmnCamelTaskSimpleCamelCall]]
 
 
-===== Simple Camel Call example
+===== 简单Camel调用示例 Simple Camel Call example
 
-
-All the files related to this example can be found in org.activiti.camel.examples.simpleCamelCall package of activiti-camel module. The target is simply activating a specific camel route. First of all we need an Spring context which contains the introduction to the routes as mentioned previously. This part of the file serves this purpose:
+这个例子相关的所有文件，都可以在activiti-camel模块的org.activiti.camel.examples.simpleCamelCall包中找到。目的是简单启动一个camel路由。首先需要一个配置了上面提到的路由的Spring上下文。下面的代码用做这个目的：
 
 [source,xml,linenums]
 ----
@@ -3710,19 +3701,19 @@ public class SimpleCamelCallRoute extends RouteBuilder {
 }
 ----
 
-The route just logs the message body and nothing more. Notice the format of the from endpoint. It is consisted of three parts:
+路由只是记录消息体，不做更多事情。请注意from端点的格式。包含三个部分：
 
 
 [options="header"]
 |===============
-|Endpoint Url Part|Description
-|activiti|refers to Activiti endpoint
-|SimpleCamelCallProcess|name of the process
-|simpleCall|name of the Camel service in the process
+|端点Url组件|描述
+|activiti|引用Activiti端点
+|SimpleCamelCallProcess|流程名
+|simpleCall|流程中Camel服务的名字
 
 |===============
 
-Ok, our route is now properly configured and accessible to the Camel. Now comes the workflow part. The workflow looks like:
+现在路由已经正确配置，可以访问Camel。下面需要像这样定义工作流：
 
 [source,xml,linenums]
 ----
@@ -3741,12 +3732,9 @@ Ok, our route is now properly configured and accessible to the Camel. Now comes 
 [[bpmnCamelTaskPingPong]]
 
 
-===== Ping Pong example
+===== 连通性测试 Ping Pong example
 
-
-Our example worked but nothing is really transferred between Camel and Activiti and there is not much merit in it. In this example we try to send and receive data to and from Camel. We send a string, camel concatenates something to it and returns back the result. The sender part is trivial, we send our message in form of a variable to Camel Task. Here is our caller code:
-
-
+示例已经可以工作，但实际上Camel与Activiti之间并没有通信，因此没有太多价值。在这个例子里，将试着从Camel接收与发送消息。将发送一个字符串，Camel在其上连接一些东西，并返回作为结果。发送部分比较普通，以变量的格式将信息发送给Camel服务。这是我们的调用代码：
 
 [source,java,linenums]
 ----
@@ -3765,8 +3753,7 @@ public void testPingPong() {
 }
 ----
 
-
-The variable "input" is actually the input for the Camel route and outputMap is there to capture the result back from Camel. The process should be something like this:
+“input”变量是实际上是Camel路由的输入，而outputMap用于捕获Camel传回的结果。流程像是这样：
 
 [source,xml,linenums]
 ----
@@ -3782,7 +3769,7 @@ The variable "input" is actually the input for the Camel route and outputMap is 
 
 ----
 
-Note that SaveOutput Service task, stores the value of "Output" variable from context to the previously mentioned OutputMap. Now we have to know how the variables are send to Camel and returned back. Here comes the notion of Camel behaviour into the play. The way variables are communicated to Camel is configurable via CamelBehavior. Here we use Default one in our sample, a short description of the other ones comes afterwards. With such a code you can configure the desired camel behaviour:
+请注意SaveOutput服务任务，将“Output”变量从上下文中取出，存储至上面提到的OutputMap。现在需要了解变量如何发送至Camel，以及如何返回。这就需要了解Camel行为的概念。变量与Camel通信的方式可以通过CamelBehavior配置。在这个例子里使用默认配置，其它配置在后面会进行简短介绍。下面的代码配置了期望的Camel行为：
 
 [source,xml,linenums]
 ----
@@ -3793,7 +3780,7 @@ Note that SaveOutput Service task, stores the value of "Output" variable from co
 </serviceTask>
 ----
 
-If you do not specify and specific behaviour then, org.activiti.camel.impl.CamelBehaviorDefaultImpl will be set. This behaviour copies the variables to Camel properties of the same name. In return regardless of selected behaviour, if the camel message body is a map, then each of its elements is copied as a variable, else the whole object is copied into a specific variable with the name of "camelBody". Knowing that, this camel route concludes our second example:
+如果不指定行为，则会设置为org.activiti.camel.impl.CamelBehaviorDefaultImpl。这个行为将以相同名字，将变量复制到Camel参数。对于返回值，无论选择什么行为，如果Camel消息体是一个map，则其中的每个元素都将复制为变量，否则整个对象将复制为名为"camelBody"的特定变量。了解这些后，Camel路由总结为第二个例子：
 
 [source,java,linenums]
 ----
@@ -3803,10 +3790,9 @@ public void configure() throws Exception {
 }
 ----
 
-In this route, the string "world" is concatenated to the end of property named "input" and the result will be in the message body. It is accessible by checking "camelBody" variable in the java service task and copied to "outputMap" and checked in test case. Now that the example on its default behaviour works, lets see what are the other possibilities. In starting every camel route, the Process Instance ID will be copied into a camel property with the specific name of "PROCESS_ID_PROPERTY". It is later used for correlating the process instance and camel route. Also it can be exploited in the Camel route.
+在这个路由中，字符串"world"会在结尾连接上名为“input”的参数，结果作为消息体。可以通过Java服务任务检查"camelBody"变量，并复制到“outputMap”，并可通过测试用例检查。既然这个例子使用默认行为，就让我们看看还有什么其他选择。在每个Camel路由的开始处，流程实例id会复制为名为"PROCESS_ID_PROPERTY"的Camel参数。之后会用于将流程实例与Camel路由相关联，也可以在Camel路由中使用。
 
-
-There are three different behaviours already available out of the box in Activiti. The behaviour can be overwritten by a specific phrase in the route URL. Here is an example of overriding the already defined behaviour in URL:
+Activiti中有已经可以使用三种不同的行为。可以通过修改路由URL中特定的部分，覆写行为。这里有个在URL中重载已有行为的例子：
 
 [source,java,linenums]
 ----
@@ -3814,98 +3800,95 @@ from("activiti:asyncCamelProcess:serviceTaskAsync2?copyVariablesToProperties=tru
 
 ----
 
-the following table provides an overview of three available camel behaviours:
+下表展示了三种可用的Camel行为：
 
 [options="header"]
 |===============
-|Behaviour|In Url|Description
-|CamelBehaviorDefaultImpl|copyVariablesToProperties|Copy Activiti variables as Camel properties
-|CamelBehaviorCamelBodyImpl|copyCamelBodyToBody|Copy only Activiti variable named "camelBody" as camel message body
-|CamelBehaviorBodyAsMapImpl|copyVariablesToBodyAsMap|Copy all the Activiti variables in a map as Camel message body
+|行为|Url中|描述
+|CamelBehaviorDefaultImpl|copyVariablesToProperties|将Activiti变量复制为Camel参数
+|CamelBehaviorCamelBodyImpl|copyCamelBodyToBody|只将名为"camelBody"的Activiti变量复制为Camel消息体
+|CamelBehaviorBodyAsMapImpl|copyVariablesToBodyAsMap|将一个map中的所有Activiti变量复制为Camel消息体
 
 |===============
 
-
-The above table explains how Activiti variables are going to be transferred to Camel. The following table explains how the Camel variables are returned back to Activiti. This can only be configured in route URLs.
+上表解释了Activiti变量如何传递给Camel。下表解释了Camel变量如何返回至Activiti。只能在路由URL中配置。
 
 [options="header"]
 |===============
-|Url|Description
-|Default|If Camel body is a map, copy each element as Activiti variable, otherwise copy the whole Camel body as "camelBody" Activiti variable
-|copyVariablesFromProperties|Copy Camel properties as Activiti variables of the same name
-|copyCamelBodyToBodyAsString|like default, but if camel Body is not a map, first convert it to String and then copy it in "camelBody"
-|copyVariablesFromHeader|Additionally copy camel headers to Activiti variables of the same names
+|Url|描述
+|Default|如果Camel消息体是一个map，则将其中每一对象复制为Activiti变量；否则将整个Camel消息体复制为"camelBody" Activiti变量
+|copyVariablesFromProperties|将Camel参数以同名复制为Activiti变量
+|copyCamelBodyToBodyAsString|与default相同，但如果Camel消息体不是map，则首先将其转换为字符串，然后再复制为"camelBody"
+|copyVariablesFromHeader|额外将Camel头复制为Activiti的同名变量
 
 |===============
 
-===== Returning back the variables
-What is mentioned above about passing variables, only holds for start side of the variable transfer, in both directions from Camel to Activiti and vice versa. +
-It is important to notice that because of special non blocking behavior of Activiti, variables are not automatically returned back from Activiti to Camel.
-For that to happen, a special syntax is available. There can be one or more parameters in Camel route URL in format of +var.return.someVariableName+.
-All variables having a name equal to one of these parameters without +var.return+ part, will be considered as output variables and will be copied back as camel properties with the same names. +
-For example in a route like:
+===== 返回变量 Returning back the variables
+
+上面提到的传递变量，不论是从Camel到Activiti还是反过来，都只用于变量传递的开始侧。要特别注意，由于Activiti的非阻塞行为，Activiti不会自动向Camel返回变量。因此，提供了特殊的语法。可以在Camel路由URL中，以++var.return.someVariableName++的格式，使用一个或多个参数。与这些参数同名，但没有++var.return++部分的变量，会被认为是输出变量，因此将会以相同的名字复制回Camel参数。例如在如下路由中：
+
 ----
 from("direct:start").to("activiti:process?var.return.exampleVar").to("mock:result");
 ----
 
-Activiti variable with the name of +exampleVar+ will be considered as output variable and will be copied back as a property in camel with the same name.
+名为++exampleVar++的Activiti变量，将被认为是输出变量，因此会以同名复制回Camel参数。
 
 
 [[bpmnCamelTaskAsyncPingPong]]
 
 
-===== Asynchronous Ping Pong example
+===== 异步连通性测试 Asynchronous Ping Pong example
 
-Previous examples were all synchronous. The workflow stops, until the camel route is concluded and returned. In some cases, we might need the Activiti workflow to continue. For such purposes the asynchronous capability of the Camel service task is useful. You can make use of this feature by setting the async property of the Camel service task to true.
+上面的例子都是同步的。工作流停止，直到Camel路由结束并返回。有时，需要Activiti工作流继续运行。为了这个目的，Camel服务任务的异步功能就很有用。可以通过将Camel服务任务的异步参数设置为true，启用这个功能。
 
 [source,xml,linenums]
 ----
 <serviceTask id="serviceAsyncPing" activiti:type="camel" activiti:async="true"/>
 ----
 
-
-By setting this feature the specified Camel route is activated asynchronously by the Activiti job executor. When you define a queue in the Camel route the Activiti process will continue with the activities after the Camel service task. The Camel route will be executed fully asynchronously from the process execution. If you want to wait for a response of the Camel service task somewhere in your process definition, you can use a receive task.
+设置这个特性后，Camel路由会由Activiti作业执行器异步启动。如果定义了Camel路由队列，Activiti流程会继续执行Camel服务任务之后的活动。Camel路由会与流程执行完全异步地执行。如果需要在流程定义的某处等待Camel服务任务的响应，可以使用接收任务（receive task）。
 
 [source,xml,linenums]
 ----
 <receiveTask id="receiveAsyncPing" name="Wait State" />
 ----
 
-The process instance will wait until a signal is received, for example from Camel. In Camel you can send a signal to the process instance by sending a message to the proper Activiti endpoint.
+流程实例会等待，直到接收到信号，例如来自Camel。在Camel中，可以通过向合适的Activiti端点发送消息，来为流程实例发送信号。
 
 [source,java,linenums]
 ----
  from("activiti:asyncPingProcess:serviceAsyncPing").to("activiti:asyncPingProcess:receiveAsyncPing");
 ----
 
+（译者注：原文如此。可能为缺失了的 to 端点的定义：）
 
-* constant string "activiti"
-* process name
-* receive task name
+* “activiti”字符串常量
+* 流程名
+* 接收任务名
 
 
 [[bpmnCamelTaskAsyncPingPong]]
 
 
-===== Instantiate workflow from Camel route
+===== 从Camel路由实例化工作流 Instantiate workflow from Camel route
 
-In our all previous examples Activiti workflow started first and the Camel route was started within workflow. It is also possible from the other side. It is possible that a workflow is instantiated from an already started camel route. It is very similar to signalling receive task, except that the last part is not there. Here is a sample route:
+上面的所有例子，都是先启动Activiti工作流，然后在工作流中启动Camel路由。也可以反过来。可以在已经启动的Camel路由中实例化工作流。与为接收任务发送消息很类似，除了最后一部分。这是一个简单的路由：
 
 [source,java,linenums]
 ----
 from("direct:start").to("activiti:camelProcess");
 ----
 
-as you see the url has two parts, the first is constant string "activiti" and the second name is the name of the process. Obviously the process should already be deployed and startable by engine configuration.
+可以看到url有两部分，第一部分是“activiti”字符串常量，第二个名字是流程的名字。很明显流程需要已经部署，并且可以通过引擎配置启动。
 
-It is also possible to set the initiator of the process to some authenticated user id that is provided in a Camel header. To achieve this first of all an initiator variable must be specified in the process definition:
+也可以在Camel头中，将流程起动人设置为某个已认证用户id。要这么做，首先需要在流程定义中指定启动人变量：
 
 [source,xml,linenums]
 ----
 <startEvent id="start" activiti:initiator="initiator" />
 ----
 
-Then given that the user id is contained in a Camel header named _CamelProcessInitiatorHeader_ the Camel route could be defined as follows:
+然后在Camel头中的__CamelProcessInitiatorHeader__指定用户id。Camel路由会如下定义：
 
 [source,java,linenums]
 ----
@@ -3918,12 +3901,12 @@ from("direct:startWithInitiatorHeader")
 [[bpmnManualTask]]
 
 
-==== Manual Task
+==== 手动任务 Manual Task
 
 [[bpmnManualTaskDescription]]
 
 
-===== Description
+===== 描述 Description
 
 A _Manual Task_ defines a task that is external to the BPM engine. It is used to model work that is done by somebody, which the engine does not need to know of, nor is there a system or UI interface. For the engine, a manual task is handled as a *pass-through activity*, automatically continuing the process from the moment process execution arrives into it.
 
