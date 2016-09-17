@@ -3,7 +3,7 @@
 
 可以使用JPA实体作为流程变量，这样可以：
 
-* 基于流程变量更新已有JPA实体，流程变量可以在用户任务的表单中填写，或者通过服务任务生成。
+* 基于流程变量更新已有JPA实体。流程变量可以在用户任务的表单中填写，或者通过服务任务生成。
 * 重用已有的领域模型，而不需要写专门的服务用于读取与更新实体值。
 * 基于已有实体做决策（网关）。
 * ...
@@ -21,7 +21,7 @@
 
 === 配置 Configuration
 
-要使用JPA实体，引擎必须引用++EntityManagerFactory++。可以通过配置引用，或者提供持久化单元名（jpa Persistence Unit Name）来实现。用作变量的JPA实体将将被自动检测，并会按情况处理。
+要使用JPA实体，引擎必须引用++EntityManagerFactory++。可以通过配置引用，或者提供持久化单元名（Persistence Unit Name）来实现。用作变量的JPA实体将将被自动检测，并会按情况处理。
 
 下面的示例配置使用jpaPersistenceUnitName：
 
@@ -95,7 +95,7 @@ ProcessEngine processEngine = ProcessEngineConfiguration
 
 首先，基于++META-INF/persistence.xml++，为我们的持久化单元创建一个__EntityManagerFactory__。它包含了需要包含在持久化单元内的类，以及一些厂商特定配置。
 
-在这个测试里我们使用简单实体，有一个id，以及一个++String++值参数，进行持久化。在运行测试前，先创建一个实体并保存。
+在这个测试里我们使用简单实体，它有一个id以及一个++String++值参数，用于持久化。在运行测试前，先创建一个实体并保存。
 
 [source,java,linenums]
 ----
@@ -148,10 +148,11 @@ ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("Upda
   activiti:expression="${entityToUpdate.setValue('updatedValue')}" />
 ----
 
-当服务任务完成时，流程实例等待在流程定义中定义的用户任务，让我们可以查看流程实例。在这时，++EntityManager++已经刷入，对实体的修改也已经存入数据库。当我们使用++entityToUpdate++变量的值时，将重新载入，我们会得到++value++参数设置为++updatedValue++的实体。
+当服务任务完成时，流程实例在流程定义中定义的用户任务处等待，让我们可以查看流程实例。在这时，++EntityManager++已经刷入，对实体的修改也已经存入数据库。当我们使用++entityToUpdate++变量的值时，将重新载入，我们会得到++value++参数设置为++updatedValue++的实体。
 
 [source,java,linenums]
 ----
+// 流程'UpdateJPAValuesProcess'中的服务任务应已设置了entityToUpdate的value。
 // Servicetask in process 'UpdateJPAValuesProcess' should have set value on entityToUpdate.
 Object updatedEntity = runtimeService.getVariable(processInstance.getId(), "entityToUpdate");
 assertTrue(updatedEntity instanceof FieldAccessJPAEntity);
@@ -160,7 +161,7 @@ assertEquals("updatedValue", ((FieldAccessJPAEntity)updatedEntity).getValue());
 
 ==== 查询JPA流程变量 Query JPA process variables
 
-可以查询有特定JPA实体作为变量值的++流程实例++与++执行++。**请注意对于++ProcessInstanceQuery++与++ExecutionQuery++的JPA实体查询，只支持++variableValueEquals(name, entity)++**。而++variableValueNotEquals++、++variableValueGreaterThan++、++variableValueGreaterThanOrEqual++、++variableValueLessThan++与++variableValueLessThanOrEqual++方法都不支持，并会在JPA实体传递为值时，抛出++ActivitiException++。
+可以查询以特定JPA实体作为变量值的++流程实例++与++执行++。**请注意对于++ProcessInstanceQuery++与++ExecutionQuery++的JPA实体查询，只支持++variableValueEquals(name, entity)++**。而++variableValueNotEquals++、++variableValueGreaterThan++、++variableValueGreaterThanOrEqual++、++variableValueLessThan++与++variableValueLessThanOrEqual++方法都不支持，并会在值传递为JPA实体时，抛出++ActivitiException++。
 
 [source,java,linenums]
 ----
@@ -173,9 +174,9 @@ assertEquals("updatedValue", ((FieldAccessJPAEntity)updatedEntity).getValue());
 可以在++activiti-spring-examples++中找到更高级的例子，++JPASpringTest++。它描述了下属简单用例：
 
 * 一个已有的Spring bean，使用已有的JPA实体，用于存储贷款申请。
-* 使用Activiti，可以使用该已有实体，通过该已有bean获取，并将其用作流程中的变量。流程定义如下步骤：
-** 创建新的LoanRequest（贷款申请）的服务任务，使用已有的++LoanRequestBean++，并使用启动流程时接收的变量（例如，从启动表单）。创建的实体作为变量存储，使用++activiti:resultVariable++将表达识别结果存储为变量。
-** 让经理可以审核申请并批准/驳回的用户任务，选择存储为boolean变量++approvedByManager++。
+* 使用Activiti，可以通过该bean获取该实体，并将其用作流程中的变量。流程定义如下步骤：
+** 创建新的LoanRequest（贷款申请）的服务任务，使用已有的++LoanRequestBean++，并使用启动流程时接收的变量（例如，从启动表单）。创建的实体作为变量存储，使用++activiti:resultVariable++将表达式结果存储为变量。
+** 让经理可以审核申请并批准/驳回的用户任务，该选择将会存储为boolean变量++approvedByManager++。
 ** 更新贷款申请实体的服务任务，以便其可以与流程同步。
 ** 依据++approved++实体参数的值，使用一个排他网关，选择下一步采用哪条路径：若申请被批准，结束流程；否则，产生一个额外任务（Send rejection letter 发送拒信），以便客户可以收到拒信得到通知。
 
