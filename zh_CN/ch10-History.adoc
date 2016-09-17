@@ -2,7 +2,7 @@
 
 == 历史 History
 
-历史是捕获流程执行过程中发生的事情，并永久存储的组件。与运行时数据相反，历史数据在流程实例完成以后，仍会保持在数据库中。
+历史是捕获流程执行过程中发生的事情，并将其永久存储的组件。与运行时数据相反，历史数据在流程实例完成以后，仍会保持在数据库中。
 
 有5个历史实体：
 
@@ -14,7 +14,7 @@
 
 因为数据库为过去与当前进行中的实例都保存历史实体，因此你可能希望查询这些表，以减少访问运行时流程实例数据，并提高运行时执行性能。
 
-之后，这些信息将在Activiti Explorer中暴露。并且，也将是生成报告所用的信息。
+之后，这些信息将在Activiti Explorer中暴露。并且，也将用于生成报告。
 
 
 [[historyQuery]]
@@ -80,7 +80,7 @@ historyService.createHistoricActivityInstanceQuery()
 
 ==== 历史详情查询 HistoricDetailQuery
 
-下一个例子，取得id为123的流程中，所有变量更新。这个查询只会返回++HistoricVariableUpdate++。请注意有可能某个变量名有多个++HistoricVariableUpdate++实体，代表流程中的每一次变量更新。可以使用++orderByTime++（变量更新的时间）或++orderByVariableRevision++（运行时变量更新时的版本号），得到其发生顺序。
+下一个例子，取得id为123的流程中，所有变量的更新记录。这个查询只会返回++HistoricVariableUpdate++。请注意有可能某个变量名有多个++HistoricVariableUpdate++实体，代表流程中的每一次变量更新。可以使用++orderByTime++（变量更新的时间）或++orderByVariableRevision++（运行时变量更新时的版本号），按其发生顺序排序。
 
 [source,java,linenums]
 ----
@@ -102,7 +102,7 @@ historyService.createHistoricDetailQuery()
   .list()
 ----
 
-最后一个例子，取得id为"123"的任务进行的所有变量更新操作。将为该任务设置的所有变量（任务局部变量）返回++HistoricVariableUpdates++，而**不会**返回流程实例中设置的。
+最后一个例子，取得id为"123"的任务进行的所有变量更新操作。将返回该任务设置的所有变量（任务局部变量）的++HistoricVariableUpdates++，而**不会**返回流程实例中设置的。
 
 [source,java,linenums]
 ----
@@ -182,7 +182,7 @@ ProcessEngine processEngine = ProcessEngineConfiguration
 
 * ++none（无）++：跳过所有历史存档。对于运行时流程执行来说，是性能最高的配置，但是不会保存任何历史信息。
 * ++activity（活动）++：存档所有流程实例与活动实例。在流程实例结束时，顶级流程实例变量的最新值，将被复制为历史流程实例。不会存档细节。
-* ++audit（审计）++：默认级别。将存档所有流程实例，活动实例，并保持变量值以及所有提交的表单参数持续同步，以保证通过表单的所有用户操作都可追踪、可审计。
+* ++audit（审计）++：默认级别。将存档所有流程实例，活动实例，并保持变量值以及所有提交的表单参数持续同步，以保证表单的所有用户操作都可追踪、可审计。
 * ++full（完全）++：历史存档的最高级别，因此也最慢。这个级别存储所有++audit++级别存储的信息，加上所有其他可用细节，主要是流程变量的更新。
 
 **在Activiti 5.11版本以前，历史级别保存在数据库中（+$$ACT_GE_PROPERTY$$+ 表，参数名为++historyLevel++）。从5.11开始，这个值不再使用，并从数据库中忽略/删除。现在历史可以在2个引擎的启动间切换，而不会由于前一个引擎启动修改了级别，而抛出异常。**
@@ -207,4 +207,4 @@ historyService
 
 在这个情况下，只会返回++HistoricFormProperty++类型的历史详情。
 
-如果在调用提交方法前，使用++IdentityService.setAuthenticatedUserId(String)++设置了认证用户，则该提交了表单的认证用户可以在历史中访问，对于启动表单使用++HistoricProcessInstance.getStartUserId()++，对于任务表单使用++HistoricActivityInstance.getAssignee()++。
+如果在调用提交方法前，使用++IdentityService.setAuthenticatedUserId(String)++设置了认证用户，则该提交了表单的认证用户可以在历史中访问。对于启动表单使用++HistoricProcessInstance.getStartUserId()++，对于任务表单使用++HistoricActivityInstance.getAssignee()++。
