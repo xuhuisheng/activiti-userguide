@@ -1,37 +1,37 @@
 [[history]]
 
-== History
+== 历史 History
 
-History is the component that captures what happened during process execution and stores it permanently.  In contrast to the runtime data,  the history data will remain present in the DB also after process instances have completed.
+历史是捕获流程执行过程中发生的事情，并永久存储的组件。与运行时数据相反，历史数据在流程实例完成以后，仍会保持在数据库中。
 
-There are 5 history entities:
+有5个历史实体：
 
-* ++HistoricProcessInstance++s containing information about current and past process instances.
-* ++HistoricVariableInstance++s containing the latest value of a process variable or task variable.
-* ++HistoricActivityInstance++s containing information about a single execution of an activity (node in the process).
-* ++HistoricTaskInstance++s containing information about current and past (completed and deleted) task instances.
-* ++HistoricDetail++s containing various kinds of information related to either a historic process instances, an activity instance or a task instance.
+* ++HistoricProcessInstance++保存当前与已结束流程实例的信息。
+* ++HistoricVariableInstance++保存流程变量或任务变量的最新值。
+* ++HistoricActivityInstance++保存活动（流程中的节点）的单一执行信息。
+* ++HistoricTaskInstance++保存当前与过去（完成并删除的）任务实例的信息。
+* ++HistoricDetail++保存与历史流程实例，活动实例或任务实例有关的多种信息。
 
-Since the DB contains historic entities for past as well as ongoing instances, you might want to consider  querying these tables in order to minimize access to the runtime process instance data  and that way keeping the runtime execution performant.
+因为数据库为过去与当前进行中的实例都保存历史实体，因此你可能希望查询这些表，以减少访问运行时流程实例数据，并提高运行时执行性能。
 
-Later on, this information will be exposed in Activiti Explorer. Also, it will be the information from which the reports will be generated.
+之后，这些信息将在Activiti Explorer中暴露。并且，也将是生成报告所用的信息。
 
 
 [[historyQuery]]
 
 
-=== Querying history
+=== 查询历史 Querying history
 
-In the API, it's possible to query all 5 of the History entities. The HistoryService exposes the methods +createHistoricProcessInstanceQuery()+, +createHistoricVariableInstanceQuery()+, +createHistoricActivityInstanceQuery()+,  +createHistoricDetailQuery()+ and +createHistoricTaskInstanceQuery()+.
+可以使用API查询全部5种历史实体，HistoryService暴露的++createHistoricProcessInstanceQuery()++、++createHistoricVariableInstanceQuery()++、++createHistoricActivityInstanceQuery()++、++createHistoricDetailQuery()++与++createHistoricTaskInstanceQuery()++方法。
 
-Below are a couple of examples that show some of the possibilities of the query API for history. Full description of the possibilities can be found in the link:$$http://activiti.org/javadocs/index.html$$[javadocs], in the +org.activiti.engine.history+ package.
+下面是一些例子，展示了历史查询API的一些用法。关于各用法的全部描述可以在link:$$http://activiti.org/javadocs/index.html$$[javadoc]中找到，在++org.activiti.engine.history++包中。
 
 [[historyQueryProcessInstance]]
 
 
-==== HistoricProcessInstanceQuery
+==== 历史流程实例查询 HistoricProcessInstanceQuery
 
-Get 10 +HistoricProcessInstances+ that are finished and which took the most time to complete (the longest duration) of all finished processes with definition 'XXX'.
+取得所有流程中，前10个花费最多时间完成（最长持续时间）的，定义为'XXX'，已完成的++HistoricProcessInstances++。
 
 [source,java,linenums]
 ----
@@ -46,9 +46,9 @@ historyService.createHistoricProcessInstanceQuery()
 [[historyQueryVariableInstance]]
 
 
-==== HistoricVariableInstanceQuery
+==== 历史变量实例查询 HistoricVariableInstanceQuery
 
-Get all +HistoricVariableInstances+ from a finished process instance with id 'xxx' ordered by variable name.
+在已完成的，id为'XXX'的流程实例中，取得所有++HistoricVariableInstances++，以变量名排序。
 
 [source,java,linenums]
 ----
@@ -61,9 +61,9 @@ historyService.createHistoricVariableInstanceQuery()
 [[historyQueryActivityInstance]]
 
 
-==== HistoricActivityInstanceQuery
+==== 历史活动实例查询 HistoricActivityInstanceQuery
 
-Get the last +HistoricActivityInstance+ of type 'serviceTask' that has been finished in any process that uses the processDefinition with id XXX.
+取得最新的，服务任务类型的，已完成的，流程定义的id为XXX的，++HistoricActivityInstance++。
 
 [source,java,linenums]
 ----
@@ -78,9 +78,9 @@ historyService.createHistoricActivityInstanceQuery()
 [[historyQueryDetail]]
 
 
-==== HistoricDetailQuery
+==== 历史详情查询 HistoricDetailQuery
 
-The next example, gets all variable-updates that have been done in process with id 123. Only ++HistoricVariableUpdate++s will be returned by this query. Note that it's possible that a certain variable name has multiple +HistoricVariableUpdate+ entries, for each time the variable was updated in the process. You can use +orderByTime+ (the time the variable update was done) or +orderByVariableRevision+ (revision of runtime variable at the time of updating) to find out in what order they occurred.
+下一个例子，取得id为123的流程中，所有变量更新。这个查询只会返回++HistoricVariableUpdate++。请注意有可能某个变量名有多个++HistoricVariableUpdate++实体，代表流程中的每一次变量更新。可以使用++orderByTime++（变量更新的时间）或++orderByVariableRevision++（运行时变量更新时的版本号），得到其发生顺序。
 
 [source,java,linenums]
 ----
@@ -91,7 +91,7 @@ historyService.createHistoricDetailQuery()
   .list()
 ----
 
-This example gets all <<formProperties,form-properties>> that were submitted in any task or when starting the process with id "123". Only ++HistoricFormProperties++s will be returned by this query.
+这个例子，取得流程id为"123"的，任何任务中或启动时提交的，所有<<formProperties,表单参数>>。这个查询只返回++HistoricFormProperties++。
 
 [source,java,linenums]
 ----
@@ -102,8 +102,7 @@ historyService.createHistoricDetailQuery()
   .list()
 ----
 
-
-The last example gets all variable updates that were performed on the task with id "123". This returns all +HistoricVariableUpdates+ for variables that were set on the task (task local variables), and NOT on the process instance.
+最后一个例子，取得id为"123"的任务进行的所有变量更新操作。将为该任务设置的所有变量（任务局部变量）返回++HistoricVariableUpdates++，而**不会**返回流程实例中设置的。
 
 [source,java,linenums]
 ----
@@ -114,7 +113,7 @@ historyService.createHistoricDetailQuery()
   .list()
 ----
 
-Task local variables can be set using the +TaskService+ or on a +DelegateTask+, inside ++TaskListener++:
+可以在++TaskListener++中使用++TaskService++或++DelegateTask++设置任务局部变量：
 
 [source,java,linenums]
 ----
@@ -131,9 +130,9 @@ public void notify(DelegateTask delegateTask) {
 [[historyQueryTaskInstance]]
 
 
-==== HistoricTaskInstanceQuery
+==== 历史任务示例查询  HistoricTaskInstanceQuery
 
-Get 10 ++HistoricTaskInstance++s that are finished and which took the most time to complete (the longest duration) of all tasks.
+取得所有任务中，前10个花费最多时间完成（最长持续时间）的，已完成的++HistoricTaskInstance++。
 
 [source,java,linenums]
 ----
@@ -143,7 +142,7 @@ historyService.createHistoricTaskInstanceQuery()
   .listPage(0, 10);
 ----
 
-Get ++HistoricTaskInstance++s that are deleted with a delete reason that contains "invalid", which were last assigned to user 'kermit'.
+取得删除原因包含"invalid"，最后一次指派给'kermit'用户的++HistoricTaskInstance++。
 
 [source,java,linenums]
 ----
@@ -157,9 +156,9 @@ historyService.createHistoricTaskInstanceQuery()
 
 [[historyConfig]]
 
-=== History configuration
+=== 历史配置 History configuration
 
-The history level can be configured programmatically, using the enum org.activiti.engine.impl.history.HistoryLevel (or _HISTORY_ constants defined on +ProcessEngineConfiguration+ for versions prior to 5.11):
+可以使用org.activiti.engine.impl.history.HistoryLevel枚举（或在5.11版本前，++ProcessEngineConfiguration++中定义的__HISTORY__常量），以编程方式配置历史级别：
 
 [source,java,linenums]
 ----
@@ -169,7 +168,7 @@ ProcessEngine processEngine = ProcessEngineConfiguration
   .buildProcessEngine();
 ----
 
-The level can also be configured in activiti.cfg.xml or in a spring-context:
+也可以在activiti.cfg.xml或Spring上下文中配置级别：
 
 [source,xml,linenums]
 ----
@@ -179,23 +178,23 @@ The level can also be configured in activiti.cfg.xml or in a spring-context:
 </bean>
 ----
 
-Following history levels can be configured:
+可以配置下列历史级别：
 
-* ++none++: skips all history archiving.  This is the most performant for runtime  process execution, but no historical information will be available.
-* ++activity++: archives all process instances and activity instances.  At the end of the process instance, the latest values of the top level process instance variables  will be copied to historic variable instances.  No details will be archived.
-* ++audit++: This is the default. It archives all process instances,  activity instances, keeps variable values continuously in sync and all form properties that are submitted  so that all user interaction through forms is traceable and can be audited.
-* ++full++: This is the highest level of history archiving and hence the  slowest.  This level stores all information as in the +audit+ level  plus all other possible details, mostly this are process variable updates.
+* ++none（无）++：跳过所有历史存档。对于运行时流程执行来说，是性能最高的配置，但是不会保存任何历史信息。
+* ++activity（活动）++：存档所有流程实例与活动实例。在流程实例结束时，顶级流程实例变量的最新值，将被复制为历史流程实例。不会存档细节。
+* ++audit（审计）++：默认级别。将存档所有流程实例，活动实例，并保持变量值以及所有提交的表单参数持续同步，以保证通过表单的所有用户操作都可追踪、可审计。
+* ++full（完全）++：历史存档的最高级别，因此也最慢。这个级别存储所有++audit++级别存储的信息，加上所有其他可用细节，主要是流程变量的更新。
 
-*Prior to Activiti 5.11, the history level was stored in the database (table +$$ACT_GE_PROPERTY$$+, property with name ++historyLevel++). Starting from 5.11, this value is not used anymore and is ignored/deleted from the database. The history can now be changed between 2 boots of the engine, without an exception being thrown in case the level changed from the previous engine-boot.*
+**在Activiti 5.11版本以前，历史级别保存在数据库中（+$$ACT_GE_PROPERTY$$+ 表，参数名为++historyLevel++）。从5.11开始，这个值不再使用，并从数据库中忽略/删除。现在历史可以在2个引擎的启动间切换，而不会由于前一个引擎启动修改了级别，而抛出异常。**
 
 [[historyFormAuditPurposes]]
 
 
-=== History for audit purposes
+=== 审计目的历史 History for audit purposes
 
-When <<historyConfig,configuring>> at least +audit+ level for configuration. Then all properties submitted through methods  +FormService.submitStartFormData(String processDefinitionId, Map<String, String> properties)+ and +FormService.submitTaskFormData(String taskId, Map<String, String> properties)+ are recorded.
+如果至少<<historyConfig,配置>>为++audit++级别，则通过++FormService.submitStartFormData(String processDefinitionId, Map<String, String> properties)++与++FormService.submitTaskFormData(String taskId, Map<String, String> properties)++方法提交的所有参数都将被记录。
 
-Form properties can be retrieved with the query API like this:
+表单参数可以通过查询API，像这样读取：
 
 [source,java,linenums]
 ----
@@ -206,7 +205,6 @@ historyService
       .list();
 ----
 
-In that case only historic details of type +HistoricFormProperty+ are returned.
+在这个情况下，只会返回++HistoricFormProperty++类型的历史详情。
 
-
-If you've set the authenticated user before calling the submit methods with +IdentityService.setAuthenticatedUserId(String)+ then that authenticated user who submitted the form will be accessible in the history as well with +HistoricProcessInstance.getStartUserId()+ for start forms and  +HistoricActivityInstance.getAssignee()+ for task forms.
+如果在调用提交方法前，使用++IdentityService.setAuthenticatedUserId(String)++设置了认证用户，则该提交了表单的认证用户可以在历史中访问，对于启动表单使用++HistoricProcessInstance.getStartUserId()++，对于任务表单使用++HistoricActivityInstance.getAssignee()++。
