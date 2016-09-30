@@ -1,45 +1,44 @@
 
-== Simulation with Activiti-Crystalball (Experimental)
+== 使用Activiti-Crystalball仿真（试验性） Simulation with Activiti-Crystalball (Experimental)
 
 [[crb-introduction]]
 
 
-=== Introduction
+=== 介绍 Introduction
 
 [[crb-overview]]
 
-==== Short overview
+==== 简介 Short overview
 
-activiti-crystalball (CrystalBall) is simulation engine for Activiti Business Process Management Platform. CrystalBall allows use of simulation for:
+activiti-crystalball（CrystalBall）是一个用于Activiti业务流程管理平台的仿真引擎。CrystalBall仿真可以用于：
       
-* decision support - for production workflow (e.g. should we add now more resources to the system to meet due dates?).
-* optimisation and understanding - testing changes and understanding their impacts.
-* training - simulation can be used to train staff before roll out.
+* 支持决策——对于生产工作流（例如，我们是否要在系统中增加更多资源，以满足截止日期？）。
+* 优化与理解——测试变更并理解其影响。
+* 培训——仿真可以在员工铺开使用前进行培训。
 * ... 
 
 
 [[crb-unique]]
 
 
-==== CrystalBall is unique
+==== CrystalBall是独特的 CrystalBall is unique
 
-No need to:
-      
-* create separate simulation models and engines.
-* create different reporting for simulation.
-* feed simulation engine with a lot of data.
+不需要：
 
-CrystalBall simulator is based on Activiti. That's why it is easy to copy data and start simulation and be able to replay workflow behavior from the history.
+* 创建单独的仿真模型与引擎。
+* 为仿真创建不同的报告。
+* 为仿真引擎提供大量数据。
+
+CrystalBall仿真器基于Activiti。这就是为什么可以很轻易地复制数据并启动仿真，也可以从历史中重放工作流行为。
     
 
 [[crb-inside]]
 
 
-=== CrystalBall inside
+=== 深入CrystalBall (CrystalBall inside)
 
+CrystalBall是一个link:$$http://en.wikipedia.org/wiki/Discrete_event_simulation$$[离散事件仿真器]。最简单的实现是org.activiti.crystalball.simulator.SimpleSimulationRun。
 
-CrystalBall is a link:$$http://en.wikipedia.org/wiki/Discrete_event_simulation$$[discrete event simulator]. The simplest implementation is org.activiti.crystalball.simulator.SimpleSimulationRun.
-  
 [source,java,linenums]  
 ----
 init();
@@ -54,36 +53,34 @@ while (!simulationEnd(event)) {
 close();  
 ----
 
-
-SimulationRun is able to execute simulation events generated from different sources (see link:$$#crb-playback$$[PlayBack]).
+SimulationRun也可以执行不同来源生成的仿真事件（参见link:$$#crb-playback$$[回放]）。
 
 
 [[crb-history-analysis]]
 
 
-=== History analysis
+=== 历史分析 History analysis
 
-One of the usecases where simulation can be used is analysis of the history. The production environment does not give any chance to repeat and debug bugs. That's why it is almost impossible to get process engine into the state which is the same as it was on the production environment on the time when bug occurred. The problem is not the hardware but
-        
-* time - process instance run can take several months.
-* concurrency - process instance run can interfere with another one and bug can be found only in the case of parallel execution of both of them.
-* users - a lot of users can participate on the process instance execution. It takes a lot of effort to get process instance to the state where error occurred.
-            
-The simulation can address mentioned issues easily. Simulation time is virtual and does not depend on real time. Activiti process engine itself is virtual. There is no need to create virtual process engine which is used in the simulation experiment. In this case concurrency can be addressed naturally. Users' behavior can be logged and replayed from this log or predicted and generated on demand.
-      
-The best way to analyze history is to re-live it once more time. The re-living is hardly achievable in real life but it can be achieved by simulation.
+仿真的一个使用场景是用于分析历史。生产环境不能用于重现并查找bug。也几乎不可能将流程引擎调整到生产环境发生bug时一样的状态，问题不在硬件而是：
+
+* 时间——流程实例可能需要好几个月。
+* 并发——流程实例运行时可能与其它的实例相互影响，只有在它们都并行执行的时候才会发现问题。
+* 用户——大量用户可以参与流程实例执行。将流程实例调整到错误发生时的状态会花费大量精力。
+
+仿真可以容易地定位上面提到的问题。仿真的时间是虚拟的，不依赖于真实时间。Activiti流程引擎本身就是虚拟的，因此不需要创建用于仿真试验的虚拟流程引擎。在这种场景下并发也可以自然地被定位。用户的行为可以记录并回放，回放可以按照记录，或者预测并按需生成。
+
+最好的分析历史的方式是将其重现。重现在真实生活正很难实现，但可以通过仿真实现。
       
 
 [[crb-collectEvents]]
 
 
-==== Events from the history.
+==== 历史中的事件 Events from the history.
 
+重现历史的最重要的事情，是收集所有影响过系统状态的事件。假设我们的流程通过用户事件驱动（例如申领，完成任务……）。在这个场景下，我们可以使用两种事件源：
 
-The most important thing to re-live the history is to collect events which affected world status. Let's say that our process is driven by user events (e.g. claim, complete task...). In such a case we have can use two event sources:
-          
-* process history - currently supported only in original link:$$http://gro-mar.github.io/activiti-crystalball/$$[activiti-crystalball] project.
-* logged ActivitiEvents. Basically we can add ActivitiEventListener to the engine from which we want to log events. Logged events are stored and after the time analyzed. The basic implementation is org.activiti.crystalball.simulator.delegate.event.impl.InMemoryRecordActivitiEventListener:
+* 流程历史——当前只支持原始link:$$http://gro-mar.github.io/activiti-crystalball/$$[activiti-crystalball]项目。
+* 记录的活动事件。我们可以将ActivitiEventListener加入想要记录事件的引擎。记录的事件会被存储用于之后的分析。基础的实现是org.activiti.crystalball.simulator.delegate.event.impl.InMemoryRecordActivitiEventListener：
 
 [source,java,linenums]
 ----
@@ -94,17 +91,16 @@ public void onEvent(ActivitiEvent event) {
 }
 ----
 
-Events are stored. We can continue in re-living the history again.
-        
+事件将被存储。我们可以继续再次重现历史。
 
 [[crb-playback]]
 
 
-==== PlayBack
+==== 回放 PlayBack
 
-The good thing on the playback is that it can be played over and over again till we do not completely understand what has happened. Crystalball simulation is based on real data, real user behavior and it is Crystalball's advantage.
-        
-The best way to understand how playback works is to explain step by step an example based on JUnit test org.activiti.crystalball.simulator.delegate.event.PlaybackRunTest. The process on which simulation is tested is the simplest one:
+回放的优点是可以一遍又一遍的播放，直到我们完全理解发生了什么。Crystalball仿真基于真实数据与真实用户行为，这是Crystalball的优势。
+
+理解回放工作方式的最好的方法，是基于JUnit测试org.activiti.crystalball.simulator.delegate.event.PlaybackRunTest逐步骤地解释。测试仿真的流程是最简单的：
 
 [source,xml,linenums]
 ----
@@ -118,120 +114,119 @@ The best way to understand how playback works is to explain step by step an exam
 </process>
 ----
 
-This process is deployed and used in real and simulation run.
-          
-* record events
+流程已被部署，并将实际使用以及仿真运行。
+
+* 记录事件
 
 [source,java,linenums]
 ----
-// get process engine with record listener to log events
+// 获取带有记录监听器的流程引擎来记录事件 get process engine with record listener to log events
 ProcessEngine processEngine = (new RecordableProcessEngineFactory(THE_SIMPLEST_PROCESS, listener)).getObject();
 
-// start process instance with variables
+// 使用变量启动流程实例 start process instance with variables
 Map<String,Object> variables = new HashMap<String, Object>();
 variables.put(TEST_VARIABLE, TEST_VALUE);
 processEngine.getRuntimeService().startProcessInstanceByKey(SIMPLEST_PROCESS, BUSINESS_KEY,variables);
 
+// 检查流程引擎状态——历史中应该有一个流程实例
 // check process engine status - there should be one process instance in the history
 checkStatus(processEngine);
 
-// close and destroy process engine
+// 关闭并销毁流程引擎 close and destroy process engine
 EventRecorderTestUtils.closeProcessEngine(processEngine, listener);
 ProcessEngines.destroy();
 ----
 
-Code snippet above will record ActivitiEventType.ENTITY_CREATED after startProcessInstanceByKey method invocation.
+上面的代码片段将在startProcessInstanceByKey方法调用后记录ActivitiEventType.ENTITY_CREATED。
               
-* start simulation run
+* 启动仿真运行 start simulation run
 
 [source,java,linenums]
 ----
 final SimpleSimulationRun.Builder builder = new SimpleSimulationRun.Builder();
-// init simulation run
+// 初始化仿真运行 init simulation run
+// 获取流程引擎工厂——与RecordableProcessEngineFactory的唯一区别是没有添加记录监听器
 // get process engine factory - the only difference from RecordableProcessEngineFactory that log listener is not added
 DefaultSimulationProcessEngineFactory simulationProcessEngineFactory = new DefaultSimulationProcessEngineFactory(THE_SIMPLEST_PROCESS);
-// configure simulation run
+// 配置仿真运行 configure simulation run
 builder.processEngine(simulationProcessEngineFactory)
-       // set playback event calendar from recorded events
+       // 从记录的事件设置回放事件日历 set playback event calendar from recorded events
        .eventCalendar(new PlaybackEventCalendarFactory(new SimulationEventComparator(), listener.getSimulationEvents()))
-       // set handlers for simulation events
+       // 为仿真事件设置处理器 set handlers for simulation events
        .customEventHandlerMap(EventRecorderTestUtils.getHandlers());
 SimpleSimulationRun simRun = builder.build();
 
 simRun.execute(new NoExecutionVariableScope());
 
-// check the status - the same method which was used in record events method
+// 检查状态——在记录事件方法中使用的相同方法 check the status - the same method which was used in record events method
 checkStatus(simulationProcessEngineFactory.getObject());
 
-// close and destroy process engine
+// 关闭并销毁流程引擎 close and destroy process engine
 simRun.getProcessEngine().close();
 ProcessEngines.destroy();
 ----
 
-More advanced playback examples are in org.activiti.crystalball.simulator.delegate.event.PlaybackProcessStartTest
+更高级的回放例子在org.activiti.crystalball.simulator.delegate.event.PlaybackProcessStartTest中
         
 
 [[crb-debug]]
 
 
-==== Process engine debugger
+==== 流程引擎调试 Process engine debugger
 
+回放限制了只能一下子执行所有仿真事件（例如启动流程，完成任务）。调试可以将执行分割为小步骤，并在步骤之间观察流程引擎的状态。
 
-Playback limits us to execute all simulation events (e.g. start process, complete task) in one bunch. Debugger allows us to split execution into smaller steps and observe process engine status between the steps.
-        
-SimpleSimulationRun implements SimulationDebugger interface. SimulationDebugger allows to execute simulation events step by step, to run simulation to the specified time.
+SimpleSimulationRun实现了SimulationDebugger接口。SimulationDebugger可以一步一步地执行仿真事件，将仿真运行到特定时间。
 
 [source,java,linenums]
 ----
   /**
-  * Allows to run simulation in debug mode
+  * 可以在调试模式运行仿真 Allows to run simulation in debug mode
   */
   public interface SimulationDebugger {
   /**
-  * initialize simulation run
-  * @param execution - variable scope to transfer variables from and to simulation run
+  * 初始化仿真运行 initialize simulation run
+  * @param execution - 传递变量与运行仿真的变量范围 variable scope to transfer variables from and to simulation run
   */
   void init(VariableScope execution);
 
   /**
-  * step one simulation event forward
+  * 前进一步仿真事件 step one simulation event forward
   */
   void step();
 
   /**
-  * continue in the simulation run
+  * 继续仿真运行 continue in the simulation run
   */
   void runContinue();
 
   /**
-  * execute simulation run till simulationTime
+  * 执行仿真运行直到simulationTime（仿真时间） execute simulation run till simulationTime
   */
   void runTo(long simulationTime);
 
   /**
-  * execute simulation run till simulation event of the specific type
+  * 执行仿真运行直到特定类型的仿真事件 execute simulation run till simulation event of the specific type
   */
   void runTo(String simulationEventType);
 
   /**
-  * close simulation run
+  * 关闭仿真运行 close simulation run
   */
   void close();
 }
 ----
 
-
-To see process engine debugger in action run SimpleSimulationRunTest
-        
+要实际查看流程引擎调试器，运行SimpleSimulationRunTest
 
 [[crb-replay]]
 
 
-==== Replay
+==== 重放 Replay
 
-Playback needs to create another process engine instance. Playback does not affect "real" environment, on the other side it needs simulation experiment configuration. Replay works on the "real" process engine. Replay executes simulation event on the running process engine. The consequence is that replay lives in real time. Real time means that simulation events are scheduled to be executed immediately.
-        
-Example bellow shows how to replay one process instance. The same technique can be applied in playback to for playing only one process instance. (ReplayRunTest) The first part of the test initialize process engine, starts one process instance and completes process instance's task.
+重放需要创建另一个流程引擎实例。回放并不影响“真实”环境，而是需要仿真试验配置。重放则运行在“真实”流程引擎上。重放在运行中的流程引擎上执行仿真事件。因此重放使用真实时间。真实时间意味着仿真事件被预定将会立即执行。
+
+下面的例子展示了如何重放一个流程实例。同样的技术可以用在回放中，以播放一个流程实例。（ReplayRunTest）测试的第一部分初始化流程引擎，启动一个流程实例，并完成流程实例的任务。
 
 [source,java,linenums]
 ----
@@ -250,15 +245,15 @@ Example bellow shows how to replay one process instance. The same technique can 
   taskService.complete(task.getId());
 ----
 
-Used process engine is basic InMemoryStandaloneProcessEngine with
-          
-* InMemoryRecordActivitiEventListener (already used in playback) to record Activiti events and transform them to simulation events.
-* UserTaskExecutionListener - when new user task is created and new task is form replay process instance, schedule task complete event to the event calendar.
+使用的流程引擎是基础的InMemoryStandaloneProcessEngine以及
 
-Next test part starts simulation debugger on the same process engine as original process. Replay event handlers replaces StartProcessEventHandler with StartReplayProcessEventHandler. StartReplayProcessEventHandler takes process instance Id to replay and in the init phase schedule process instance start. StartProcessEventHandler in the handle phase starts new process instance with one reserved variable. Variable name is "_replay.processInstanceId". The variable is used to store id of the process which is replayed. ReplaySimulationRun in comparison with SimpleSimulationRun does not:
-          
-* create and close process engine instance.
-* change simulation time. (real time cannot be changed)
+* InMemoryRecordActivitiEventListener（已经在回放中使用过）用于记录Activiti事件，并将其转换为仿真事件。
+* UserTaskExecutionListener——当创建了新的用户任务，且新的任务是表单重放流程引擎时，将任务完成事件预定至事件日历。
+
+测试的下一部分在原流程的相同流程引擎上启动了仿真调试器。重放事件处理器使用StartReplayProcessEventHandler取代了StartProcessEventHandler。StartReplayProcessEventHandler取得流程实例Id，将其用于重放以及在初始化阶段预定流程实例启动。在处理阶段StartProcessEventHandler使用一个预留的变量启动新的流程实例。变量名字为"_replay.processInstanceId"。这个变量用于存储需要重放的流程的id。与SimpleSimulationRun相比，ReplaySimulationRun并不：
+
+* 创建与关闭流程引擎实例。
+* 修改仿真时间。（真实时间不能修改）
 [source,java,linenums]
 
 ----
@@ -266,36 +261,37 @@ final SimulationDebugger simRun = new ReplaySimulationRun(processEngine,
   getReplayHandlers(processInstance.getId()));
 ----
 
-And now replay process instance can start. At the beginning there are no process instances running. There is one process instance finished in the history. After the init there is one simulation event in the event calendar - to start process instance which replays already finished process instance.
+现在重放流程实例可以启动了。在一开始流程实例还没有运行。在历史中已经有一个已完成的流程实例。在初始化之后，在事件日历中有一个仿真事件——用于启动一个流程实例，以重放已经完成的流程实例。
 
 [source,java,linenums]
 ----
 simRun.init();
 
+// 原始流程已经完成——不应该有任何运行中的流程实例/任务
 // original process is finished - there should not be any running process instance/task
 assertEquals(0, runtimeService.createProcessInstanceQuery().processDefinitionKey(USERTASK_PROCESS).count());
 assertEquals(0, taskService.createTaskQuery().taskDefinitionKey("userTask").count());
 
 simRun.step();
 
-// replay process was started
+// 重放流程已启动 replay process was started
 assertEquals(1, runtimeService.createProcessInstanceQuery().processDefinitionKey(USERTASK_PROCESS).count());
-// there should be one task
+// 应该有一个任务 there should be one task
 assertEquals(1, taskService.createTaskQuery().taskDefinitionKey("userTask").count());
 ----
 
-When the task was created UserTaskExecutionListener created new simulation event to complete user task.
+当创建任务时，UserTaskExecutionListener创建了新的仿真事件，以完成用户任务。
 
 [source,java,linenums]
 ----
 simRun.step();
 
-// userTask was completed - replay process was finished
+// 用户任务已完成——重放流程已经完成 userTask was completed - replay process was finished
 assertEquals(0, runtimeService.createProcessInstanceQuery().processDefinitionKey(USERTASK_PROCESS).count());
 assertEquals(0, taskService.createTaskQuery().taskDefinitionKey("userTask").count());
 ----
 
-Simulation is finished and we can continue in another process instance start, or any other events. For now we can close simRun and process engine.
+仿真结束，我们可以继续另一个流程实例启动，或任何其他事件。这次我们关闭simRun与流程引擎。
 
 [source,java,linenums]
 ----
