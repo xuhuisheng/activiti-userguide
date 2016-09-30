@@ -2,50 +2,45 @@
 
 == Activiti Modeler
 
-Activiti Modeler is a BPMN web modeler component that's available as part of the <<activitiExplorer,Activiti Explorer>> web application. 
-The Modeler is a fork of the link:$$http://code.google.com/p/signavio-core-components/$$[Signavio Core Components] project. 
-The Activiti Modeler is an Angular JS based application since version 5.17.0 (before it was an Ext-JS based application). The Angular JS part of the Activiti Modeler is released with a LGPL license.
-A main difference with the previous Activiti Modeler (Signavio Core Components) is that that the new modeler is maintained and developed as part of the Activiti project. 
-The goal of the Activiti Modeler is to support all the BPMN elements and extension supported by the Activiti Engine.
- 
-When you run the Activiti Explorer with the default configuration one demo process will be available in the model workspace.
+Activiti Modeler是一个BPMN web建模器组件，内置在<<activitiExplorer,Activiti Explorer>> web应用中。Modeler是 link:$$http://code.google.com/p/signavio-core-components/$$[Signavio核心组件]的分支项目。Activiti Modeler从5.17.0版本起基于Angular JS（之前是基于Ext-JS的应用）。Activiti Modeler的Angular JS部分基于LGPL协议发布。与之前版本的Activiti Modeler（Signavio核心组件）的主要区别，是新的Modeler作为Activiti项目的一部分维护与开发。Activiti Modeler的目标，是支持所有BPMN元素与Activiti支持的扩展。
+
+使用默认配置运行Activiti Explorer时，在模型工作空间内将有一个示例流程。
 
 image::images/modeler.example.process.png[align="center"]
     
 
-=== Model editing
+=== 编辑模型 Model editing
 
-When you click on the edit button in the model workspace the model will be opened in the modeler. On the left side of the screen the available palette of BPMN elements and Activiti extensions is available. You can drag and drop new elements on the canvas when needed. On the bottom side of the screen the attributes of a selected element can be filled-in. In the example screenshot a user task is selected and you can fill-in user task attributes like assignment, form properties and due date. 
-To return to the Activiti Explorer you can click the close button at the top right of the screen.
+在模型工作空间点击edit按钮时，会在建模器中打开模型。屏幕的左侧是BPMN元素与Activiti扩展的画板。在需要时可以将新元素拖放至画布上。在屏幕底部可以填写选中元素的属性。在示例截图中选中了一个用户任务，可以填写用户任务属性，例如办理人，表单参数与到期日期。要返回Activiti Explorer，可以点击屏幕右上角的关闭按钮。
 
 image::images/modeler.editor.canvas.png[align="center"]
 
 
-=== Importing existing models
+=== 导入现有模型 Importing existing models
 
-You can also import existing models into the model workspace to edit them in the Activiti Modeler. Click on the import button and select a .bpmn or .bpmn20.xml file. Note that the BPMN XML file should contain BPMN DI information.
+也可以将现有模型导入模型工作空间，以在Activiti Modeler中编辑它们。点击import按钮，选择一个.bpmn或者.bpmn20.xml文件。请注意这个BPMN XML文件需要包含BPMN DI信息。
 
 image::images/modeler.import.png[align="center"]
       
 
 
-=== Convert deployed definitions to a editable model
+=== 将已部署定义转换为可编辑模型 Convert deployed definitions to a editable model
 
-Deployed process definition can be converted into models that can be edited by the Activiti Modeler. Note that the process definition should contain BPMN DI information.
+已部署的流程定义可以转换为能够使用Activiti Modeler编辑的模型。请注意该流程定义需要包含BPMN DI信息。
 
 image::images/modeler.convert.png[align="center"]
 
 
-=== Export model to BPMN XML
+=== 将模型导出为BPMN XML （Export model to BPMN XML）
 
-A model in the model workspace can be exported to a BPMN XML file. Select the export option in the model action select box.
+模型工作空间中的模型可以导出为BPMN XML文件。在模型动作选项框中选择导出选项。
       
 image::images/modeler.export.png[align="center"]    
 
 
-=== Deploy model to the Activiti Engine
+=== 将模型部署至Activiti引擎 Deploy model to the Activiti Engine
 
-When a model contains all the attributes necessary to be executed, it can be deployed to the Activiti Engine. Select the deploy option in the model action select box.
+当模型包含了运行所需的所有参数，就可以部署至Activiti引擎。在模型动作选项框中选择部署选项。
 
 image::images/modeler.deploy.png[align="center"]
       
